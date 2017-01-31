@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_graph"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="com.steppy.keepfit.GraphActivity">
 
-    tools:context="com.steppy.keepfit.MainActivity"
-    >
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"
@@ -21,19 +19,4 @@
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         app:bb_tabXmlResource="@xml/bottombartabs" />
-
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressMiddle"
-        android:layout_below="@id/toolbar"
-        android:layout_centerHorizontal="true">
-
-
-
-
-    </RelativeLayout>
-
-
 </RelativeLayout>

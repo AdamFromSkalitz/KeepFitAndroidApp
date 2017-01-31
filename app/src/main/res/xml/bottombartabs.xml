@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <tabs>
         <tab
-            id="@+id/tab_favorites"
+            id="@+id/tab_graph"
             icon="@drawable/chart"
-            title="Favorites" />
+            title="Graph"
+            />
         <tab
-            id="@+id/tab_nearby"
+            id="@+id/tab_main"
             icon="@drawable/step"
-            title="Nearby" />
+            title="Main"
+            />
         <tab
-            id="@+id/tab_friends"
-            icon="@drawable/add"
-            title="Friends" />
+            id="@+id/tab_goals"
+            icon="@drawable/goal"
+            title="Goals"
+            />
     </tabs>
-</menu>
