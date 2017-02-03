@@ -7,8 +7,10 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.IdRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,7 +34,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity  {
     private BottomBar bottomBar;
     private Button but;
-
+    private MainActivity mai;
     Toolbar toolbar;
     View dateButtonMain;
 
@@ -75,8 +77,13 @@ public class MainActivity extends AppCompatActivity  {
         }
     };
 
+    public Context getContext() {
+        return mai;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mai=this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -154,15 +161,6 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
-
-    public static class ViewGoalsFragment extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.fragment_goals, container, false);
-        }
-    }
     public static class GraphFragment extends Fragment {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -171,30 +169,21 @@ public class MainActivity extends AppCompatActivity  {
             return inflater.inflate(R.layout.fragment_graph, container, false);
         }
     }
-    public static class MainFragment extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.fragment_main, container, false);
-        }
-    }
-
-    public void viewGoals() {
-        Intent intent = new Intent(this,ViewGoalsActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
-
-    public void viewGraph() {
-        Intent intent = new Intent(this,GraphActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
+//    public static class MainFragment extends Fragment {
+//        @Override
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                                 Bundle savedInstanceState) {
+//            // Inflate the layout for this fragment
+//            final View mainView = inflater.inflate(R.layout.fragment_main, container, false);
+//            FloatingActionButton myFab = (FloatingActionButton) mainView.findViewById(R.id.fab);
+//            myFab.setOnClickListener(new View.OnClickListener() {
+//                public void onClick(View v) {
+//                    Toast.makeText(MainActivity.this,"main fab press",Toast.LENGTH_LONG).show();
+//                }
+//            });
+//            return inflater.inflate(R.layout.fragment_main, container, false);
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

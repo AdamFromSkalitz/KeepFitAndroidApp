@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_view_goals"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.steppy.keepfit.AddGoalsActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        >
+    </include>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/middle"
+        android:layout_below="@id/toolbar"
+        android:layout_centerHorizontal="true"
+
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="75dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginBottom="100dp">
+
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameText"
+            android:layout_marginTop="50dp"
+            android:hint="Name"/>
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/goalsText"
+            android:layout_below="@id/nameText"
+            android:layout_marginTop="60dp"
+            android:inputType="phone"
+            android:hint="Steps"/>
+
+        <CheckBox
+            android:text="CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBox"
+            android:layout_below="@id/goalsText"
+            android:layout_marginTop="60dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkBox"
+            android:id="@+id/setButton"
+            android:text="Save Goal"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="60dp"
+            />
+
+
+
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>

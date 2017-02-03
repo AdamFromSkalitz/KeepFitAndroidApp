@@ -25,35 +25,8 @@ public class GraphActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(" ");
         Toast.makeText(GraphActivity.this,"Graph",Toast.LENGTH_LONG).show();
 
-        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                if (tabId == R.id.tab_main) {
-                    viewMain(tabId);
-                }else if(tabId == R.id.tab_goals){
-                    viewGoals();
-                }
-
-            }
-        });
     }
 
-    public void viewMain(int tabId) {
-        Intent intent = new Intent(findViewById(tabId).getContext(),MainActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
-
-    public void viewGoals() {
-        Intent intent = new Intent(this,ViewGoalsActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto">
+
 
     <TextView
-        android:text="Goals content"
+        android:text="goal content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewProgressNumber"
+        android:id="@+id/tv"
         />
+
+
+    <ListView
+        android:id="@+id/goalList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        />
+
+
+
+
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_content"
@@ -23,23 +37,42 @@
         android:layout_marginTop="10dp"
         >
 
-        <ListView
-            android:id="@+id/lvToDoList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></ListView>
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="70dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/add_float"
-            app:layout_anchor="@id/lvToDoList"
-            app:layout_anchorGravity="bottom|right|end" />
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/floatingMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            fab:menu_labels_ellipsize="end"
+            fab:menu_labels_singleLine="true"
+            fab:menu_fab_label="Cancel"
+            fab:menu_backgroundColor="#ccffffff"
+            fab:menu_animationDelayPerItem="0"
+            fab:menu_colorNormal="#00C29F"
+            fab:menu_colorPressed="#00C29F"
+            fab:menu_colorRipple="#00C29F"
+            android:padding="8dp">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabSteps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add"
+                fab:fab_size="mini"
+                fab:fab_label="Add Steps"/>
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabGoals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/add"
+                fab:fab_size="mini"
+                fab:fab_label="Add Goal"/>
+
+        </com.github.clans.fab.FloatingActionMenu>
+
 
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>
