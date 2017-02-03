@@ -54,7 +54,7 @@
             android:id="@+id/fabSteps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/add"
+            android:src="@drawable/addsmall"
             fab:fab_size="mini"
             fab:fab_label="Add Steps"/>
 
@@ -62,7 +62,7 @@
             android:id="@+id/fabGoals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/add"
+            android:src="@drawable/addsmall"
             fab:fab_size="mini"
             fab:fab_label="Add Goal"/>
 

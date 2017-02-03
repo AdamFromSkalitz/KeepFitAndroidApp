@@ -29,6 +29,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 
+import java.io.File;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity  {
@@ -83,6 +84,13 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        File dir = getFilesDir();
+        File file = new File(dir, "goals.txt");
+        boolean deleted = file.delete();
+
+
         mai=this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -109,7 +117,7 @@ public class MainActivity extends AppCompatActivity  {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
-        Toast.makeText(MainActivity.this,"month"+monthh,Toast.LENGTH_LONG).show();
+        //Toast.makeText(MainActivity.this,"month"+monthh,Toast.LENGTH_LONG).show();
 
         but = (Button) findViewById(R.id.date);
 

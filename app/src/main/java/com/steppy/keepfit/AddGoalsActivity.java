@@ -21,11 +21,18 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 public class AddGoalsActivity extends AppCompatActivity {
     private BottomBar bottomBar;
     final Handler handler = new Handler();
+    private ArrayList<Goal> listToBeSaved = new ArrayList<>();
+
+
+    FileOutputStream fos;
+    ObjectOutputStream os;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +57,27 @@ public class AddGoalsActivity extends AppCompatActivity {
                 Toast.makeText(AddGoalsActivity.this, "Name " + name.getText() + " goal " + goal.getText() + " active " + active.isChecked(), Toast.LENGTH_LONG).show();
 
                 String FILENAME = "goals.txt";
+                String r = "read";
                 String nameString = name.getText().toString();
                 String goalString = goal.getText().toString();
                 String activeString = String.valueOf(active.isChecked());
+                Goal thisGoal = new Goal(nameString,Integer.parseInt(goal.getText().toString()),active.isChecked());
+                listToBeSaved.add(thisGoal);
                 try {
-                    FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-                    OutputStreamWriter outputWriter = new OutputStreamWriter(fos);
-                    outputWriter.write(nameString);
-                    outputWriter.write(goalString);
-                    outputWriter.write(activeString);
+                     fos = openFileOutput(FILENAME, Context.MODE_APPEND);
+                    //OutputStreamWriter outputWriter = new OutputStreamWriter(fos);
+                     os = new AppendingObjectOutputStream (fos);
+                    //outputWriter.write(r);
+                    os.writeObject(thisGoal);
+                    os.close();
+                    fos.close();
+
+//                    outputWriter.write(nameString);
+//                    outputWriter.write(goalString);
+//                    outputWriter.write(activeString);
+//                    outputWriter.close();
+                    Toast.makeText(getBaseContext(), "File saved successfully!",
+                            Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

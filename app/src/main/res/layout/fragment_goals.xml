@@ -5,25 +5,6 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto">
 
 
-    <TextView
-        android:text="goal content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv"
-        />
-
-
-    <ListView
-        android:id="@+id/goalList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        />
-
-
-
-
-
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/main_content"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -37,6 +18,12 @@
         android:layout_marginTop="10dp"
         >
 
+        <ListView
+            android:id="@+id/goalList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            />
 
 
         <com.github.clans.fab.FloatingActionMenu
@@ -59,7 +46,7 @@
                 android:id="@+id/fabSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add"
+                android:src="@drawable/addsmall"
                 fab:fab_size="mini"
                 fab:fab_label="Add Steps"/>
 
@@ -67,12 +54,11 @@
                 android:id="@+id/fabGoals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/add"
+                android:src="@drawable/addsmall"
                 fab:fab_size="mini"
                 fab:fab_label="Add Goal"/>
 
         </com.github.clans.fab.FloatingActionMenu>
-
 
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>
