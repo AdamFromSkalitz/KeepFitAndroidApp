@@ -2,6 +2,7 @@ package com.steppy.keepfit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -24,13 +25,14 @@ import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AddGoalsActivity extends AppCompatActivity {
     private BottomBar bottomBar;
     final Handler handler = new Handler();
     private ArrayList<Goal> listToBeSaved = new ArrayList<>();
 
-
+    DBHelper dbHelper;
     FileOutputStream fos;
     ObjectOutputStream os;
 
@@ -52,40 +54,21 @@ public class AddGoalsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText name = (EditText) findViewById(R.id.nameText);
                 EditText goal = (EditText) findViewById(R.id.goalsText);
-                CheckBox active = (CheckBox) findViewById(R.id.checkBox);
+                //CheckBox active = (CheckBox) findViewById(R.id.checkBox);
+                Date date = new Date();
 
-                Toast.makeText(AddGoalsActivity.this, "Name " + name.getText() + " goal " + goal.getText() + " active " + active.isChecked(), Toast.LENGTH_LONG).show();
-
-                String FILENAME = "goals.txt";
-                String r = "read";
+                dbHelper = new DBHelper(AddGoalsActivity.this);
                 String nameString = name.getText().toString();
                 String goalString = goal.getText().toString();
-                String activeString = String.valueOf(active.isChecked());
-                Goal thisGoal = new Goal(nameString,Integer.parseInt(goal.getText().toString()),active.isChecked());
-                listToBeSaved.add(thisGoal);
-                try {
-                     fos = openFileOutput(FILENAME, Context.MODE_APPEND);
-                    //OutputStreamWriter outputWriter = new OutputStreamWriter(fos);
-                     os = new AppendingObjectOutputStream (fos);
-                    //outputWriter.write(r);
-                    os.writeObject(thisGoal);
-                    os.close();
-                    fos.close();
+                //String activeString = String.valueOf(active.isChecked());
+                String dateString = date.toString();
 
-//                    outputWriter.write(nameString);
-//                    outputWriter.write(goalString);
-//                    outputWriter.write(activeString);
-//                    outputWriter.close();
-                    Toast.makeText(getBaseContext(), "File saved successfully!",
-                            Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(dbHelper.insertGoal(nameString,goalString, "false", dateString)){
+                    Toast.makeText(AddGoalsActivity.this, "Name " + name.getText() + " goal " + goal.getText(), Toast.LENGTH_LONG).show();
                 }
-// fos.write(nameString);
-//                fos.write(string.getBytes());
-//                fos.write(string.getBytes());
-//
-//                fos.close();
+                dbHelper.close();
+
+
             }
         });
     }

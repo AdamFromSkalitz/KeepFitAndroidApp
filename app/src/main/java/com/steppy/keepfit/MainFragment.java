@@ -2,6 +2,7 @@ package com.steppy.keepfit;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,10 @@ import com.github.clans.fab.FloatingActionButton;
  */
 
 public class MainFragment extends Fragment {
+    TextView progress;
+    TextView goalValue;
+    DBHelper dbHelper;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -26,8 +31,25 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         final View mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        TextView v = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
+        dbHelper = new DBHelper(getActivity());
 
+        goalValue = (TextView) mainView.findViewById(R.id.textViewGoalNumber);
+        Cursor cursor = dbHelper.getActiveGoal();
+        cursor.moveToFirst();
+        try {
+            String goal = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+            goalValue.setText(goal);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        progress = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
+        //cursor = dbHelper.getDayProgress();
+//        cursor.moveToFirst();
+//        String active = cursor.getString(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+//        progress.setText(active);
+
+        cursor.close();
+        dbHelper.closeDB();
 
 
         FloatingActionButton myFab = (FloatingActionButton) mainView.findViewById(R.id.fabGoals);

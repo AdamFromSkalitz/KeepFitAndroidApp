@@ -41,18 +41,10 @@
             android:inputType="phone"
             android:hint="Steps"/>
 
-        <CheckBox
-            android:text="CheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/checkBox"
-            android:layout_below="@id/goalsText"
-            android:layout_marginTop="60dp"/>
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/checkBox"
+            android:layout_below="@id/goalsText"
             android:id="@+id/setButton"
             android:text="Save Goal"
             android:layout_marginTop="60dp"

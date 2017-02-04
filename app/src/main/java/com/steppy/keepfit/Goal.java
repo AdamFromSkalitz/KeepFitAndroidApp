@@ -28,4 +28,14 @@ public class Goal implements Serializable {
         return active;
     }
 
+    public void setName(String Name){
+        name = Name;
+    }
+    public void setSteps(int Steps){
+        steps=Steps;
+    }
+    public void makeActive(boolean Active){
+        active = active;
+    }
+
 }

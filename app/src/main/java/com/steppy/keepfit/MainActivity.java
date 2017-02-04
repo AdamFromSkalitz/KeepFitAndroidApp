@@ -9,6 +9,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.annotation.IdRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -30,6 +31,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity  {
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity  {
     private MainActivity mai;
     Toolbar toolbar;
     View dateButtonMain;
-
+    ArrayList<Goal> ItemGoalList = new ArrayList<Goal>();
 
     Calendar c = Calendar.getInstance();
     int yearr;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity  {
     int day;
     static final int dialog_id = 0;
 
+    DBHelper dbHelper;
 
     public void showDialogOnButtonClick(){
         but = (Button) findViewById(R.id.date);
@@ -85,6 +88,10 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
+//        dbHelper = new DBHelper(this);
+//        final Cursor cursor = dbHelper.getAllGoals();
+//        cursor.moveToFirst();
 
         File dir = getFilesDir();
         File file = new File(dir, "goals.txt");

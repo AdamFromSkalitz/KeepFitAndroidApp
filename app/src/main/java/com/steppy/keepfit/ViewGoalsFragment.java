@@ -2,7 +2,9 @@ package com.steppy.keepfit;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.ClipData;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,15 +34,14 @@ import static android.R.attr.data;
  */
 
 public class ViewGoalsFragment extends Fragment{
-    ArrayList<String> listItems=new ArrayList<String>();
-    ArrayAdapter<String> adapter;
     ListView listView;
-    EditText editTextView;
     ArrayList<Goal> ItemGoalList;
     CustomAdapter customAdapter;
+    DBHelper dbHelper;
 
     FileInputStream fis;
     ObjectInputStream is;
+
     static final int READ_BLOCK_SIZE = 100;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,61 +65,43 @@ public class ViewGoalsFragment extends Fragment{
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addGoals();
+
             }
         });
 
         return goalView;
     }
 
-//    @SuppressLint("NewApi")
-//    public void addValue(View v) {
-//        String name = editTextView.getText().toString();
-//        if (name.isEmpty()) {
-//            Toast.makeText(getActivity(), "Plz enter Values",
-//                    Toast.LENGTH_SHORT).show();
-//        } else {
-//            Goal md = new Goal(name);
-//            ItemGoalList.add(md);
-//            customAdapter.notifyDataSetChanged();
-//            editTextView.setText("");
-//        }
-//    }
+
+
 
     private void populateList() {
-        String FILENAME = "goals.txt";
-        try{
-//            FileInputStream fileIn = getActivity().openFileInput(FILENAME);
-//            InputStreamReader InputRead = new InputStreamReader(fileIn);
-//
-//            char[] inputBuffer= new char[READ_BLOCK_SIZE];
-//            String s="h";
-//            int charRead;
-//
-//            while ((charRead=InputRead.read(inputBuffer))>0) {
-//                // char to string conversion
-//                String readstring=String.copyValueOf(inputBuffer,0,charRead);
-//                s +=readstring;
-//            }
-//            InputRead.close();
-             fis = getActivity().openFileInput(FILENAME);
-             is = new ObjectInputStream(fis);
 
-            while (true) {
-                try {
-                    Goal goal = (Goal) is.readObject();
-                    ItemGoalList.add(goal);
-                } catch (EOFException e) {
-                    customAdapter.notifyDataSetChanged();
-                    is.close();
-                    fis.close();
-                }
+        dbHelper = new DBHelper(getActivity());
+        final Cursor cursor = dbHelper.getAllGoals();
+        cursor.moveToFirst();
+        while(!cursor.isAfterLast()){
+            String active = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_ACTIVE));
+            boolean activeBool = Boolean.parseBoolean(active);
+            String goalValue = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+            int goalValueInt = Integer.parseInt(goalValue);
+            String name = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_NAME));
+
+
+            Goal goal = new Goal(name,goalValueInt,activeBool);
+            ItemGoalList.add(goal);
+
+            if(activeBool){
+                //make all item views images pauses
+                View view = listView.getRootView();
+                //View image = view.findViewById(R.id.imgActive);
+
             }
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
+            cursor.moveToNext();
         }
-
+        customAdapter.notifyDataSetChanged();
+        cursor.close();
+        dbHelper.close();
     }
 
 
