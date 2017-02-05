@@ -1,5 +1,7 @@
 package com.steppy.keepfit;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,19 +20,20 @@ public class AddStepsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_steps);
 
+
         Button but = (Button) findViewById(R.id.setButton);
         but.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                EditText goal = (EditText) findViewById(R.id.stepsText);
-                String goalString = goal.getText().toString();
+                EditText goalProgress = (EditText) findViewById(R.id.stepsText);
+                String progressString = goalProgress.getText().toString();
                 Date date = new Date();
 
                 dbHelper = new DBHelper(AddStepsActivity.this);
 
-                if(dbHelper.updateDayProgress(Integer.parseInt(goalString))){
-                    Toast.makeText(AddStepsActivity.this, "Goal "+goalString, Toast.LENGTH_LONG).show();
+                if(dbHelper.updateDayProgress(progressString)){
+                    Toast.makeText(AddStepsActivity.this, "Goal "+progressString, Toast.LENGTH_LONG).show();
                 }
                 dbHelper.close();
 

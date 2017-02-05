@@ -2,6 +2,7 @@ package com.steppy.keepfit;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -13,16 +14,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "SQLiteGoalsList.db";
     private static final int DATABASE_VERSION = 1;
+
     public static final String GOAL_TABLE_NAME = "Goal_List";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_GOALVALUE = "goalValue";
+    public static final String COLUMN_PROGRESS = "goalProgress";
     public static final String COLUMN_ACTIVE = "active";
     public static final String COLUMN_DATE = "date";
 
-    public static final String PROGRESS_TABLE_NAME = "progress";
+    public static final String PROGRESS_TABLE_NAME = "dayProgress";
     public static final String PROGRESS_COLUMN_ID = "_id";
-    public static final String PROGRESS_COLUMN_GOAL = "goal name"; //? needed?
+    public static final String PROGRESS_COLUMN_GOAL = "goalName"; //? needed?
     public static final String PROGRESS_COLUMN_STEPS = "steps";
 
     public DBHelper(Context context) {
@@ -35,6 +38,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_GOALVALUE + " TEXT, " +
+                COLUMN_PROGRESS + " TEXT, " +
                 COLUMN_ACTIVE + " TEXT, " +
                 COLUMN_DATE + " TEXT );";
         db.execSQL(createGoalTable);
@@ -45,12 +49,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 PROGRESS_COLUMN_STEPS + " TEXT); ";
         db.execSQL(createProgressTable);
 
+        //make old goals table?
+
         //Only make this entry once
-        db = getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(PROGRESS_COLUMN_GOAL, "name");
-        contentValues.put(PROGRESS_COLUMN_STEPS, "0");
-        db.insert(GOAL_TABLE_NAME, null, contentValues);
+//        db = getWritableDatabase();
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(PROGRESS_COLUMN_GOAL, "name");
+//        contentValues.put(PROGRESS_COLUMN_STEPS, "0");
+//        db.insert(GOAL_TABLE_NAME, null, contentValues);
     }
 
     @Override
@@ -133,26 +139,55 @@ public class DBHelper extends SQLiteOpenHelper {
         Steps db functions
      */
 
-    public boolean updateDayProgress(int steps){
-        //maybe right nopw??
+    public boolean updateDayProgress(String steps){
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
+        Cursor resPro = db.rawQuery("SELECT * FROM " + PROGRESS_TABLE_NAME + " WHERE " +
+                COLUMN_ID + "=?", new String[] {"1"});
 
-        Cursor res = db.rawQuery("SELECT * FROM " + PROGRESS_TABLE_NAME + " WHERE " +
-                COLUMN_ID + "=?", new String[] {"0"});
-        res.moveToFirst();
-        String goal = res.getString(res.getColumnIndex(DBHelper.PROGRESS_COLUMN_GOAL));
-        contentValues.put(PROGRESS_COLUMN_GOAL, goal);
-        contentValues.put(PROGRESS_COLUMN_STEPS, steps); //int not string blahahahahahghhh
+        if(resPro.getCount()==0){
+            //If there is no progress entry
+            ContentValues contentValues = new ContentValues();
+            Cursor resultGoal = db.rawQuery("SELECT * FROM " + GOAL_TABLE_NAME + " WHERE "+
+                        COLUMN_ACTIVE + "=?", new String[] {"true"});
+            if(resultGoal==null){
+                //If there is not active goal
+                resPro.close();
+                db.close();
+                return false;
+            }
+            resultGoal.moveToFirst();
+            String goalActive = resultGoal.getString(resultGoal.getColumnIndex(DBHelper.COLUMN_NAME));
+            resultGoal.close();
 
-        db.insert(PROGRESS_TABLE_NAME, null, contentValues);
+            contentValues.put(PROGRESS_COLUMN_GOAL, goalActive);
+            contentValues.put(PROGRESS_COLUMN_STEPS, steps); //int not string blahahahahahghhh
+            db.insert(PROGRESS_TABLE_NAME, null, contentValues);
+        }else{
+            ContentValues contentValues1 = new ContentValues();
+            resPro.moveToFirst();
+
+            Cursor resultGoal = db.rawQuery("SELECT * FROM " + GOAL_TABLE_NAME + " WHERE "+
+                    COLUMN_ACTIVE + "=?", new String[] {"true"});
+
+            String stepsOld = resPro.getString(resPro.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+            String stepsCombine = Integer.toString(Integer.parseInt(steps) + Integer.parseInt(stepsOld));
+            resultGoal.moveToFirst();
+            String goalActive = resultGoal.getString(resultGoal.getColumnIndex(DBHelper.COLUMN_NAME));
+            int id = resPro.getInt(resPro.getColumnIndex(DBHelper.PROGRESS_COLUMN_ID));
+            resultGoal.close();
+            resPro.close();
+            contentValues1.put(PROGRESS_COLUMN_GOAL, goalActive);
+            contentValues1.put(PROGRESS_COLUMN_STEPS,stepsCombine);
+            db.update(PROGRESS_TABLE_NAME, contentValues1, PROGRESS_COLUMN_ID + " = ? ", new String[] { Integer.toString(id) } );
+        }
+        db.close();
         return true;
     }
 
     public Cursor getDayProgress(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res = db.rawQuery("SELECT * FROM " + PROGRESS_TABLE_NAME + " WHERE " +
-                COLUMN_ID + "=?", new String[] {"0"});
+                COLUMN_ID + "=?", new String[] {"1"});
         return res;
     }
 

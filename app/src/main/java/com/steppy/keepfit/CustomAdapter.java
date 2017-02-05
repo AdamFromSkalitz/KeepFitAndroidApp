@@ -2,6 +2,7 @@ package com.steppy.keepfit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.media.Image;
@@ -11,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 /**
  * Created by Turkleton's on 03/02/2017.
@@ -65,7 +69,6 @@ public class CustomAdapter extends BaseAdapter {
 
 
             final ImageView imgActive = (ImageView) convertView.findViewById(R.id.imgActive);
-            asds
             //Do the next four lines work?
             if(g.isActive()) {
                 imgActive.setBackgroundResource(R.drawable.play);
@@ -134,7 +137,19 @@ public class CustomAdapter extends BaseAdapter {
             imgEdit.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
+                    dbHelper = new DBHelper(context);
+                    Cursor res = dbHelper.getActiveGoal();
+                    res.moveToFirst();
+                    String goalActiveName = res.getString(res.getColumnIndex(DBHelper.COLUMN_NAME));
+                    if (!goalActiveName.equals(g.getName())) {
+                        Intent intent = new Intent(context, EditGoalsActivity.class);
+                        String goalName = g.getName();
+                        intent.putExtra("name", goalName);
+                        notifyDataSetChanged();
+                        dbHelper.close();
 
+                        context.startActivity(intent);
+                    }
                 }
             });
 
@@ -143,9 +158,15 @@ public class CustomAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     dbHelper = new DBHelper(context);
-                    itemGoalList.remove(position);
-                    //remove from internal storage
-                    dbHelper.deleteGoal(g.getName());
+                    Cursor res = dbHelper.getActiveGoal();
+                    res.moveToFirst();
+                    String goalActiveName = res.getString(res.getColumnIndex(DBHelper.COLUMN_NAME));
+                    if (!goalActiveName.equals(g.getName())){
+                        //if not active goal
+                        //remove from internal storage
+                        itemGoalList.remove(position);
+                        dbHelper.deleteGoal(g.getName());
+                    }
                     notifyDataSetChanged();
                     dbHelper.close();
                 }
@@ -153,4 +174,6 @@ public class CustomAdapter extends BaseAdapter {
         }
         return convertView;
     }
+
+
 }

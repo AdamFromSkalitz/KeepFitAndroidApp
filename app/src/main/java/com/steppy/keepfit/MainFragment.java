@@ -1,9 +1,12 @@
 package com.steppy.keepfit;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,8 @@ import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 
+import static android.icu.lang.UCharacter.SentenceBreak.SP;
+
 /**
  * Created by Turkleton's on 31/01/2017.
  */
@@ -21,12 +26,16 @@ public class MainFragment extends Fragment {
     TextView progress;
     TextView goalValue;
     DBHelper dbHelper;
+    public static final String PREFS_NAME = "MyPrefsFile";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+//        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        boolean strUserName = SP.getBoolean("enableTest", false);
+//        Toast.makeText(getActivity(), Boolean.toString(strUserName), Toast.LENGTH_LONG).show();
 
         // Inflate the layout for this fragment
         final View mainView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -38,24 +47,32 @@ public class MainFragment extends Fragment {
         cursor.moveToFirst();
         try {
             String goal = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
-            goalValue.setText(goal);
+            goalValue.setText("Goal   "+goal);
         }catch(Exception e){
             e.printStackTrace();
         }
+        cursor.close();
+
         progress = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
-        //cursor = dbHelper.getDayProgress();
-//        cursor.moveToFirst();
-//        String active = cursor.getString(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
-//        progress.setText(active);
+        cursor = dbHelper.getDayProgress();
+        cursor.moveToFirst();
+        String stepsProgress = cursor.getString(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+        progress.setText("Progress   "+stepsProgress);
 
         cursor.close();
         dbHelper.closeDB();
 
 
-        FloatingActionButton myFab = (FloatingActionButton) mainView.findViewById(R.id.fabGoals);
-        myFab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton goalFab = (FloatingActionButton) mainView.findViewById(R.id.fabGoals);
+        goalFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addGoals();
+            }
+        });
+        FloatingActionButton stepFab = (FloatingActionButton) mainView.findViewById(R.id.fabSteps);
+        stepFab.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                addSteps();
             }
         });
 
@@ -70,4 +87,10 @@ public class MainFragment extends Fragment {
         //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
+
+    public void addSteps(){
+        Intent intent = new Intent(getActivity(),AddStepsActivity.class);
+        startActivity(intent);
+    }
+
 }

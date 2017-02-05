@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Testing"
+        android:key="test">
+
+        <SwitchPreference
+            android:title="Test Mode"
+            android:key="enableTest"
+            android:id="@+id/testMode"
+            android:summary="Allow insertion of goal with any date"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="User Preferences"
+        android:key="prefs">
+
+        <ListPreference
+            android:title="Units"
+            android:key="units"
+            android:defaultValue="1"
+            android:summary="Change units the 'steps' are in"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues"/>
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity  {
     View dateButtonMain;
     ArrayList<Goal> ItemGoalList = new ArrayList<Goal>();
 
+
+
     Calendar c = Calendar.getInstance();
     int yearr;
     int monthh;
@@ -87,16 +89,6 @@ public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-//        dbHelper = new DBHelper(this);
-//        final Cursor cursor = dbHelper.getAllGoals();
-//        cursor.moveToFirst();
-
-        File dir = getFilesDir();
-        File file = new File(dir, "goals.txt");
-        boolean deleted = file.delete();
-
 
         mai=this;
         super.onCreate(savedInstanceState);
@@ -217,11 +209,15 @@ public class MainActivity extends AppCompatActivity  {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            openSettings();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    public void openSettings(){
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
 
 }

@@ -68,7 +68,12 @@ public class ViewGoalsFragment extends Fragment{
 
             }
         });
-
+        FloatingActionButton stepFab = (FloatingActionButton) goalView.findViewById(R.id.fabSteps);
+        stepFab.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                addSteps();
+            }
+        });
         return goalView;
     }
 
@@ -110,6 +115,10 @@ public class ViewGoalsFragment extends Fragment{
         //EditText editText = (EditText) findViewById(R.id.edit_message);
         //String message = editText.getText().toString();
         //intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
+    public void addSteps(){
+        Intent intent = new Intent(getActivity(),AddStepsActivity.class);
         startActivity(intent);
     }
 
