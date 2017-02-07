@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         but = (Button) findViewById(R.id.date);
 
         bottomBar = (BottomNavigationView) findViewById(R.id.bottomBar);
+        bottomBar.setId(R.id.tab_main);
         //bottomBar.setDefaultTab(R.id.tab_main);
         bottomBar.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {

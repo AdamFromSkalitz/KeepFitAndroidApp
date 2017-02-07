@@ -66,7 +66,7 @@ public class ViewGoalsFragment extends Fragment{
         FloatingActionButton myFab = (FloatingActionButton) goalView.findViewById(R.id.fabGoals);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                addGoalsFrag();
+                addGoals();
 
             }
         });
@@ -85,6 +85,10 @@ public class ViewGoalsFragment extends Fragment{
     private void populateList() {
 
         dbHelper = new DBHelper(getActivity());
+
+        //final Cursor curs = dbHelper.getAllOldGoals();
+
+
         final Cursor cursor = dbHelper.getAllGoals();
         cursor.moveToFirst();
         while(!cursor.isAfterLast()){
@@ -93,17 +97,8 @@ public class ViewGoalsFragment extends Fragment{
             String goalValue = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
             int goalValueInt = Integer.parseInt(goalValue);
             String name = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_NAME));
-
-
             Goal goal = new Goal(name,goalValueInt,activeBool);
             ItemGoalList.add(goal);
-
-            if(activeBool){
-                //make all item views images pauses
-                View view = listView.getRootView();
-                //View image = view.findViewById(R.id.imgActive);
-
-            }
             cursor.moveToNext();
         }
         customAdapter.notifyDataSetChanged();

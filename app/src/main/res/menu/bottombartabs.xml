@@ -7,11 +7,13 @@
         android:enabled="true"
         android:icon="@drawable/chart"
         android:title="Graph"
+        android:checkable="true"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/tab_main"
         android:enabled="true"
         android:icon="@drawable/step"
+        android:checkable="true"
         android:title="Main"
         app:showAsAction="ifRoom" />
     <item
@@ -19,5 +21,6 @@
         android:enabled="true"
         android:icon="@drawable/goal"
         android:title="Goals"
+        android:checkable="true"
         app:showAsAction="ifRoom" />
 </menu>

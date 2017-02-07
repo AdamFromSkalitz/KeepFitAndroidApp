@@ -29,14 +29,13 @@ public class MainFragment extends Fragment {
     TextView progress;
     TextView goalValue;
     DBHelper dbHelper;
+    private String stepsProgress;
     public static final String PREFS_NAME = "MyPrefsFile";
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
 
 //        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
 //        boolean strUserName = SP.getBoolean("enableTest", false);
@@ -59,11 +58,16 @@ public class MainFragment extends Fragment {
         cursor.close();
 
         progress = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
+
         cursor = dbHelper.getDayProgress();
         cursor.moveToFirst();
-        String stepsProgress = cursor.getString(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
-        progress.setText("Progress   "+stepsProgress);
-
+        try {
+            stepsProgress = cursor.getString(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+        }catch (Exception e){
+            stepsProgress = "0";
+            e.printStackTrace();
+        }
+        progress.setText("Progress:   " + stepsProgress);
         cursor.close();
         dbHelper.closeDB();
 

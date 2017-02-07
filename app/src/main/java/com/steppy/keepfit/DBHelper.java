@@ -15,6 +15,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "SQLiteGoalsList.db";
     private static final int DATABASE_VERSION = 1;
 
+    public static final String OLD_GOAL_TABLE_NAME = "OldGoalList";
+    public static final String OLD_GOAL_COLUMN_ID = "_id";
+    public static final String OLD_GOAL_COLUMN_NAME = "name";
+    public static final String OLD_GOAL_COLUMN_GOALVALUE = "goalValue";
+    public static final String OLD_GOAL_COLUMN_PROGRESS = "goalProgress";
+    public static final String OLD_GOAL_COLUMN_DATE = "date";
+
     public static final String GOAL_TABLE_NAME = "Goal_List";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_NAME = "name";
@@ -49,20 +56,24 @@ public class DBHelper extends SQLiteOpenHelper {
                 PROGRESS_COLUMN_STEPS + " TEXT); ";
         db.execSQL(createProgressTable);
 
-        //make old goals table?
-
-        //Only make this entry once
-//        db = getWritableDatabase();
-//        ContentValues contentValues = new ContentValues();
-//        contentValues.put(PROGRESS_COLUMN_GOAL, "name");
-//        contentValues.put(PROGRESS_COLUMN_STEPS, "0");
-//        db.insert(GOAL_TABLE_NAME, null, contentValues);
+        String createOldGoalTable = "CREATE TABLE " + OLD_GOAL_TABLE_NAME + "( " +
+                OLD_GOAL_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                OLD_GOAL_COLUMN_NAME + " TEXT, " +
+                OLD_GOAL_COLUMN_GOALVALUE + " TEXT, " +
+                OLD_GOAL_COLUMN_PROGRESS + " TEXT, " +
+                OLD_GOAL_COLUMN_DATE + " TEXT );";
+        db.execSQL(createOldGoalTable);
     }
+
+     /*
+      * Goals db functions
+      */
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + GOAL_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + PROGRESS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + OLD_GOAL_TABLE_NAME);
         onCreate(db);
     }
 
@@ -115,11 +126,6 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-//    public Cursor makeAllGoalsUnActive(){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//
-//    }
-
     public Integer deleteGoal(Integer id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(GOAL_TABLE_NAME,
@@ -136,7 +142,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     /*
-        Steps db functions
+     * Steps db functions
      */
 
     public boolean updateDayProgress(String steps){
@@ -197,6 +203,27 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
             db.close();
+    }
+
+    /*
+     * Old goals db functions
+     */
+
+    public boolean insertOldGoal(String name, String goalValue, String progress, String date) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(OLD_GOAL_COLUMN_NAME, name);
+        contentValues.put(OLD_GOAL_COLUMN_GOALVALUE, goalValue);
+        contentValues.put(OLD_GOAL_COLUMN_PROGRESS, progress);
+        contentValues.put(OLD_GOAL_COLUMN_DATE, date);
+        db.insert(OLD_GOAL_TABLE_NAME, null, contentValues);
+        return true;
+    }
+
+    public Cursor getAllOldGoals(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME, null );
+        return res;
     }
 
 }

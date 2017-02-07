@@ -36,10 +36,27 @@
             android:inputType="phone"
             android:hint="Steps"/>
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/stepsText"
+            android:layout_below="@id/goalsText"
+            android:visibility="gone"
+            android:inputType="phone"/>
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/goalsText"
+            android:text="Pick Date"
+            android:id="@+id/addDateBut"
+            android:visibility="gone"
+            android:layout_below="@id/stepsText"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/addDateBut"
             android:id="@+id/setButton"
             android:text="Save Goal"
             android:layout_marginTop="60dp"
