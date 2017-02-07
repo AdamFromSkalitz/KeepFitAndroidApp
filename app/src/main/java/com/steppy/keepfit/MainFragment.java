@@ -1,6 +1,9 @@
 package com.steppy.keepfit;
 
+import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +35,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
 
 //        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
 //        boolean strUserName = SP.getBoolean("enableTest", false);
@@ -79,12 +84,19 @@ public class MainFragment extends Fragment {
         return mainView;
     }
 
+    public void addGoalsFrag(){
+        AddGoalsFragment addGoalsFragment = new AddGoalsFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.progressMiddle, addGoalsFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
     public void addGoals() {
         Intent intent = new Intent(getActivity(), AddGoalsActivity.class);
         //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 

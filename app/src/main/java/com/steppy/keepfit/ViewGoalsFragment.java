@@ -2,6 +2,8 @@ package com.steppy.keepfit;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
@@ -64,7 +66,7 @@ public class ViewGoalsFragment extends Fragment{
         FloatingActionButton myFab = (FloatingActionButton) goalView.findViewById(R.id.fabGoals);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                addGoals();
+                addGoalsFrag();
 
             }
         });
@@ -109,6 +111,15 @@ public class ViewGoalsFragment extends Fragment{
         dbHelper.close();
     }
 
+    public void addGoalsFrag(){
+        AddGoalsFragment addGoalsFragment = new AddGoalsFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.replace(R.id.progressMiddle, addGoalsFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
     public void addGoals() {
         Intent intent = new Intent(getActivity(), AddGoalsActivity.class);

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class AddGoalsActivity extends AppCompatActivity {
+    MainActivity mainact;
     private BottomBar bottomBar;
     final Handler handler = new Handler();
     private ArrayList<Goal> listToBeSaved = new ArrayList<>();
@@ -43,9 +44,9 @@ public class AddGoalsActivity extends AppCompatActivity {
 //
 //        Toast.makeText(ViewGoalsActivity.this,"ViewGoals",Toast.LENGTH_LONG).show();
 //
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(" ");
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setTitle(" ");
 
 
         Button but = (Button) findViewById(R.id.setButton);
@@ -68,6 +69,11 @@ public class AddGoalsActivity extends AppCompatActivity {
                 }
                 dbHelper.close();
 
+                backToPrevFrag();
+
+
+                //getFragmentManager().popBackStack();
+
 
             }
         });
@@ -80,6 +86,11 @@ public class AddGoalsActivity extends AppCompatActivity {
         return true;
     }
 
+    public void backToPrevFrag(){
+        Intent fragBack = new Intent(this, MainActivity.class);
+        fragBack.putExtra("openPrevFrag",true);
+        startActivity(fragBack);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

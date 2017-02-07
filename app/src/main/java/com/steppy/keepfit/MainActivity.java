@@ -11,6 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -25,23 +27,17 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
-
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity  {
-    private BottomBar bottomBar;
+public class MainActivity extends AppCompatActivity {
+    private BottomNavigationView bottomBar;
     private Button but;
     private MainActivity mai;
     Toolbar toolbar;
     View dateButtonMain;
     ArrayList<Goal> ItemGoalList = new ArrayList<Goal>();
-
 
 
     Calendar c = Calendar.getInstance();
@@ -52,12 +48,12 @@ public class MainActivity extends AppCompatActivity  {
 
     DBHelper dbHelper;
 
-    public void showDialogOnButtonClick(){
+    public void showDialogOnButtonClick() {
         but = (Button) findViewById(R.id.date);
         but.setOnClickListener(
-                new View.OnClickListener(){
+                new View.OnClickListener() {
                     @Override
-                    public void onClick(View v){
+                    public void onClick(View v) {
                         showDialog(dialog_id);
                     }
                 }
@@ -65,9 +61,9 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     @Override
-    protected Dialog onCreateDialog(int id ){
-        if(id==dialog_id){
-            return new DatePickerDialog(this,dpickerListener,yearr,monthh,day);
+    protected Dialog onCreateDialog(int id) {
+        if (id == dialog_id) {
+            return new DatePickerDialog(this, dpickerListener, yearr, monthh, day);
         }
         return null;
     }
@@ -77,7 +73,7 @@ public class MainActivity extends AppCompatActivity  {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             yearr = year;
-            monthh=month;
+            monthh = month;
             day = dayOfMonth;
 
         }
@@ -90,7 +86,10 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        mai=this;
+        if(getIntent().hasExtra("openPrevFrag")){
+            getFragmentManager().popBackStack();
+        }
+        mai = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -120,61 +119,55 @@ public class MainActivity extends AppCompatActivity  {
 
         but = (Button) findViewById(R.id.date);
 
-        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
-        bottomBar.setDefaultTab(R.id.tab_main);
-        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelected(@IdRes int tabId) {
-                if (tabId == R.id.tab_goals) {
-                    toolbar.removeView(dateButtonMain);
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        bottomBar = (BottomNavigationView) findViewById(R.id.bottomBar);
+        //bottomBar.setDefaultTab(R.id.tab_main);
+        bottomBar.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        FragmentManager fragmentManager;// = getFragmentManager();
+                        FragmentTransaction fragmentTransaction;// = fragmentManager.beginTransaction();
 
-                    ViewGoalsFragment goalsFragment = new ViewGoalsFragment();
-                    fragmentTransaction.replace(R.id.progressMiddle, goalsFragment);
-                    fragmentTransaction.addToBackStack(null);
+                        switch (item.getItemId()) {
+                            //if (tabId == R.id.tab_goals) {
+                            case R.id.tab_goals:
+                                fragmentManager = getFragmentManager();
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                toolbar.removeView(dateButtonMain);
+                                ViewGoalsFragment goalsFragment = new ViewGoalsFragment();
+                                fragmentTransaction.replace(R.id.progressMiddle, goalsFragment);
+                                fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.commit();
+                                break;
+                                //viewGoals();
+                                //}else if (tabId == R.id.tab_graph) {
+                            case R.id.tab_graph:
+                                toolbar.removeView(dateButtonMain);
+                                GraphFragment graphFragment = new GraphFragment();
+                                fragmentManager = getFragmentManager();
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.progressMiddle, graphFragment);
+                                fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.commit();
+                                //} else if (tabId == R.id.tab_main) {
+                                break;
+                            case R.id.tab_main:
+                                try {
+                                    toolbar.addView(dateButtonMain);
+                                } catch (Exception e) {
 
-                    fragmentTransaction.commit();
-
-
-                    //viewGoals();
-                }else if(tabId == R.id.tab_graph){
-                    toolbar.removeView(dateButtonMain);
-                    GraphFragment graphFragment = new GraphFragment();
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    fragmentTransaction.replace(R.id.progressMiddle, graphFragment);
-                    fragmentTransaction.addToBackStack(null);
-
-                    fragmentTransaction.commit();
-                }
-                else if(tabId == R.id.tab_main){
-                    try {
-                        toolbar.addView(dateButtonMain);
-                    }catch(Exception e){
-
+                                }
+                                MainFragment mainFragment = new MainFragment();
+                                fragmentManager = getFragmentManager();
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.progressMiddle, mainFragment);
+                                fragmentTransaction.addToBackStack(null);
+                                fragmentTransaction.commit();
+                                break;
+                        }
+                        return true;
                     }
-                    MainFragment mainFragment = new MainFragment();
-                    FragmentManager fragmentManager = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-                    fragmentTransaction.replace(R.id.progressMiddle, mainFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-
-                }
-            }
-        });
-    }
-
-    public static class GraphFragment extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            // Inflate the layout for this fragment
-            return inflater.inflate(R.layout.fragment_graph, container, false);
-        }
+                });
     }
 //    public static class MainFragment extends Fragment {
 //        @Override
@@ -215,7 +208,7 @@ public class MainActivity extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
-    public void openSettings(){
+    public void openSettings() {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
     }

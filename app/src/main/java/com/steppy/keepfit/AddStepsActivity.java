@@ -1,5 +1,6 @@
 package com.steppy.keepfit;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,8 @@ public class AddStepsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_steps);
 
 
+       // if getSharedPreferences()
+
         Button but = (Button) findViewById(R.id.setButton);
         but.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -36,10 +39,16 @@ public class AddStepsActivity extends AppCompatActivity {
                     Toast.makeText(AddStepsActivity.this, "Goal "+progressString, Toast.LENGTH_LONG).show();
                 }
                 dbHelper.close();
-
+                backToPrevFrag();
 
             }
         });
 
+    }
+
+    public void backToPrevFrag(){
+        Intent fragBack = new Intent(this, MainActivity.class);
+        fragBack.putExtra("openPrevFrag",true);
+        startActivity(fragBack);
     }
 }

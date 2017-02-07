@@ -1,0 +1,35 @@
+[33mcommit b19fcfbc3ad1c9bb9becd84e80d0783a247c504e[m
+Author: Adam <adam_kidd@hotmail.co.uk>
+Date:   Sun Feb 5 20:22:20 2017 +0000
+
+    pretty much finished stage 1, stage 2 and 3 not too far behind but need more clarity on task
+
+[33mcommit c7df45d58bed4245e3e5c0801af26b50ef92201f[m
+Author: Adam <adam_kidd@hotmail.co.uk>
+Date:   Sat Feb 4 22:00:04 2017 +0000
+
+    saves goals to sqlite db, can access them, only one can be active, can view delete and make active or inactive. started adding steps stuff
+
+[33mcommit 39d97830a8f9451b6e8795eb376df53081ba5d86[m
+Author: Adam <adam_kidd@hotmail.co.uk>
+Date:   Fri Feb 3 20:38:33 2017 +0000
+
+     i know i know practically nothing about android but a lot of programming decisions seems weird and stupid, can't save all my objects as apparently no one thought it would be nice to save objects one by one. outputstream is wack
+
+[33mcommit 92887c7470a39cbea4e951a666854c2035ad21c8[m
+Author: Adam <adam_kidd@hotmail.co.uk>
+Date:   Fri Feb 3 11:54:56 2017 +0000
+
+    added fab and fab children, add goals activity and started trying to save information to internal storage and reading in in view goals fragment
+
+[33mcommit 7a77d5b508413010b055a548c74b0859c3a19614[m
+Author: Adam <adam_kidd@hotmail.co.uk>
+Date:   Tue Jan 31 00:31:34 2017 +0000
+
+    have bot nav swapping between very basic views, tool bar and have a fab
+
+[33mcommit 757c652695b3a89e7e8312ace2b84168be08e223[m
+Author: Adam <adam_kidd@hotmail.co.uk>
+Date:   Thu Jan 26 17:21:53 2017 +0000
+
+    lots of this probably shouldn't be here
