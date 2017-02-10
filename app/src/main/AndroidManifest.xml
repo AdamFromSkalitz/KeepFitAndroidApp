@@ -18,7 +18,8 @@
         <activity android:name=".AddGoalsActivity" />
         <activity android:name=".AddStepsActivity" />
         <activity android:name=".EditGoalsActivity" />
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".DeleteHistoryActivity"></activity>
     </application>
 
 </manifest>

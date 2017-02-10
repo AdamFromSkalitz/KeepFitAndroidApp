@@ -25,7 +25,34 @@
             android:entries="@array/listArray"
             android:entryValues="@array/listValues"/>
 
+        <EditTextPreference
+            android:defaultValue="75"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Step Mapping"
+            android:summary="How many centimeters long is your step?"
+            android:key="mapping" />
+
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="Default Presentation Mode"
+        android:key="defaultPres">
+
+        <EditTextPreference
+            android:defaultValue="hmm"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Ummmm, what?"
+            android:summary="select the default mode for the presentation of the activity and goal history and the statistics (basically the view that would be presented to the user)."
+            android:key="pres" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Clear History"
+        android:key="delHistory">
+
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

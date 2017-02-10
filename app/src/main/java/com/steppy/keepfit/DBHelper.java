@@ -226,4 +226,10 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public Cursor getCustomUserOldGoals(String statistics,String startDate,String endDate,String unitsString, String cutOffDirection,int cutOffPercentage){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME, null );
+        return res;
+    }
+
 }

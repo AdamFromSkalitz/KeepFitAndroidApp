@@ -9,4 +9,8 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/deleteHistory"
+        android:orderInCategory="101"
+        android:title="Clear History"/>
 </menu>
