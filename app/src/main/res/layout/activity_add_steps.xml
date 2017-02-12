@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/stepsText"
         android:id="@+id/setButton"
-        android:text="Save Goal"
+        android:text="Save Steps"
         android:layout_marginTop="60dp"
         android:layout_marginRight="60dp"
         />

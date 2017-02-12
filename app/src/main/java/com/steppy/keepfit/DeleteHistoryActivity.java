@@ -10,11 +10,13 @@ import android.widget.Toast;
 
 public class DeleteHistoryActivity extends AppCompatActivity {
 
+    private DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_history);
 
+        dbHelper = new DBHelper(this);
         Button del = (Button) findViewById(R.id.buttonDel);
 
         del.setOnClickListener(new View.OnClickListener() {
@@ -26,7 +28,8 @@ public class DeleteHistoryActivity extends AppCompatActivity {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 Toast.makeText(DeleteHistoryActivity.this,"yes",Toast.LENGTH_LONG).show();
-                                //Yes button
+                                dbHelper.deleteAllOldGoals();
+                                dbHelper.close();
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:

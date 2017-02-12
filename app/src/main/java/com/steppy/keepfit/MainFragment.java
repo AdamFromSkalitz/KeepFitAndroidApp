@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -18,7 +19,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.R.attr.entries;
 import static android.icu.lang.UCharacter.SentenceBreak.SP;
 
 /**
@@ -29,9 +48,10 @@ public class MainFragment extends Fragment {
     TextView progress;
     TextView goalValue;
     DBHelper dbHelper;
-    private String stepsProgress;
+    private String stepsProgress="0";
+    private String goal="0";
     public static final String PREFS_NAME = "MyPrefsFile";
-
+    List<PieEntry> entries = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,11 +70,12 @@ public class MainFragment extends Fragment {
         Cursor cursor = dbHelper.getActiveGoal();
         cursor.moveToFirst();
         try {
-            String goal = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
-            goalValue.setText("Goal   "+goal);
+             goal = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
         }catch(Exception e){
+            goal="0";
             e.printStackTrace();
         }
+        goalValue.setText("Goal   "+goal);
         cursor.close();
 
         progress = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
@@ -70,6 +91,85 @@ public class MainFragment extends Fragment {
         progress.setText("Progress:   " + stepsProgress);
         cursor.close();
         dbHelper.closeDB();
+
+        PieChart chart = (PieChart) mainView.findViewById(R.id.chartPie);
+        chart.setUsePercentValues(true);
+        //XAxis xAxis = chart.getXAxis();
+        //xAxis.setGranularity(1f);
+        //xAxis.setValueFormatter(formatter);
+
+        // enable rotation of the chart by touch
+        chart.setRotationAngle(0);
+        chart.setRotationEnabled(true);
+
+        Description desc = new Description();
+        desc.setText("");
+        chart.setDescription(desc);
+
+        Legend legend = chart.getLegend();
+        legend.setEnabled(true);
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setXEntrySpace(7);
+        legend.setYEntrySpace(5);
+        List<LegendEntry> xVals = new ArrayList<LegendEntry>();
+        //xVals.add("progree");
+        //xVals.add("goal")
+        //new Le
+        LegendEntry le = new LegendEntry();
+        le.label="Progress";
+        LegendEntry le2 = new LegendEntry();
+        le2.label="Goal";
+        xVals.add(le);
+        xVals.add(le2);
+        //.add(new LegendEntry("progress"));
+        legend.setEntries(xVals);
+
+        //legend.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "Set1", "Set2"});
+
+        int stepsProgressInt = Integer.parseInt(stepsProgress);
+        int goalValueInt = Integer.parseInt(goal);
+        float percent = ((float)stepsProgressInt/(float)goalValueInt) *100;
+        //int percent1 = (int) percent*100;
+        int percentToComplete = 100-(int)percent;
+
+        if(percentToComplete<0){
+            percent=100;
+            percentToComplete=0;
+        }
+
+        entries.add(new PieEntry((int)percent,"Progress"));
+        entries.add(new PieEntry(percentToComplete,"Goal left"));
+//        entries.add(new BarEntry(4,4));
+
+        PieDataSet dataSet = new PieDataSet(entries,"");
+
+
+        // add many colors
+        ArrayList<Integer> colors = new ArrayList<Integer>();
+
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.COLORFUL_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
+
+        for (int c : ColorTemplate.PASTEL_COLORS)
+            colors.add(c);
+
+        colors.add(ColorTemplate.getHoloBlue());
+        dataSet.setColors(colors);
+
+        PieData pieData = new PieData(dataSet);
+        pieData.setValueFormatter(new PercentFormatter());
+
+        chart.setData(pieData);
+        chart.invalidate();
 
 
         FloatingActionButton goalFab = (FloatingActionButton) mainView.findViewById(R.id.fabGoals);

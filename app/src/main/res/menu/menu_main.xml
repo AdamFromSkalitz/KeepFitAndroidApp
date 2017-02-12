@@ -13,4 +13,8 @@
         android:id="@+id/deleteHistory"
         android:orderInCategory="101"
         android:title="Clear History"/>
+    <item
+        android:id="@+id/statistics"
+        android:orderInCategory="102"
+        android:title="Statistics"/>
 </menu>

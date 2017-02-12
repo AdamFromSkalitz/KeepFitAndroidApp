@@ -19,23 +19,43 @@
         android:layout_marginTop="10dp">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:layout_centerHorizontal="true">
-
-            <TextView
-                android:id="@+id/textViewProgressNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:text="Progress" />
 
             <TextView
                 android:id="@+id/textViewGoalNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewProgressNumber"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="50dp"
                 android:text="Goal" />
+
+            <TextView
+                android:id="@+id/textViewProgressNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="60dp"
+                android:layout_below="@id/textViewGoalNumber"
+                android:text="Progress" />
+
+            <com.github.mikephil.charting.charts.PieChart
+
+                android:layout_margin="30dp"
+                android:id="@+id/chartPie"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/textViewProgressNumber"
+
+                android:layout_marginBottom="100dp">
+
+            </com.github.mikephil.charting.charts.PieChart>
+
+
+
         </RelativeLayout>
 
         <com.github.clans.fab.FloatingActionMenu

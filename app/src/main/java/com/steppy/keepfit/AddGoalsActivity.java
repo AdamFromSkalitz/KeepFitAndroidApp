@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 public class AddGoalsActivity extends AppCompatActivity {
     MainActivity mainact;
@@ -115,9 +116,19 @@ public class AddGoalsActivity extends AppCompatActivity {
                     String goalString = goalValue.getText().toString();
                     String stepsString = stepsValue.getText().toString();
                     String dateString = mDay+"/"+(mMonth+1)+"/"+mYear;
-                    Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+mDay+"/"+(mMonth+1)+"/"+mYear,Toast.LENGTH_SHORT).show();
+                    Date date = new GregorianCalendar(mYear,mMonth,mDay).getTime();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateString1 = sdf.format(date);
 
-                    if(dbHelper.insertOldGoal(nameString,goalString,stepsString,dateString)){
+                    Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+dateString1,Toast.LENGTH_SHORT).show();
+
+                    int goalValueInt = Integer.parseInt(goalString);
+                    int stepsProgressInt = Integer.parseInt(stepsString);
+                    float percent = ((float)stepsProgressInt/(float)goalValueInt) *100;
+                    int percentInt = (int) percent;
+                    String percentString = Integer.toString(percentInt);
+                    Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+percentString,Toast.LENGTH_SHORT).show();
+                    if(dbHelper.insertOldGoal(nameString,goalString,stepsString,percentString,dateString1)){
                         Toast.makeText(AddGoalsActivity.this, "Test Goal Added Successfully",Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_LONG).show();

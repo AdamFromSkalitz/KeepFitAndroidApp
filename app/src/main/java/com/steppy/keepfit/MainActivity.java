@@ -2,11 +2,13 @@ package com.steppy.keepfit;
 
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     View dateButtonMain;
     ArrayList<Goal> ItemGoalList = new ArrayList<Goal>();
-
+    private PendingIntent pendingIntent;
 
     Calendar c = Calendar.getInstance();
     int yearr;
@@ -171,6 +173,11 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+
+        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
+
+        startAt10();
     }
 //    public static class MainFragment extends Fragment {
 //        @Override
@@ -207,9 +214,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             openSettings();
         }else if(id == R.id.deleteHistory){
-
             Intent intent = new Intent(MainActivity.this, DeleteHistoryActivity.class);
             startActivity(intent);
+        }else if(id == R.id.statistics){
 
         }
 
@@ -221,4 +228,40 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+//    public void start() {
+//        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        int interval = 8000;
+//
+//        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
+//        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
+//    }
+
+    public void cancel() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pendingIntent);
+        Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
+    }
+
+    public void startAt10() {
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        int interval = 10000;
+
+        /* Set the alarm to start at 10:30 AM */
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 24);
+
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int mMin = calendar.get(Calendar.MINUTE);
+        Toast.makeText(this, mHour+":"+mMin,Toast.LENGTH_SHORT).show();
+
+        /* Repeating on every 20 minutes interval */
+        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
 }
+
+

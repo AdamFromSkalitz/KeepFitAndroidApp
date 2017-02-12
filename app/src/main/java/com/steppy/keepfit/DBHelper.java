@@ -13,13 +13,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "SQLiteGoalsList.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public static final String OLD_GOAL_TABLE_NAME = "OldGoalList";
     public static final String OLD_GOAL_COLUMN_ID = "_id";
     public static final String OLD_GOAL_COLUMN_NAME = "name";
     public static final String OLD_GOAL_COLUMN_GOALVALUE = "goalValue";
     public static final String OLD_GOAL_COLUMN_PROGRESS = "goalProgress";
+    public static final String OLD_GOAL_COLUMN_PERCENTAGE = "progressPercentage";
     public static final String OLD_GOAL_COLUMN_DATE = "date";
 
     public static final String GOAL_TABLE_NAME = "Goal_List";
@@ -27,6 +28,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_GOALVALUE = "goalValue";
     public static final String COLUMN_PROGRESS = "goalProgress";
+    public static final String COLUMN_PERCENTAGE = "progressPercentage";
     public static final String COLUMN_ACTIVE = "active";
     public static final String COLUMN_DATE = "date";
 
@@ -46,6 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_GOALVALUE + " TEXT, " +
                 COLUMN_PROGRESS + " TEXT, " +
+                COLUMN_PERCENTAGE + " INTEGER , " +
                 COLUMN_ACTIVE + " TEXT, " +
                 COLUMN_DATE + " TEXT );";
         db.execSQL(createGoalTable);
@@ -60,7 +63,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 OLD_GOAL_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 OLD_GOAL_COLUMN_NAME + " TEXT, " +
                 OLD_GOAL_COLUMN_GOALVALUE + " TEXT, " +
-                OLD_GOAL_COLUMN_PROGRESS + " TEXT, " +
+                OLD_GOAL_COLUMN_PROGRESS + " INTEGER, " +
+                OLD_GOAL_COLUMN_PERCENTAGE + " TEXT, " +
                 OLD_GOAL_COLUMN_DATE + " TEXT );";
         db.execSQL(createOldGoalTable);
     }
@@ -209,12 +213,13 @@ public class DBHelper extends SQLiteOpenHelper {
      * Old goals db functions
      */
 
-    public boolean insertOldGoal(String name, String goalValue, String progress, String date) {
+    public boolean insertOldGoal(String name, String goalValue, String progress, String percent, String date) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(OLD_GOAL_COLUMN_NAME, name);
         contentValues.put(OLD_GOAL_COLUMN_GOALVALUE, goalValue);
         contentValues.put(OLD_GOAL_COLUMN_PROGRESS, progress);
+        contentValues.put(OLD_GOAL_COLUMN_PERCENTAGE,percent);
         contentValues.put(OLD_GOAL_COLUMN_DATE, date);
         db.insert(OLD_GOAL_TABLE_NAME, null, contentValues);
         return true;
@@ -226,10 +231,39 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getCustomUserOldGoals(String statistics,String startDate,String endDate,String unitsString, String cutOffDirection,int cutOffPercentage){
+    public Cursor getCustomUserOldGoals(String statistics,String startDate,String endDate,String unitsString, String cutOffDirection,String cutOffPercentage){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME, null );
+
+        Cursor res=null;//  = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME,null);
+
+        switch(cutOffDirection) {
+            case "No selection":
+                res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME + " WHERE " +
+                        OLD_GOAL_COLUMN_DATE + " BETWEEN "+ "?"+ " AND " + "?", new String[] {startDate,endDate});
+                break;
+            case "Goal fully completed":
+                res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME + " WHERE " +
+                        OLD_GOAL_COLUMN_DATE + " BETWEEN "+ "?"+ " AND " + "?" +
+                        " AND "+ OLD_GOAL_COLUMN_PERCENTAGE + " = ?", new String[] {startDate,endDate,"100"});
+                break;
+            case "Below percentage":
+                res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME + " WHERE " +
+                        OLD_GOAL_COLUMN_DATE + " BETWEEN "+ "?"+ " AND " + "?" +
+                        " AND "+ OLD_GOAL_COLUMN_PERCENTAGE + " <= " + "?", new String[] {startDate,endDate,cutOffPercentage});
+                break;
+            case "Above percentage":
+                res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME + " WHERE " +
+                        OLD_GOAL_COLUMN_DATE + " BETWEEN "+ "?"+ " AND " + "?" +
+                        " AND "+ OLD_GOAL_COLUMN_PERCENTAGE + " > " + "?", new String[] {startDate,endDate,cutOffPercentage});
+                break;
+
+        }
         return res;
     }
 
+    public int deleteAllOldGoals() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(OLD_GOAL_TABLE_NAME,
+                null, null);
+    }
 }

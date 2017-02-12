@@ -102,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/editTextCutOff"
                 android:hint="Percentage"
+                android:text="0"
                 android:inputType="phone"
                 />
             <TextView
@@ -121,14 +122,21 @@
 
         <com.github.mikephil.charting.charts.BarChart
 
-            android:layout_margin="30dp"
             android:id="@+id/chart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/buttonConfirm"
-            android:layout_marginBottom="40dp">
+            android:layout_marginBottom="100dp">
 
         </com.github.mikephil.charting.charts.BarChart>
+
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/combichart">
+
+        </com.github.mikephil.charting.charts.CombinedChart>
+
     </RelativeLayout>
 
 </LinearLayout>

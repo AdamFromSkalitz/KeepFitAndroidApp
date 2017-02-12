@@ -2,6 +2,7 @@
 <resources>
     <string-array name="history">
         <item>No selection</item>
+        <item>Goal fully completed</item>
         <item>Below percentage</item>
         <item>Above percentage</item>
     </string-array>
