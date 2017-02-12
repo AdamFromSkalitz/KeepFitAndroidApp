@@ -32,43 +32,13 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.BubbleData;
-import com.github.mikephil.charting.data.BubbleDataSet;
-import com.github.mikephil.charting.data.BubbleEntry;
-import com.github.mikephil.charting.data.CandleData;
-import com.github.mikephil.charting.data.CandleDataSet;
-import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.data.ScatterDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LegendEntry;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.charts.CombinedChart.DrawOrder;
+
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -194,7 +164,7 @@ public class GraphFragment extends Fragment {
             }
         });
         //drawCombiChart();
-        generateBarTwoData();
+        //generateBarTwoData();
         return graphView;
     }
 
@@ -213,6 +183,7 @@ public class GraphFragment extends Fragment {
             goalNames.add(name);
             String dateString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_DATE));
             String progressString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS));
+            String goalString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_GOALVALUE));
             String percent = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PERCENTAGE));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date date;
@@ -220,15 +191,21 @@ public class GraphFragment extends Fragment {
             try{
                 date = df.parse(dateString);
                 blah = df.format(date);
-                dates.add(blah);
-                Toast.makeText(getActivity(),dateString,Toast.LENGTH_SHORT).show();
-                Toast.makeText(getActivity(),blah,Toast.LENGTH_SHORT).show();
+
+                dates.add(date.getDate()+"/"+date.getMonth()+"-"+name);
+                //Toast.makeText(getActivity(),dateString,Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),blah,Toast.LENGTH_SHORT).show();
             }catch (Exception e){
                 e.printStackTrace();
             }
             int progressInt = Integer.parseInt(progressString);
+            int goalInt = Integer.parseInt(goalString);
+            int remainder = goalInt-progressInt;
+            if(remainder<0){
+                remainder=0;
+            }
             //new BarEntry()
-            entries.add(new BarEntry(i,progressInt,name));
+            entries.add(new BarEntry(i,new float[]{progressInt,remainder},name));
 
             final String finalBlah=blah;
 
@@ -256,15 +233,9 @@ public class GraphFragment extends Fragment {
         xAxis.setGranularity(1f);
         xAxis.setValueFormatter(formatter);
 
-        String[] labels = goalNames.toArray(new String[goalNames.size()]);
-
-        Legend legend = chart.getLegend();
-        legend.setEnabled(true);
-        //legend.setCustom();
 
         BarDataSet dataSet = new BarDataSet(entries,"");
-        //dataSet.setColor(Color.GREEN);
-        //dataSet.setValueTextColor(Color.BLUE);
+
 
         // add many colors
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -286,17 +257,16 @@ public class GraphFragment extends Fragment {
 
         int[] colorsArray =  new int[colors.size()];
 
-        colors.add(ColorTemplate.getHoloBlue());
-        dataSet.setColors(colors);
+        //colors.add(ColorTemplate.getHoloBlue());
+        dataSet.setColors(getColors());
 
+        dataSet.setStackLabels(new String[]{"progress", "goal total", });
 
-        legend.setExtra(ColorTemplate.VORDIPLOM_COLORS, labels);
+        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        dataSets.add(dataSet);
 
-        //legend.setCustom(laArray);
+        BarData barData = new BarData(dataSets);
 
-        //legend.setExtra(colorsArray,labels);
-
-        BarData barData = new BarData(dataSet);
         chart.setData(barData);
         chart.invalidate();
 
@@ -311,117 +281,6 @@ public class GraphFragment extends Fragment {
         return chart;
     }
 
-
-    public void drawCombiChart(){
-        CombinedChart mChart = (CombinedChart) graphView.findViewById(R.id.combichart);
-
-        mChart.setDrawOrder(new DrawOrder[]{
-                DrawOrder.BAR, DrawOrder.BAR,
-        });
-
-        CombinedData data = new CombinedData();
-        data.setData(generateBarOneData());
-        //data.setData(generateBarTwoData());
-
-
-        mChart.setData(data);
-        mChart.invalidate();
-    }
-
-    private BarData generateBarOneData() {
-        ArrayList<BarEntry> entries1 = new ArrayList<BarEntry>();
-        ArrayList<BarEntry> entries2 = new ArrayList<BarEntry>();
-
-        //entries1.add(new BarEntry(0, getRandom(15, 5));
-        entries1.add(new BarEntry(0, 4));
-        entries1.add(new BarEntry(0, 8));
-
-        entries2.add(new BarEntry(0, 1));
-        entries2.add(new BarEntry(0, 3));
-        entries2.add(new BarEntry(0, 5));
-
-        BarDataSet set1 = new BarDataSet(entries1, "Bar 1");
-        set1.setColor(Color.rgb(60, 220, 78));
-        set1.setValueTextColor(Color.rgb(60, 220, 78));
-        set1.setValueTextSize(10f);
-        set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-        BarDataSet set2 = new BarDataSet(entries2, "");
-        set2.setStackLabels(new String[]{"Stack 1", "Stack 2"});
-        set2.setColors(new int[]{Color.rgb(61, 165, 255), Color.rgb(23, 197, 255)});
-        set2.setValueTextColor(Color.rgb(61, 165, 255));
-        set2.setValueTextSize(10f);
-        set2.setAxisDependency(YAxis.AxisDependency.LEFT);
-
-        float groupSpace = 0.06f;
-        float barSpace = 0.02f; // x2 dataset
-        float barWidth = 0.45f; // x2 dataset
-
-        BarData d = new BarData(set1, set2);
-
-        d.setBarWidth(barWidth);
-        d.groupBars(0, groupSpace, barSpace); //
-
-        return d;
-    }
-
-    private void generateBarTwoData() {
-
-        final ArrayList<String> dates1 = new ArrayList<>();
-        dates1.add("01/1-goal1");
-        dates1.add("02/1-goal2 ");
-        dates1.add("03/1");
-        dates1.add("04/1");
-        dates1.add("05/1");
-        dates1.add("06/1");
-
-        BarChart mChart = (BarChart) graphView.findViewById(R.id.chart);
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
-
-
-        yVals1.add(new BarEntry(0, new float[]{500,1000}));
-        yVals1.add(new BarEntry(1, new float[]{1200, 0}));
-        yVals1.add(new BarEntry(2, new float[]{100,700}));
-        yVals1.add(new BarEntry(3, new float[]{100,700}));
-        yVals1.add(new BarEntry(4, new float[]{800,100}));
-        yVals1.add(new BarEntry(5, new float[]{600,0}));
-
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        BarDataSet set1;
-        set1 = new BarDataSet(yVals1, "Statistics Vienna 2014");
-        set1.setColors(getColors());
-
-        set1.setStackLabels(new String[]{"Births", "Divorces", });
-
-        IAxisValueFormatter formatter = new IAxisValueFormatter() {
-
-            final String[] quarters = dates1.toArray(new String[dates1.size()]);
-            @Override
-            public String getFormattedValue(float value, AxisBase axis) {
-                return quarters[(int) value];
-            }
-        };
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(dataSets);
-        //data.setValueFormatter(new MyValueFormatter());
-        data.setValueTextColor(Color.WHITE);
-
-        XAxis xAxis = mChart.getXAxis();
-        xAxis.setGranularity(1f);
-        xAxis.setValueFormatter(formatter);
-
-        mChart.setData(data);
-        mChart.invalidate();
-
-    }
 
     private int[] getColors() {
 

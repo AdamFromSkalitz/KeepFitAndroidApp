@@ -46,8 +46,8 @@ public class DBHelper extends SQLiteOpenHelper {
         String createGoalTable = "CREATE TABLE " + GOAL_TABLE_NAME + "( " +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_NAME + " TEXT, " +
-                COLUMN_GOALVALUE + " TEXT, " +
-                COLUMN_PROGRESS + " TEXT, " +
+                COLUMN_GOALVALUE + " INTEGER, " +
+                COLUMN_PROGRESS + " INTEGER, " +
                 COLUMN_PERCENTAGE + " INTEGER , " +
                 COLUMN_ACTIVE + " TEXT, " +
                 COLUMN_DATE + " TEXT );";
@@ -55,16 +55,16 @@ public class DBHelper extends SQLiteOpenHelper {
 
         String createProgressTable="CREATE TABLE " + PROGRESS_TABLE_NAME + "( "+
                 PROGRESS_COLUMN_ID + " INTEGER PRIMARY KEY, " +
-                PROGRESS_COLUMN_GOAL + " TEXT, "+
-                PROGRESS_COLUMN_STEPS + " TEXT); ";
+                PROGRESS_COLUMN_GOAL + " INTEGER, "+
+                PROGRESS_COLUMN_STEPS + " INTEGER); ";
         db.execSQL(createProgressTable);
 
         String createOldGoalTable = "CREATE TABLE " + OLD_GOAL_TABLE_NAME + "( " +
                 OLD_GOAL_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 OLD_GOAL_COLUMN_NAME + " TEXT, " +
-                OLD_GOAL_COLUMN_GOALVALUE + " TEXT, " +
+                OLD_GOAL_COLUMN_GOALVALUE + " INTEGER, " +
                 OLD_GOAL_COLUMN_PROGRESS + " INTEGER, " +
-                OLD_GOAL_COLUMN_PERCENTAGE + " TEXT, " +
+                OLD_GOAL_COLUMN_PERCENTAGE + " INTEGER, " +
                 OLD_GOAL_COLUMN_DATE + " TEXT );";
         db.execSQL(createOldGoalTable);
     }
