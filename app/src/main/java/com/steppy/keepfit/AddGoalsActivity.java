@@ -50,6 +50,7 @@ public class AddGoalsActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private boolean testMode;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +59,8 @@ public class AddGoalsActivity extends AppCompatActivity {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
         testMode = SP.getBoolean("enableTest", false);
         //Toast.makeText(this, Boolean.toString(testMode), Toast.LENGTH_LONG).show();
+
+        Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
 
         if(testMode){
             EditText steps = (EditText) findViewById(R.id.stepsText); //new EditText(this);
@@ -107,17 +110,21 @@ public class AddGoalsActivity extends AppCompatActivity {
                     String dateString1 = sdf.format(date);
                     Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
                     String units = unitsSpin.getSelectedItem().toString();
-                    Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+dateString1,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+dateString1,Toast.LENGTH_SHORT).show();
 
-                    int goalValueInt = Integer.parseInt(goalString);
-                    int stepsProgressInt = Integer.parseInt(stepsString);
+                    float i =Float.parseFloat(goalString);
+                    float goalValueInt = turnIntoSteps(i);
+                    float stepsProgressInt = turnIntoSteps(Float.parseFloat(stepsString));
+                    //int goalValueInt = Integer.parseInt(goalString);
+                    //int stepsProgressInt = Integer.parseInt(stepsString);
+
                     float percent = ((float)stepsProgressInt/(float)goalValueInt) *100;
                     int percentInt = (int) percent;
                     String percentString = Integer.toString(percentInt);
 
-                    Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+percentString,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+goalValueInt+" "+stepsProgressInt,Toast.LENGTH_SHORT).show();
 
-                    if(dbHelper.insertOldGoal(nameString,goalString,stepsString,percentString,dateString1,units)){
+                    if(dbHelper.insertOldGoal(nameString,(int)goalValueInt,(int)stepsProgressInt,percentString,dateString1,units)){
                         Toast.makeText(AddGoalsActivity.this, "Test Goal Added Successfully",Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_LONG).show();
@@ -128,7 +135,8 @@ public class AddGoalsActivity extends AppCompatActivity {
 
                     EditText name = (EditText) findViewById(R.id.nameText);
                     EditText goal = (EditText) findViewById(R.id.goalsText);
-
+                    Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
+                    String units = unitsSpin.getSelectedItem().toString();
 
 //                    Calendar cal = Calendar.getInstance();
 //                    cal.setTime(date);
@@ -139,18 +147,17 @@ public class AddGoalsActivity extends AppCompatActivity {
                     dbHelper = new DBHelper(AddGoalsActivity.this);
                     String nameString = name.getText().toString();
                     String goalString = goal.getText().toString();
-                    //String dateString = day+"/"+month+"/"+year;
 
-                    Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
-                    String units = unitsSpin.getSelectedItem().toString();
+
+                    float stepsGoal = turnIntoSteps(Float.parseFloat(goalString));
 
                     Date date = new Date();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateString = sdf.format(date);
 
-                    //Toast.makeText(AddGoalsActivity.this,day+"/"+month+"/"+year,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGoalsActivity.this,""+stepsGoal,Toast.LENGTH_SHORT).show();
 
-                    if (dbHelper.insertGoal(nameString, goalString, "false", dateString,units)) {
+                    if (dbHelper.insertGoal(nameString,(int)stepsGoal, "false", dateString,units)) {
                         Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_LONG).show();
                     }else{
                         Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_LONG).show();
@@ -190,4 +197,55 @@ public class AddGoalsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public float turnIntoSteps(float goalInSomeUnits){
+
+        Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
+        String units = unitsSpin.getSelectedItem().toString();
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(AddGoalsActivity.this);
+
+        float stepsInt = goalInSomeUnits;
+        float goalFloat = (float) goalInSomeUnits;
+        float steps=0;
+        float inches=0;
+        float cms=0;
+        float inch=0;
+        float cm=0;
+        switch (units){
+            case "Metres":
+//              // 1 meters = 100cm
+                cms = goalFloat*100;
+                cm = SP.getFloat("mappingMet",75);
+                steps = cms/cm;
+                stepsInt = (int) steps;
+                break;
+            case "Kilometres":
+                // 1 kilometer = 1000 metres
+                float m = goalFloat*1000;
+                // 1 meters = 100cm
+                cms = m*100;
+                cm = Float.parseFloat(SP.getString("mappingMet","75"));
+                steps = cms/cm;
+                stepsInt = (int) steps;
+                break;
+            case "Yards":
+                //1 yard = 36 inches
+                inches = goalFloat*36;
+                inch = (float) SP.getInt("mappingImp",30);
+                steps = inches/inch;
+                stepsInt = (int) steps;
+                break;
+            case "Miles":
+                //1 mile = 1760 yards
+                float yards = goalFloat*1760;
+                //1 yard = 36 inches
+                inches = yards*36;
+                inch = Integer.parseInt(SP.getString("mappingImp","30"));
+                steps = inches/inch;
+                // steps in inches atm
+                stepsInt = (int) steps;
+                break;
+        }
+
+        return stepsInt;
+    }
 }

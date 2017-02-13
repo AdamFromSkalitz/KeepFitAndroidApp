@@ -40,31 +40,32 @@ public class AddGoalsFragment extends Fragment {
 //                | View.SYSTEM_UI_FLAG_FULLSCREEN;
 //        decorView.setSystemUiVisibility(uiOptions);
 
-        Button but = (Button) addGoalsView.findViewById(R.id.setButton);
-        but.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText name = (EditText) addGoalsView.findViewById(R.id.nameText);
-                EditText goal = (EditText) addGoalsView.findViewById(R.id.goalsText);
-                //CheckBox active = (CheckBox) findViewById(R.id.checkBox);
-                Date date = new Date();
-
-                dbHelper = new DBHelper(getActivity());
-                String nameString = name.getText().toString();
-                String goalString = goal.getText().toString();
-                //String activeString = String.valueOf(active.isChecked());
-                String dateString = date.toString();
-
-                if(dbHelper.insertGoal(nameString,goalString, "false", dateString,"")){
-                    Toast.makeText(getActivity(), "Name " + name.getText() + " goal " + goal.getText(), Toast.LENGTH_LONG).show();
-                }
-                dbHelper.close();
-
-                getActivity().getFragmentManager().popBackStackImmediate();
-
-            }
-        });
-        return addGoalsView;
+//        Button but = (Button) addGoalsView.findViewById(R.id.setButton);
+//        but.setOnClickListener(new Button.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                EditText name = (EditText) addGoalsView.findViewById(R.id.nameText);
+//                EditText goal = (EditText) addGoalsView.findViewById(R.id.goalsText);
+//                //CheckBox active = (CheckBox) findViewById(R.id.checkBox);
+//                Date date = new Date();
+//
+//                dbHelper = new DBHelper(getActivity());
+//                String nameString = name.getText().toString();
+//                String goalString = goal.getText().toString();
+//                int goalInt
+//                //String activeString = String.valueOf(active.isChecked());
+//                String dateString = date.toString();
+//
+//                if(dbHelper.insertGoal(nameString,goalString, "false", dateString,"")){
+//                    Toast.makeText(getActivity(), "Name " + name.getText() + " goal " + goal.getText(), Toast.LENGTH_LONG).show();
+//                }
+//                dbHelper.close();
+//
+//                getActivity().getFragmentManager().popBackStackImmediate();
+//
+//            }
+//        });
+       return addGoalsView;
     }
 
 

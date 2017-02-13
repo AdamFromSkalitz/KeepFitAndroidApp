@@ -86,7 +86,7 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertGoal(String name, String goalValue, String active, String date, String units) {
+    public boolean insertGoal(String name, int goalValue, String active, String date, String units) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NAME, name);
@@ -227,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Old goals db functions
      */
 
-    public boolean insertOldGoal(String name, String goalValue, String progress, String percent, String date, String units) {
+    public boolean insertOldGoal(String name, int goalValue, int progress, String percent, String date, String units) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(OLD_GOAL_COLUMN_NAME, name);
@@ -246,7 +246,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public Cursor getCustomUserOldGoals(String statistics,String startDate,String endDate,String unitsString, String cutOffDirection,String cutOffPercentage){
+    public Cursor getCustomUserOldGoals(String statistics,String startDate,String endDate, String cutOffDirection,String cutOffPercentage){
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor res=null;//  = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME,null);
@@ -264,7 +264,7 @@ public class DBHelper extends SQLiteOpenHelper {
             case "Below percentage":
                 res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME + " WHERE " +
                         OLD_GOAL_COLUMN_DATE + " BETWEEN "+ "?"+ " AND " + "?" +
-                        " AND "+ OLD_GOAL_COLUMN_PERCENTAGE + " <= " + "?", new String[] {startDate,endDate,cutOffPercentage});
+                        " AND "+ OLD_GOAL_COLUMN_PERCENTAGE + " < " + "?", new String[] {startDate,endDate,cutOffPercentage});
                 break;
             case "Above percentage":
                 res = db.rawQuery( "SELECT * FROM " + OLD_GOAL_TABLE_NAME + " WHERE " +

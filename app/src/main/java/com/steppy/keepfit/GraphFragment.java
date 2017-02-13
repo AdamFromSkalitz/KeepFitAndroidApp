@@ -2,8 +2,10 @@ package com.steppy.keepfit;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +58,8 @@ public class GraphFragment extends Fragment {
     private DBHelper dbHelper;
     List<String> dates;
 
+    private Spinner unitsSpin;
+
     private String statistics = "Total";
     private String startDate="";
     private String endDate="";
@@ -64,7 +68,6 @@ public class GraphFragment extends Fragment {
     private int mYear;
     private int mMonth;
     private int mDay;
-    private String unitsString="";
     private String cutOffDirection="No Selection";
     private String cutOffPercentage="0";
     private Button buttonConfirm;
@@ -77,18 +80,18 @@ public class GraphFragment extends Fragment {
         // Inflate the layout for this fragment
         graphView = inflater.inflate(R.layout.fragment_graph, container, false);
 
-        TabLayout tabLayout = (TabLayout) graphView.findViewById(R.id.layoutTab);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                //Toast.makeText(getActivity(),tab.getText(),Toast.LENGTH_SHORT).show();
-                statistics = tab.getText().toString();
-            }
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
-        });
+//        TabLayout tabLayout = (TabLayout) graphView.findViewById(R.id.layoutTab);
+//        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+//            @Override
+//            public void onTabSelected(TabLayout.Tab tab) {
+//                //Toast.makeText(getActivity(),tab.getText(),Toast.LENGTH_SHORT).show();
+//                statistics = tab.getText().toString();
+//            }
+//            @Override
+//            public void onTabUnselected(TabLayout.Tab tab) {}
+//            @Override
+//            public void onTabReselected(TabLayout.Tab tab) {}
+//        });
 
         //Set up initial start and end dates
         final Calendar c = Calendar.getInstance();
@@ -141,7 +144,7 @@ public class GraphFragment extends Fragment {
             }
         });
 
-        final Spinner unitsSpin = (Spinner) graphView.findViewById(R.id.spinnerUnits);
+        unitsSpin = (Spinner) graphView.findViewById(R.id.spinnerUnits);
 
         final Spinner cutOffSpin = (Spinner) graphView.findViewById(R.id.spinnerCutOff);
 
@@ -156,9 +159,9 @@ public class GraphFragment extends Fragment {
                 //create query with user given stuff
                 cutOffDirection = cutOffSpin.getSelectedItem().toString();
                 cutOffPercentage = cutOffEdit.getText().toString();
-                unitsString = unitsSpin.getSelectedItem().toString();
+                //unitsString = unitsSpin.getSelectedItem().toString();
 
-                Cursor customResult  = dbHelper.getCustomUserOldGoals(statistics,startDate,endDate,unitsString,cutOffDirection,cutOffPercentage);
+                Cursor customResult  = dbHelper.getCustomUserOldGoals(statistics,startDate,endDate,cutOffDirection,cutOffPercentage);
                 popGraph(customResult);
 
             }
@@ -184,33 +187,67 @@ public class GraphFragment extends Fragment {
             String dateString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_DATE));
             String progressString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS));
             String goalString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_GOALVALUE));
-            String percent = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PERCENTAGE));
+            //String percent = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PERCENTAGE));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date date;
             String blah="";
+            String unitsDBString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
+
             try{
                 date = df.parse(dateString);
                 blah = df.format(date);
-
                 dates.add(date.getDate()+"/"+date.getMonth()+"-"+name);
                 //Toast.makeText(getActivity(),dateString,Toast.LENGTH_SHORT).show();
                 //Toast.makeText(getActivity(),blah,Toast.LENGTH_SHORT).show();
             }catch (Exception e){
                 e.printStackTrace();
             }
+
+
             int progressInt = Integer.parseInt(progressString);
             int goalInt = Integer.parseInt(goalString);
-            int remainder = goalInt-progressInt;
-            if(remainder<0){
-                remainder=0;
+
+            String unitsSpinString = unitsSpin.getSelectedItem().toString();
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+            float progressUnits= (float) progressInt;
+            float goalUnits = (float) goalInt;
+            //convert data in db from steps into the units specified by the user
+            switch (unitsSpinString){
+                case "Kilometres":
+                    float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+                    int progressStepsCM = (int)progressInt*(int)cmMap;
+                    progressUnits = (float)progressStepsCM/100000;
+
+                    int goalStepsCM = (int)goalInt*(int)cmMap;
+                    goalUnits = (float)goalStepsCM/100000;
+
+                    break;
+                case "Miles":
+                    int inch = Integer.parseInt(SP.getString("mappingImp","30"));
+                    int progressStepsINC = progressInt*inch;
+                    progressUnits = (float)progressStepsINC/(36*1760);
+
+                    int goalsStepsINC = goalInt*inch;
+                    goalUnits = (float)goalsStepsINC/(36*1760);
+                    break;
+                case "Steps":
+                    break;
             }
+
+            float remainder = goalUnits-progressUnits;
+            if(remainder<0){
+                remainder=0f;
+            }
+
             //new BarEntry()
-            entries.add(new BarEntry(i,new float[]{progressInt,remainder},name));
+            entries.add(new BarEntry(i,new float[]{progressUnits,remainder},name));
 
             final String finalBlah=blah;
 
             i++;
             customResult.moveToNext();
+
         }
         customResult.close();
         dbHelper.close();

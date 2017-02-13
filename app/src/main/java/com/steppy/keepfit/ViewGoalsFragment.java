@@ -55,7 +55,7 @@ public class ViewGoalsFragment extends Fragment{
 
         listView = (ListView) goalView.findViewById(R.id.goalList);
         ItemGoalList = new ArrayList<Goal>();
-        customAdapter = new CustomAdapter(getActivity(), ItemGoalList);
+        customAdapter = new CustomAdapter(getActivity(), goalView,ItemGoalList);
         listView.setEmptyView(goalView.findViewById(R.id.empty));
         listView.setAdapter(customAdapter);
 

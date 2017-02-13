@@ -18,5 +18,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         Toast.makeText(context, "I'm running", Toast.LENGTH_SHORT).show();
 
         //Write adding floating progress stuff here
+        //make sure the units of the floating progress and goalValue are same
     }
 }

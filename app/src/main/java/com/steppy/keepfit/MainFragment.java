@@ -75,7 +75,9 @@ public class MainFragment extends Fragment {
         cursor.moveToFirst();
         try {
             units = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
-            goal = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+            int goalInt = cursor.getInt(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+            float stepsFloat=stepsToUnits(goalInt);
+            goal=""+stepsFloat;
         }catch(Exception e){
             goal="0";
             units="";
@@ -91,24 +93,8 @@ public class MainFragment extends Fragment {
         cursor.moveToFirst();
         try {
             int steps= cursor.getInt(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
-            float stepsFloat=0f;
-            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            float stepsCM = SP.getFloat("mappingMet",75);
-            float stepsInch = SP.getFloat("MappingImp",30);
-            switch (units){
-                case "Kilometres":
-                    float cm = stepsCM*steps;
-                    stepsFloat= (float)cm/ 100000;
-                    stepsProgress=""+stepsFloat;
-                    break;
-                case "Miles":
-                    float inches = stepsInch*steps;
-                    stepsFloat= (float)inches/(1760*36);
-                    stepsProgress=""+stepsFloat;
-                    break;
-                case "Steps":
-                    stepsProgress=""+steps;
-            }
+            float stepsFloat=stepsToUnits(steps);
+            stepsProgress=""+stepsFloat;
 
         }catch (Exception e){
             stepsProgress = "0";
@@ -153,7 +139,7 @@ public class MainFragment extends Fragment {
         //legend.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "Set1", "Set2"});
 
         float stepsProgressInt = Float.parseFloat(stepsProgress);
-        int goalValueInt = Integer.parseInt(goal);
+        float goalValueInt = Float.parseFloat(goal);
         float percent = ((float)stepsProgressInt/(float)goalValueInt) *100;
         //int percent1 = (int) percent*100;
         int percentToComplete = 100-(int)percent;
@@ -235,4 +221,27 @@ public class MainFragment extends Fragment {
         startActivity(intent);
     }
 
+    public float stepsToUnits(int steps){
+        float stepsFloat=0f;
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        float stepsCM = Float.parseFloat(SP.getString("mappingMet","75"));
+        float stepsInch = Float.parseFloat(SP.getString("MappingImp","30"));
+        switch (units){
+            case "Kilometres":
+                float cm = stepsCM*(float)steps;
+                stepsFloat= (float)cm/100000;
+                //stepsProgress=""+stepsFloat;
+                break;
+            case "Miles":
+                float inches = stepsInch*(float)steps;
+                stepsFloat= (float)inches/(1760*36);
+                //stepsProgress=""+stepsFloat;
+                break;
+            case "Steps":
+                //stepsProgress=""+steps;
+                stepsFloat=steps;
+        }
+
+        return stepsFloat;
+    }
 }

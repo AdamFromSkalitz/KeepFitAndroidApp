@@ -1,6 +1,7 @@
 package com.steppy.keepfit;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,6 +24,7 @@ import static android.provider.AlarmClock.EXTRA_MESSAGE;
  */
 
 public class CustomAdapter extends BaseAdapter {
+    View fraggers;
     Context context;
     ArrayList<Goal> itemGoalList;
     DBHelper dbHelper;
@@ -31,8 +33,9 @@ public class CustomAdapter extends BaseAdapter {
 //    public void add(){
 //
 //    }
-    public CustomAdapter(Context context, ArrayList<Goal> goalList) {
+    public CustomAdapter(Context context,View frag, ArrayList<Goal> goalList) {
         this.context = context;
+        this.fraggers = frag;
         this.itemGoalList = goalList;
 
     }
@@ -161,8 +164,13 @@ public class CustomAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     dbHelper = new DBHelper(context);
                     Cursor res = dbHelper.getActiveGoal();
+                    String goalActiveName="";
                     res.moveToFirst();
-                    String goalActiveName = res.getString(res.getColumnIndex(DBHelper.COLUMN_NAME));
+                    try {
+                        goalActiveName = res.getString(res.getColumnIndex(DBHelper.COLUMN_NAME));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     if (!goalActiveName.equals(g.getName())){
                         //if not active goal
                         //remove from internal storage
@@ -174,6 +182,7 @@ public class CustomAdapter extends BaseAdapter {
                 }
             });
         }
+        fraggers.invalidate();
         return convertView;
     }
 

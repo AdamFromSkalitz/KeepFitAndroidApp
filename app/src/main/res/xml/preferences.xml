@@ -31,10 +31,12 @@
             android:singleLine="true"
             android:title="Metric Units Mapping"
             android:summary="How many metres long is your step?"
-            android:key="mappingMet" />
+            android:key="mappingMet"
+            android:inputType="number"/>
 
         <EditTextPreference
             android:defaultValue="30"
+            android:inputType="number"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:title="Silly Units Mapping"
