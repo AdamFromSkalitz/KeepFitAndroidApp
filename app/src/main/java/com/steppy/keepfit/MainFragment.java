@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.attr.entries;
+import static android.R.attr.uncertainGestureColor;
 import static android.icu.lang.UCharacter.SentenceBreak.SP;
 
 /**
@@ -47,9 +48,11 @@ import static android.icu.lang.UCharacter.SentenceBreak.SP;
 public class MainFragment extends Fragment {
     TextView progress;
     TextView goalValue;
+    TextView unitsView;
     DBHelper dbHelper;
     private String stepsProgress="0";
     private String goal="0";
+    private String units = "";
     public static final String PREFS_NAME = "MyPrefsFile";
     List<PieEntry> entries = new ArrayList<>();
 
@@ -67,23 +70,46 @@ public class MainFragment extends Fragment {
         dbHelper = new DBHelper(getActivity());
 
         goalValue = (TextView) mainView.findViewById(R.id.textViewGoalNumber);
+        unitsView = (TextView) mainView.findViewById(R.id.textUnits);
         Cursor cursor = dbHelper.getActiveGoal();
         cursor.moveToFirst();
         try {
-             goal = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+            units = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
+            goal = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
         }catch(Exception e){
             goal="0";
+            units="";
             e.printStackTrace();
         }
-        goalValue.setText("Goal   "+goal);
+        unitsView.setText("Units:   "+units);
+        goalValue.setText("Goal:   "+goal);
         cursor.close();
 
-        progress = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
 
+        progress = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
         cursor = dbHelper.getDayProgress();
         cursor.moveToFirst();
         try {
-            stepsProgress = cursor.getString(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+            int steps= cursor.getInt(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+            float stepsFloat=0f;
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            float stepsCM = SP.getFloat("mappingMet",75);
+            float stepsInch = SP.getFloat("MappingImp",30);
+            switch (units){
+                case "Kilometres":
+                    float cm = stepsCM*steps;
+                    stepsFloat= (float)cm/ 100000;
+                    stepsProgress=""+stepsFloat;
+                    break;
+                case "Miles":
+                    float inches = stepsInch*steps;
+                    stepsFloat= (float)inches/(1760*36);
+                    stepsProgress=""+stepsFloat;
+                    break;
+                case "Steps":
+                    stepsProgress=""+steps;
+            }
+
         }catch (Exception e){
             stepsProgress = "0";
             e.printStackTrace();
@@ -126,7 +152,7 @@ public class MainFragment extends Fragment {
 
         //legend.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "Set1", "Set2"});
 
-        int stepsProgressInt = Integer.parseInt(stepsProgress);
+        float stepsProgressInt = Float.parseFloat(stepsProgress);
         int goalValueInt = Integer.parseInt(goal);
         float percent = ((float)stepsProgressInt/(float)goalValueInt) *100;
         //int percent1 = (int) percent*100;

@@ -68,13 +68,15 @@ public class EditGoalsActivity extends AppCompatActivity {
                 String active = goalToEditRes.getString(goalToEditRes.getColumnIndex(DBHelper.COLUMN_ACTIVE));
                 goalToEditRes.close();
 
+                String units = goalToEditRes.getString(goalToEditRes.getColumnIndex(DBHelper.COLUMN_UNITS));
+
                 if(goalString.equals("")){
                     goalString = existGoalValue;
                 }
                 if(nameString.equals("")){
                     nameString = existGoalName;
                 }
-                if (dbHelper.updateGoal(id, nameString, goalString, active, dateString)) {
+                if (dbHelper.updateGoal(id, nameString, goalString, active, dateString,units)) {
                     Toast.makeText(EditGoalsActivity.this, "Name " +nameString + " goal " + goalString, Toast.LENGTH_LONG).show();
                 }
                 dbHelper.close();

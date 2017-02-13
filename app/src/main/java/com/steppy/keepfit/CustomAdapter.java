@@ -92,11 +92,12 @@ public class CustomAdapter extends BaseAdapter {
                     String name = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_NAME));
                     String goal = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
                     String date =  cur.getString(cur.getColumnIndex(DBHelper.COLUMN_DATE));
+                    String units = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_UNITS));
                     cur.close();
 
                     if(active.equals("true")) {
                         //if active, make unactive
-                        dbHelper.updateGoal(id, name, goal, "false", date);
+                        dbHelper.updateGoal(id, name, goal, "false", date,units);
                         g.makeActive(false);
                         imgActive.setBackgroundResource(R.drawable.pause);
                         //imgActive.setBackgroundColor(Color.parseColor("#e99c9c"));
@@ -112,8 +113,9 @@ public class CustomAdapter extends BaseAdapter {
                             String nameTemp = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_NAME));
                             String goalTemp = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
                             String dateTemp =  cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_DATE));
+                            String unitsTemp = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
 
-                            dbHelper.updateGoal(idTemp, nameTemp, goalTemp, "false", dateTemp);
+                            dbHelper.updateGoal(idTemp, nameTemp, goalTemp, "false", dateTemp,unitsTemp);
                             cursor.moveToNext();
                             imgActive.setBackgroundResource(R.drawable.pause);
                         }
@@ -121,7 +123,7 @@ public class CustomAdapter extends BaseAdapter {
                             g.makeActive(false);
                         }
                         //if unactive, make active
-                        dbHelper.updateGoal(id,name,goal,"true",date);
+                        dbHelper.updateGoal(id,name,goal,"true",date,units);
                         g.makeActive(true);
                         imgActive.setBackgroundResource(R.drawable.play);
                         cursor.close();

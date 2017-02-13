@@ -55,7 +55,7 @@ public class AddGoalsFragment extends Fragment {
                 //String activeString = String.valueOf(active.isChecked());
                 String dateString = date.toString();
 
-                if(dbHelper.insertGoal(nameString,goalString, "false", dateString)){
+                if(dbHelper.insertGoal(nameString,goalString, "false", dateString,"")){
                     Toast.makeText(getActivity(), "Name " + name.getText() + " goal " + goal.getText(), Toast.LENGTH_LONG).show();
                 }
                 dbHelper.close();

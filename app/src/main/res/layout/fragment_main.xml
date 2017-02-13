@@ -26,12 +26,19 @@
             android:layout_centerHorizontal="true">
 
             <TextView
-                android:id="@+id/textViewGoalNumber"
+                android:id="@+id/textUnits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="50dp"
+                android:text="Units" />
+
+            <TextView
+                android:id="@+id/textViewGoalNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textUnits"
                 android:text="Goal" />
 
             <TextView

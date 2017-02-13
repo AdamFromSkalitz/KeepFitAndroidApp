@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 /**
  * Created by Turkleton's on 04/02/2017.
@@ -22,6 +23,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String OLD_GOAL_COLUMN_PROGRESS = "goalProgress";
     public static final String OLD_GOAL_COLUMN_PERCENTAGE = "progressPercentage";
     public static final String OLD_GOAL_COLUMN_DATE = "date";
+    public static final String OLD_GOAL_COLUMN_UNITS = "units";
 
     public static final String GOAL_TABLE_NAME = "Goal_List";
     public static final String COLUMN_ID = "_id";
@@ -31,6 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_PERCENTAGE = "progressPercentage";
     public static final String COLUMN_ACTIVE = "active";
     public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_UNITS = "units";
 
     public static final String PROGRESS_TABLE_NAME = "dayProgress";
     public static final String PROGRESS_COLUMN_ID = "_id";
@@ -48,9 +51,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 COLUMN_NAME + " TEXT, " +
                 COLUMN_GOALVALUE + " INTEGER, " +
                 COLUMN_PROGRESS + " INTEGER, " +
-                COLUMN_PERCENTAGE + " INTEGER , " +
+                COLUMN_PERCENTAGE + " INTEGER, " +
                 COLUMN_ACTIVE + " TEXT, " +
-                COLUMN_DATE + " TEXT );";
+                COLUMN_DATE + " TEXT," +
+                COLUMN_UNITS + " TEXT);";
         db.execSQL(createGoalTable);
 
         String createProgressTable="CREATE TABLE " + PROGRESS_TABLE_NAME + "( "+
@@ -65,7 +69,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 OLD_GOAL_COLUMN_GOALVALUE + " INTEGER, " +
                 OLD_GOAL_COLUMN_PROGRESS + " INTEGER, " +
                 OLD_GOAL_COLUMN_PERCENTAGE + " INTEGER, " +
-                OLD_GOAL_COLUMN_DATE + " TEXT );";
+                OLD_GOAL_COLUMN_DATE + " TEXT, "+
+                OLD_GOAL_COLUMN_UNITS + " TEXT );";
         db.execSQL(createOldGoalTable);
     }
 
@@ -81,24 +86,26 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertGoal(String name, String goalValue, String active, String date) {
+    public boolean insertGoal(String name, String goalValue, String active, String date, String units) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NAME, name);
         contentValues.put(COLUMN_GOALVALUE, goalValue);
         contentValues.put(COLUMN_ACTIVE, active);
         contentValues.put(COLUMN_DATE, date);
+        contentValues.put(COLUMN_UNITS, units);
         db.insert(GOAL_TABLE_NAME, null, contentValues);
         return true;
     }
 
-    public boolean updateGoal(int id, String name, String goalValue, String active, String date) {
+    public boolean updateGoal(int id, String name, String goalValue, String active, String date, String units) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_NAME, name);
         contentValues.put(COLUMN_GOALVALUE, goalValue);
         contentValues.put(COLUMN_ACTIVE, active);
         contentValues.put(COLUMN_DATE, date);
+        contentValues.put(COLUMN_UNITS,units);
         db.update(GOAL_TABLE_NAME, contentValues, COLUMN_ID + " = ? ", new String[] { Integer.toString(id) } );
         return true;
     }
@@ -149,7 +156,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Steps db functions
      */
 
-    public boolean updateDayProgress(String steps){
+    public boolean updateDayProgress(int steps){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor resPro = db.rawQuery("SELECT * FROM " + PROGRESS_TABLE_NAME + " WHERE " +
                 COLUMN_ID + "=?", new String[] {"1"});
@@ -166,7 +173,14 @@ public class DBHelper extends SQLiteOpenHelper {
                 return false;
             }
             resultGoal.moveToFirst();
-            String goalActive = resultGoal.getString(resultGoal.getColumnIndex(DBHelper.COLUMN_NAME));
+            String goalActive="";
+            try {
+                goalActive = resultGoal.getString(resultGoal.getColumnIndex(DBHelper.COLUMN_NAME));
+            }catch (Exception e){
+                resPro.close();
+                db.close();
+                return false;
+            }
             resultGoal.close();
 
             contentValues.put(PROGRESS_COLUMN_GOAL, goalActive);
@@ -179,8 +193,8 @@ public class DBHelper extends SQLiteOpenHelper {
             Cursor resultGoal = db.rawQuery("SELECT * FROM " + GOAL_TABLE_NAME + " WHERE "+
                     COLUMN_ACTIVE + "=?", new String[] {"true"});
 
-            String stepsOld = resPro.getString(resPro.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
-            String stepsCombine = Integer.toString(Integer.parseInt(steps) + Integer.parseInt(stepsOld));
+            int stepsOld = resPro.getInt(resPro.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+            int stepsCombine = steps + stepsOld;
             resultGoal.moveToFirst();
             String goalActive = resultGoal.getString(resultGoal.getColumnIndex(DBHelper.COLUMN_NAME));
             int id = resPro.getInt(resPro.getColumnIndex(DBHelper.PROGRESS_COLUMN_ID));
@@ -213,7 +227,7 @@ public class DBHelper extends SQLiteOpenHelper {
      * Old goals db functions
      */
 
-    public boolean insertOldGoal(String name, String goalValue, String progress, String percent, String date) {
+    public boolean insertOldGoal(String name, String goalValue, String progress, String percent, String date, String units) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(OLD_GOAL_COLUMN_NAME, name);
@@ -221,6 +235,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(OLD_GOAL_COLUMN_PROGRESS, progress);
         contentValues.put(OLD_GOAL_COLUMN_PERCENTAGE,percent);
         contentValues.put(OLD_GOAL_COLUMN_DATE, date);
+        contentValues.put(OLD_GOAL_COLUMN_UNITS,units);
         db.insert(OLD_GOAL_TABLE_NAME, null, contentValues);
         return true;
     }

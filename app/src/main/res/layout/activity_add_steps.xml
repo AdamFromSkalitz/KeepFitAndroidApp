@@ -15,22 +15,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/stepsText"
-        android:layout_marginTop="60dp"
-        android:inputType="phone"
-        android:hint="Steps"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/stepsText"
-        android:id="@+id/setButton"
-        android:text="Save Steps"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="60dp"
-        />
+        <EditText
+            android:id="@+id/stepsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:hint="Steps"
+            android:inputType="phone" />
+
+        <Spinner
+            android:id="@+id/spinnerUnits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stepsText"
+            android:entries="@array/listArray">
+
+        </Spinner>
+
+
+        <Button
+            android:id="@+id/setButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stepsText"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="60dp"
+            android:text="Save Steps" />
     </RelativeLayout>
 </RelativeLayout>

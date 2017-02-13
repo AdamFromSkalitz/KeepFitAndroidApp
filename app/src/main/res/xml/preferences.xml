@@ -29,9 +29,17 @@
             android:defaultValue="75"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Step Mapping"
-            android:summary="How many centimeters long is your step?"
-            android:key="mapping" />
+            android:title="Metric Units Mapping"
+            android:summary="How many metres long is your step?"
+            android:key="mappingMet" />
+
+        <EditTextPreference
+            android:defaultValue="30"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="Silly Units Mapping"
+            android:summary="How many inches long is your step?"
+            android:key="mappingImp" />
 
     </PreferenceCategory>
 
@@ -48,11 +56,5 @@
             android:key="pres" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="Clear History"
-        android:key="delHistory">
-
-
-    </PreferenceCategory>
 
 </PreferenceScreen>
