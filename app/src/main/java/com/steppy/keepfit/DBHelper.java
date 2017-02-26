@@ -281,4 +281,18 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.delete(OLD_GOAL_TABLE_NAME,
                 null, null);
     }
+
+
+    /*
+        Statistics
+    * */
+
+    public  Cursor getStatistics(String startDate, String endDate, String startPercent, String endPercent){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor result = db.rawQuery(" SELECT * FROM "+ OLD_GOAL_TABLE_NAME + " WHERE "+
+                OLD_GOAL_COLUMN_DATE + " BETWEEN " +"? "+"AND " + "? " +
+                "AND " + OLD_GOAL_COLUMN_PERCENTAGE + " BETWEEN "+ "? " + "AND " + " ?",
+                new String[] {startDate, endDate, startPercent, endPercent});
+        return result;
+    }
 }

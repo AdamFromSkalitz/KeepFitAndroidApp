@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                                 toolbar.removeView(dateButtonMain);
                                 ViewGoalsFragment goalsFragment = new ViewGoalsFragment();
                                 fragmentTransaction.replace(R.id.progressMiddle, goalsFragment);
-                                fragmentTransaction.addToBackStack(null);
+                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
                                 break;
                                 //viewGoals();
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                                 fragmentManager = getFragmentManager();
                                 fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.progressMiddle, graphFragment);
-                                fragmentTransaction.addToBackStack(null);
+                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
                                 //} else if (tabId == R.id.tab_main) {
                                 break;
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
                                 fragmentManager = getFragmentManager();
                                 fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.progressMiddle, mainFragment);
-                                fragmentTransaction.addToBackStack(null);
+                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
                                 break;
                         }
@@ -217,7 +217,8 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, DeleteHistoryActivity.class);
             startActivity(intent);
         }else if(id == R.id.statistics){
-
+            Intent intent = new Intent(MainActivity.this,StatisticsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

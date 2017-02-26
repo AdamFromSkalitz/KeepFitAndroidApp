@@ -74,7 +74,7 @@
             android:padding="8dp"
             fab:menu_animationDelayPerItem="0"
             fab:menu_backgroundColor="#ccffffff"
-            fab:menu_colorNormal="#00C29F"
+            fab:menu_colorNormal="@color/colorAccent"
             fab:menu_colorPressed="#00C29F"
             fab:menu_colorRipple="#00C29F"
             fab:menu_fab_label="Cancel"

@@ -35,9 +35,10 @@
         </LinearLayout>
 
         <LinearLayout
+
+            android:id="@+id/layoutUnits"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/layoutUnits"
             android:layout_below="@id/datePicker"
             android:layout_centerHorizontal="true"
             android:layout_margin="5dp">
@@ -45,16 +46,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Units:     "/>
+                android:layout_marginLeft="5dp"
+                android:text="Units:     "
+                android:textSize="17sp" />
 
             <Spinner
+                android:id="@+id/spinnerUnits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/spinnerUnits"
-                android:entries="@array/listArray">
+                android:entries="@array/listArray"
+                android:textSize="17dp">
+
             </Spinner>
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"

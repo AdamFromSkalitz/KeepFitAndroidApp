@@ -9,10 +9,10 @@ import java.io.Serializable;
 
 public class Goal implements Serializable {
     private String name;
-    private int steps;
+    private float steps;
     private boolean active;
 
-    public Goal(String name, int steps, boolean active) {
+    public Goal(String name, float steps, boolean active) {
         this.name = name;
         this.steps = steps;
         this.active = active;
@@ -21,7 +21,7 @@ public class Goal implements Serializable {
     public String getName(){
         return name;
     }
-    public int getSteps(){
+    public float getSteps(){
         return steps;
     }
     public boolean isActive(){
@@ -31,7 +31,7 @@ public class Goal implements Serializable {
     public void setName(String Name){
         name = Name;
     }
-    public void setSteps(int Steps){
+    public void setSteps(float Steps){
         steps=Steps;
     }
     public void makeActive(boolean Active){

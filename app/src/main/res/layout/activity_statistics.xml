@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_statistics"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.steppy.keepfit.StatisticsActivity">
+
+    <LinearLayout
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="Choose Period:"
+            android:textSize="17sp" />
+
+        <!--     <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date"
+            android:id="@+id/buttonStartDate"
+            android:background="@drawable/dateboxbackground"
+            android:textSize="17sp"/> -->
+        <Button
+            android:id="@+id/buttonStartDate"
+            android:layout_width="125dp"
+            android:layout_height="31dp"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:text="Start Date"
+            android:layout_marginLeft="5dp"
+            />
+
+        <Button
+            android:id="@+id/buttonEndDate"
+            android:layout_width="125dp"
+            android:layout_height="31dp"
+            android:background="@drawable/buttonshape"
+            android:text="End Date"
+            android:layout_marginLeft="5dp"
+            android:textColor="#000000"
+            android:textAllCaps="false"/>
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:id="@+id/layoutUnits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/datePicker"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="Units:     "
+            android:textSize="17sp" />
+
+        <Spinner
+            android:id="@+id/spinnerUnits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/listArray"
+            android:textSize="17dp">
+
+        </Spinner>
+    </LinearLayout>
+    <!--
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layoutUnits"
+            android:id="@+id/percentRange">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set goals in % range "
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextRangeStart"
+                android:hint="Percentage"
+                android:text="0"
+                android:inputType="phone"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" -  "
+                />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextRangeEnd"
+                android:hint="Percentage"
+                android:text="100"
+                android:inputType="phone"
+                />
+        </LinearLayout>
+    -->
+
+    <TextView
+        android:id="@+id/goalPercentageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layoutUnits"
+        android:layout_margin="5dp"
+        android:layout_marginLeft="5dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Choose percentage goal range"
+        android:textSize="19dp" />
+
+
+    <LinearLayout
+        android:id="@+id/seekerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goalPercentageTitle"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/lowerBound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight=".1"
+            android:text="Lower Bound"
+            android:textSize="17sp" />
+
+        <SeekBar
+            android:id="@+id/seekBarBot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".8"
+            android:progress="100"
+            android:secondaryProgress="0" />
+
+        <TextView
+            android:id="@+id/seektvbot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="-1dp"
+            android:layout_weight=".1"
+            android:text="0"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/seekerLayoutTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/seekerLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/upperBound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight=".1"
+            android:text="Upper Bound"
+            android:textSize="17sp" />
+
+        <SeekBar
+            android:id="@+id/seekBarTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".8"
+            android:progress="100"
+            android:secondaryProgress="100" />
+
+        <TextView
+            android:id="@+id/seektvtop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight=".1"
+            android:text="100"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="31dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/buttonshape"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:id="@+id/buttonConfirm"
+        android:layout_below="@id/seekerLayoutTop"
+        android:text="Confirm Options" />
+
+
+    <TableLayout
+        android:id="@+id/table"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/buttonConfirm"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="19sp"
+                android:layout_marginRight="120sp"
+                android:layout_marginEnd="120sp"
+                android:text="Average"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total"
+                android:textSize="19sp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/avgNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="120sp"
+                android:layout_marginEnd="120sp"
+                android:textSize="22sp"
+                android:textColor="@color/colorAccent"
+                android:text="456"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="45645"
+                android:textSize="22sp"
+                android:textColor="@color/colorAccent"
+                android:gravity="center"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max"
+                android:layout_marginRight="120sp"
+                android:layout_marginEnd="120sp"
+                android:textSize="19sp"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Min"
+                android:textSize="19sp"
+                android:gravity="center"/>
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="120sp"
+                android:layout_marginEnd="120sp"
+                android:textSize="22sp"
+                android:textColor="@color/colorAccent"
+                android:text="3453"
+                android:gravity="center"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textColor="@color/colorAccent"
+                android:layout_weight="1"
+                android:text="3453"
+                android:gravity="center"/>
+
+        </TableRow>
+
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/goalsGridTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/table"
+        android:layout_margin="5dp"
+        android:layout_marginLeft="5dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Goals"
+        android:textSize="19dp" />
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goalsGridTitle"
+        android:columnWidth="0dp"
+        android:horizontalSpacing="2dp"
+        android:numColumns="5"
+        android:verticalSpacing="4dp">
+    </GridView>
+
+
+</RelativeLayout>
