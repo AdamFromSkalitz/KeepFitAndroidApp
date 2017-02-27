@@ -17,22 +17,22 @@ import java.util.ArrayList;
 
 public class GridAdapter extends BaseAdapter {
     private Context mContext;
-    String[] itemGoalList;
-    public String[] message = {"Goal1","Goal2", "Goal3","Goal4","Goal5","Goal6","Goal7"};
+    ArrayList<Goal> itemGoalList;
+    //public String[] message = {"Goal1","Goal2", "Goal3","Goal4","Goal5","Goal6","Goal7"};
 
-    public GridAdapter(Context c,String[] goalList){
+    public GridAdapter(Context c,ArrayList<Goal> goalList){
         mContext=c;
         itemGoalList=goalList;
     }
 
     @Override
     public int getCount() {
-        return itemGoalList.length;
+        return itemGoalList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return itemGoalList[position];
+        return itemGoalList.get(position);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class GridAdapter extends BaseAdapter {
 
         if(convertView==null){
             textView = new TextView(mContext);
-            textView.setLayoutParams(new GridView.LayoutParams(200,200));
+            textView.setLayoutParams(new GridView.LayoutParams(350,350));
             //textView.setPadding(8,8,8,8);
             textView.setGravity(Gravity.CENTER);
             textView.setBackgroundResource(R.color.colorPrimary);
@@ -55,7 +55,7 @@ public class GridAdapter extends BaseAdapter {
         }else{
             textView = (TextView) convertView;
         }
-        textView.setText(message[position]);
+        textView.setText(itemGoalList.get(position).getName());
         return textView;
     }
 }

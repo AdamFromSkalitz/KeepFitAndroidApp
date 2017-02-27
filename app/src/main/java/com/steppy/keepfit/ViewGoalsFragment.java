@@ -52,7 +52,7 @@ public class ViewGoalsFragment extends Fragment{
         // Inflate the layout for this fragment
         final View goalView = inflater.inflate(R.layout.fragment_goals, container, false);
 
-
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Goals");
         listView = (ListView) goalView.findViewById(R.id.goalList);
         ItemGoalList = new ArrayList<Goal>();
         customAdapter = new CustomAdapter(getActivity(), goalView,ItemGoalList);

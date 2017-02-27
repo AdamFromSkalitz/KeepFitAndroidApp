@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_margin="6dp">
+        android:layout_margin="10dp"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,7 +30,7 @@
             android:textSize="17sp"/> -->
         <Button
             android:id="@+id/buttonStartDate"
-            android:layout_width="125dp"
+            android:layout_width="100dp"
             android:layout_height="31dp"
             android:background="@drawable/buttonshape"
             android:shadowColor="#A8A8A8"
@@ -40,16 +41,16 @@
             android:textColor="#000000"
             android:textSize="15sp"
             android:text="Start Date"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="35dp"
             />
 
         <Button
             android:id="@+id/buttonEndDate"
-            android:layout_width="125dp"
+            android:layout_width="100dp"
             android:layout_height="31dp"
             android:background="@drawable/buttonshape"
             android:text="End Date"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="20dp"
             android:textColor="#000000"
             android:textAllCaps="false"/>
     </LinearLayout>
@@ -61,13 +62,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/datePicker"
         android:layout_centerHorizontal="true"
-        android:layout_margin="5dp">
+        android:layout_margin="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="Units:     "
+            android:layout_marginLeft="7dp"
+            android:text="Units Progress:     "
             android:textSize="17sp" />
 
         <Spinner
@@ -75,55 +76,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/listArray"
+            android:layout_marginLeft="11dp"
             android:textSize="17dp">
 
         </Spinner>
     </LinearLayout>
-    <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/layoutUnits"
-            android:id="@+id/percentRange">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Set goals in % range "
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextRangeStart"
-                android:hint="Percentage"
-                android:text="0"
-                android:inputType="phone"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" -  "
-                />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editTextRangeEnd"
-                android:hint="Percentage"
-                android:text="100"
-                android:inputType="phone"
-                />
-        </LinearLayout>
-    -->
 
     <TextView
         android:id="@+id/goalPercentageTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/layoutUnits"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="5dp"
         android:fontFamily="sans-serif-medium"
         android:text="Choose percentage goal range"
@@ -144,9 +110,9 @@
             android:id="@+id/lowerBound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="22dp"
             android:layout_weight=".1"
-            android:text="Lower Bound"
+            android:text="Lower Bound:"
             android:textSize="17sp" />
 
         <SeekBar
@@ -181,9 +147,9 @@
             android:id="@+id/upperBound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="22dp"
             android:layout_weight=".1"
-            android:text="Upper Bound"
+            android:text="Upper Bound:"
             android:textSize="17sp" />
 
         <SeekBar
@@ -206,6 +172,7 @@
     <Button
         android:layout_width="150dp"
         android:layout_height="31dp"
+        android:layout_margin="10dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/buttonshape"
         android:shadowColor="#A8A8A8"
@@ -227,7 +194,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         >
 
         <TableRow
@@ -272,14 +239,15 @@
                 android:layout_marginEnd="120sp"
                 android:textSize="22sp"
                 android:textColor="@color/colorAccent"
-                android:text="456"
+                android:text="0.0"
                 android:gravity="center"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="45645"
+                android:text="0.0"
+                android:id="@+id/totalNum"
                 android:textSize="22sp"
                 android:textColor="@color/colorAccent"
                 android:gravity="center"/>
@@ -325,7 +293,8 @@
                 android:layout_marginEnd="120sp"
                 android:textSize="22sp"
                 android:textColor="@color/colorAccent"
-                android:text="3453"
+                android:id="@+id/maxNum"
+                android:text="0.0"
                 android:gravity="center"/>
 
             <TextView
@@ -334,23 +303,41 @@
                 android:textSize="22sp"
                 android:textColor="@color/colorAccent"
                 android:layout_weight="1"
-                android:text="3453"
+                android:id="@+id/minNum"
+                android:text="0.0"
                 android:gravity="center"/>
 
         </TableRow>
 
     </TableLayout>
 
-    <TextView
-        android:id="@+id/goalsGridTitle"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/table"
-        android:layout_margin="5dp"
-        android:layout_marginLeft="5dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="Goals"
-        android:textSize="19dp" />
+        android:id="@+id/goalGridTitle"
+        android:layout_below="@id/table">
+
+        <TextView
+            android:id="@+id/goalsGridTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Goals"
+            android:textSize="19dp" />
+
+        <TextView
+            android:id="@+id/goalsTitleNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="0"
+            android:textSize="15dp" />
+    </LinearLayout>
+
 
     <GridView
         android:id="@+id/gridView"
@@ -358,10 +345,10 @@
         android:layout_margin="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/goalsGridTitle"
+        android:layout_below="@id/goalGridTitle"
         android:columnWidth="0dp"
-        android:horizontalSpacing="2dp"
-        android:numColumns="5"
+        android:horizontalSpacing="4dp"
+        android:numColumns="3"
         android:verticalSpacing="4dp">
     </GridView>
 

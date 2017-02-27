@@ -79,7 +79,7 @@ public class GraphFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         graphView = inflater.inflate(R.layout.fragment_graph, container, false);
-
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("History");
 //        TabLayout tabLayout = (TabLayout) graphView.findViewById(R.id.layoutTab);
 //        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 //            @Override

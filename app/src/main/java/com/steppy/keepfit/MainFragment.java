@@ -11,6 +11,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +36,12 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.color;
+import static android.R.attr.data;
 import static android.R.attr.entries;
 import static android.R.attr.uncertainGestureColor;
 import static android.icu.lang.UCharacter.SentenceBreak.SP;
@@ -67,40 +72,44 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         final View mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        dbHelper = new DBHelper(getActivity());
+//        Toolbar toolbar = (Toolbar) mainView.findViewById(R.id.toolbar);
+//        ((ActionBarActivity)getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Home");
 
-        goalValue = (TextView) mainView.findViewById(R.id.textViewGoalNumber);
-        unitsView = (TextView) mainView.findViewById(R.id.textUnits);
+        dbHelper = new DBHelper(getActivity());
+        DecimalFormat df = new DecimalFormat("##.##");
+        goalValue = (TextView) mainView.findViewById(R.id.tvgoal);
+        unitsView = (TextView) mainView.findViewById(R.id.tvunits);
         Cursor cursor = dbHelper.getActiveGoal();
         cursor.moveToFirst();
         try {
             units = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
             int goalInt = cursor.getInt(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
             float stepsFloat=stepsToUnits(goalInt);
-            goal=""+stepsFloat;
+            goal=df.format(stepsFloat);//""+stepsFloat;
         }catch(Exception e){
             goal="0";
             units="";
             e.printStackTrace();
         }
-        unitsView.setText("Units:   "+units);
-        goalValue.setText("Goal:   "+goal);
+        unitsView.setText(units);
+        goalValue.setText(goal);
         cursor.close();
 
 
-        progress = (TextView) mainView.findViewById(R.id.textViewProgressNumber);
+        progress = (TextView) mainView.findViewById(R.id.tvprogress);
         cursor = dbHelper.getDayProgress();
         cursor.moveToFirst();
         try {
             int steps= cursor.getInt(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
             float stepsFloat=stepsToUnits(steps);
-            stepsProgress=""+stepsFloat;
-
+            stepsProgress = df.format(stepsFloat);
+            //stepsProgress=""+stepsFloat;
         }catch (Exception e){
             stepsProgress = "0";
             e.printStackTrace();
         }
-        progress.setText("Progress:   " + stepsProgress);
+        progress.setText(stepsProgress);
         cursor.close();
         dbHelper.closeDB();
 
@@ -154,7 +163,8 @@ public class MainFragment extends Fragment {
 //        entries.add(new BarEntry(4,4));
 
         PieDataSet dataSet = new PieDataSet(entries,"");
-
+        dataSet.setValueTextSize(15f);
+        dataSet.setColor(Color.BLACK);
 
         // add many colors
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -175,6 +185,8 @@ public class MainFragment extends Fragment {
             colors.add(c);
 
         colors.add(ColorTemplate.getHoloBlue());
+        colors.add(R.attr.colorPrimaryDark);
+        colors.add(R.attr.colorAccent);
         dataSet.setColors(colors);
 
         PieData pieData = new PieData(dataSet);

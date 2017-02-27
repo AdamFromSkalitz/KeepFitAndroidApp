@@ -37,7 +37,7 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomBar;
-    private Button but;
+
     private MainActivity mai;
     Toolbar toolbar;
     View dateButtonMain;
@@ -52,17 +52,17 @@ public class MainActivity extends AppCompatActivity {
 
     DBHelper dbHelper;
 
-    public void showDialogOnButtonClick() {
-        but = (Button) findViewById(R.id.date);
-        but.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDialog(dialog_id);
-                    }
-                }
-        );
-    }
+//    public void showDialogOnButtonClick() {
+//        but = (Button) findViewById(R.id.date);
+//        but.setOnClickListener(
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showDialog(dialog_id);
+//                    }
+//                }
+//        );
+//    }
 
     @Override
     protected Dialog onCreateDialog(int id) {
@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(" ");
         //showDialogOnButtonClick();
 
-        dateButtonMain = getLayoutInflater().inflate(R.layout.datepicker, null);
-        toolbar.addView(dateButtonMain);
+        //dateButtonMain = getLayoutInflater().inflate(R.layout.datepicker, null);
+        //toolbar.addView(dateButtonMain);
 
         //fragmentTransaction.add(R.id.progressMiddle, mainFragment);
         final Calendar cal = Calendar.getInstance();
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Toast.makeText(MainActivity.this,"month"+monthh,Toast.LENGTH_LONG).show();
 
-        but = (Button) findViewById(R.id.date);
+//        but = (Button) findViewById(R.id.date);
 
         bottomBar = (BottomNavigationView) findViewById(R.id.bottomBar);
         bottomBar.setId(R.id.tab_main);

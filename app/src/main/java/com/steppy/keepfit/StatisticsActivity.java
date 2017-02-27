@@ -30,23 +30,29 @@ import java.text.DateFormatSymbols;
 public class StatisticsActivity extends AppCompatActivity {
     private String startDate;
     private String endDate;
-    private int mYear;
-    private int mMonth;
-    private int mDay;
+
+    private int endYear;
+    private int endMonth;
+    private int endDay;
+
+    private int startYear;
+    private int startMonth;
+    private int startDay;
+
     private Spinner unitsSpin;
     private DBHelper dbHelper;
     private int m;
 
     private float total=0f;
     private float average=0f;
-    private float max=0f;
-    private float min=0f;
+    private float max=Float.MIN_VALUE;
+    private float min=Float.MAX_VALUE;
 
     private int minUpperBound=0;
     private int maxLowerBound=100;
 
-    private String[] goals={"Goal1","Goal2", "Goal3","Goal4","Goal5","Goal6","Goal7"};
-    //private ArrayList<Goal> goals = new ArrayList<>();
+    //private String[] goals={"Goal1","Goal2", "Goal3","Goal4","Goal5","Goal6","Goal7"};
+    private ArrayList<Goal> goals = new ArrayList<>();
     GridAdapter gridAdapter;
 
     @Override
@@ -59,53 +65,53 @@ public class StatisticsActivity extends AppCompatActivity {
 
         //Set up initial start and end dates
         final Calendar c = Calendar.getInstance();
-//        mYear = c.get(Calendar.YEAR);
-//        mMonth = c.get(Calendar.MONTH);
-//        mDay = c.get(Calendar.DAY_OF_MONTH);
-        mYear =  2017;
-        mMonth = 0;
-        mDay = 2;
+        endYear = c.get(Calendar.YEAR);
+        endMonth = c.get(Calendar.MONTH);
+        endDay = c.get(Calendar.DAY_OF_MONTH);
+        startYear=endYear;
+        startMonth=endMonth;
+        startDay=endDay;
 
-        Date date = new GregorianCalendar(mYear,mMonth,mDay).getTime();
+        Date date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
         String dateString1 = sdf.format(date);
         endDate = dateString1;
 
         //setInitalDates();
-        int monthPrev=0;
-        int dayPrev=0;
-        int yearPrev=mYear;
-        if(mDay-7<1){
+//        monthPrev=mMonth;
+//        dayPrev=mDay;
+//        yearPrev=mYear;
+        if(startDay-7<1){
             //change month to previous month
-            if(mMonth-1<0) {
+            if(startMonth-1<0) {
                 //month is zero indexed, yes from this dialogue
-                yearPrev = mYear - 1;
-                monthPrev=0;
-                dayPrev=31-(7-mDay);
+                startYear = startYear - 1;
+                startMonth=0;
+                startDay=31-(7-startDay);
             }else{
-                String month = getMonth(mMonth-1);
+                String month = getMonth(startMonth-1);
                 if(month.equals("September") | month.equals("April") | month.equals("June")|month.equals("November")){
                     int fullMonthDays=30;
-                    dayPrev=fullMonthDays-(7-mDay);
+                    startDay=fullMonthDays-(7-startDay);
                 }else if(month.equals("February")) {
                     int fullMonthDays=29;
-                    dayPrev=fullMonthDays-(7-mDay);
+                    startDay=fullMonthDays-(7-startDay);
                 }else{
                     int fullMonthDays=31;
-                    dayPrev=fullMonthDays-(7-mDay);
+                    startDay=fullMonthDays-(7-startDay);
                 }
-                monthPrev = mMonth - 1;
+                startMonth = startDay - 1;
             }
         }else{
-            dayPrev=mDay-7;
+            startDay=startDay-7;
         }
 
-        Toast.makeText(StatisticsActivity.this,"day "+dayPrev+" month "+monthPrev+ " y "+yearPrev,Toast.LENGTH_SHORT).show();
+        Toast.makeText(StatisticsActivity.this,"day "+startDay+" month "+startMonth+ " y "+startYear,Toast.LENGTH_SHORT).show();
 
-        date = new GregorianCalendar(mYear,mMonth,mDay).getTime();
+        date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
         sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
-        dateString1 = sdf.format(date);
-        startDate = dateString1;
+        startDate = sdf.format(date);
+
 
 
 
@@ -124,10 +130,13 @@ public class StatisticsActivity extends AppCompatActivity {
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
                                 String dateString1 = sdf.format(date);
                                 startDate = dateString1;
+                                startDay=dayOfMonth;
+                                startMonth=monthOfYear;
+                                startYear=year;
                                 Toast.makeText(StatisticsActivity.this,dateString1,Toast.LENGTH_SHORT).show();
                                 butStartDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
-                        }, mYear, mMonth, mDay);
+                        }, startYear, startMonth, startDay);
                 dpd.show();
             }
         });
@@ -146,10 +155,13 @@ public class StatisticsActivity extends AppCompatActivity {
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                                 String dateString1 = sdf.format(date);
                                 endDate = dateString1;
+                                endDay=dayOfMonth;
+                                endMonth=monthOfYear;
+                                endYear=year;
                                 Toast.makeText(StatisticsActivity.this,dateString1,Toast.LENGTH_SHORT).show();
                                 butEndDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
-                        }, mYear, mMonth, mDay);
+                        }, endYear, endMonth, endDay  );
                 dpd.show();
             }
         });
@@ -161,11 +173,14 @@ public class StatisticsActivity extends AppCompatActivity {
         GridView gridView = (GridView) findViewById(R.id.gridView);
         gridView.setAdapter(gridAdapter);
 
-        TableRow tl = (TableRow) findViewById(R.id.tableRow2);
-        TextView tv = (TextView) findViewById(R.id.avgNum);
+        final TextView tvAvg = (TextView) findViewById(R.id.avgNum);
+        final TextView tvTot = (TextView) findViewById(R.id.totalNum);
+        final TextView tvMax = (TextView) findViewById(R.id.maxNum);
+        final TextView tvMin = (TextView) findViewById(R.id.minNum);
 
-        final TextView tvs = (TextView) findViewById(R.id.seektvtop);
+        final TextView tvGoalTitleNum = (TextView) findViewById(R.id.goalsTitleNum);
 
+        final TextView tvstop = (TextView) findViewById(R.id.seektvtop);
         final SeekBar sbTop = (SeekBar) findViewById(R.id.seekBarTop);
         final SeekBar sbBot = (SeekBar) findViewById(R.id.seekBarBot);
 
@@ -177,12 +192,12 @@ public class StatisticsActivity extends AppCompatActivity {
 
                 if(progress<=minUpperBound){
                     m=1;
-                    tvs.setText(minUpperBound+"");
+                    tvstop.setText(minUpperBound+"");
                     sbTop.setProgress(minUpperBound);
                     maxLowerBound=minUpperBound;
 
                 }else{
-                    tvs.setText(progress+"");
+                    tvstop.setText(progress+"");
                     maxLowerBound=progress;
                 }
             }
@@ -198,18 +213,19 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-        final TextView tvsbbot = (TextView) findViewById(R.id.seektvbot);
+        final TextView tvsbot = (TextView) findViewById(R.id.seektvbot);
 
         sbBot.setProgress(0);
         sbBot.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress>=maxLowerBound){
-                    tvsbbot.setText(progress+"");
+
+                    tvsbot.setText(progress+"");
                     sbBot.setProgress(maxLowerBound);
                     minUpperBound=maxLowerBound;
                 }else {
-                    tvsbbot.setText(progress+"");
+                    tvsbot.setText(progress+"");
 
                     minUpperBound=progress;
                 }
@@ -232,9 +248,12 @@ public class StatisticsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String unitsSpinString = unitsSpin.getSelectedItem().toString();
-
-                String startPercent="";
-                String endPercent="";
+                goals.clear();
+                total=0f;
+                max=Float.MIN_VALUE;
+                min=Float.MAX_VALUE;
+                String startPercent = Integer.toString(sbBot.getProgress());
+                String endPercent = Integer.toString(sbTop.getProgress());
                 Cursor result = dbHelper.getStatistics(startDate,endDate,startPercent,endPercent);
 
                 //put that result into the table
@@ -242,7 +261,7 @@ public class StatisticsActivity extends AppCompatActivity {
                 result.moveToFirst();
                 while(!result.isAfterLast()){
                     String name = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_NAME));
-                    boolean active = false;
+                    boolean active = true;
                     float steps=0f;
                     try {
                         steps = Float.parseFloat(result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS)));
@@ -256,11 +275,23 @@ public class StatisticsActivity extends AppCompatActivity {
                     if(steps<min){
                         min=steps;
                     }
-                    //goals.add(new Goal(name,steps,active));
-                }
-                //average=total/goals.size();
 
+                    goals.add(new Goal(name,steps,active));
+                    result.moveToNext();
+                }
+                if(goals.size()==0){
+                    average=0f;
+                }else {
+                    average = total / goals.size();
+                }
                 gridAdapter.notifyDataSetChanged();
+                //updateTable()
+                tvGoalTitleNum.setText(""+goals.size());
+                tvAvg.setText(""+average);
+                tvMax.setText(""+max);
+                tvMin.setText(""+min);
+                tvTot.setText(""+total);
+
             }
         });
     }

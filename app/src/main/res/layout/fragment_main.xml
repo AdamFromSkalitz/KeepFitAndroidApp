@@ -16,51 +16,119 @@
         android:layout_marginBottom="70dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
-            android:layout_centerHorizontal="true">
+            android:layout_marginTop="10dp">
 
-            <TextView
-                android:id="@+id/textUnits"
+            <TableLayout
+                android:id="@+id/table"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="50dp"
-                android:text="Units" />
+                android:layout_below="@id/buttonConfirm"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/textViewGoalNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textUnits"
-                android:text="Goal" />
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp">
 
-            <TextView
-                android:id="@+id/textViewProgressNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="60dp"
-                android:layout_below="@id/textViewGoalNumber"
-                android:text="Progress" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="50sp"
+                        android:layout_marginRight="50sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Units"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="50sp"
+                        android:layout_marginRight="50sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Goal"
+                        android:textSize="19sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Progress"
+                        android:textSize="19sp" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tableRow2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="0dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="50sp"
+                        android:layout_marginRight="50sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Steps"
+                        android:textColor="@color/colorAccent"
+                        android:id="@+id/tvunits"
+                        android:textSize="23sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="50sp"
+                        android:layout_marginRight="50sp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0.0"
+                        android:textColor="@color/colorAccent"
+                        android:id="@+id/tvgoal"
+                        android:textSize="23sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:id="@+id/tvprogress"
+                        android:text="0.0"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="23sp" />
+                </TableRow>
+            </TableLayout>
+
+
 
             <com.github.mikephil.charting.charts.PieChart
 
-                android:layout_margin="30dp"
                 android:id="@+id/chartPie"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/textViewProgressNumber"
+                android:layout_below="@id/table"
+                android:layout_margin="30dp"
 
                 android:layout_marginBottom="100dp">
 
             </com.github.mikephil.charting.charts.PieChart>
-
 
 
         </RelativeLayout>
