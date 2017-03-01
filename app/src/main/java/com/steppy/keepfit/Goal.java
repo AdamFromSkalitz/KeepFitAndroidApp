@@ -11,11 +11,13 @@ public class Goal implements Serializable {
     private String name;
     private float steps;
     private boolean active;
+    private String units;
 
-    public Goal(String name, float steps, boolean active) {
+    public Goal(String name, float steps, boolean active,String units) {
         this.name = name;
         this.steps = steps;
         this.active = active;
+        this.units = units;
     }
 
     public String getName(){
@@ -27,7 +29,6 @@ public class Goal implements Serializable {
     public boolean isActive(){
         return active;
     }
-
     public void setName(String Name){
         name = Name;
     }
@@ -35,7 +36,15 @@ public class Goal implements Serializable {
         steps=Steps;
     }
     public void makeActive(boolean Active){
-        active = active;
+        this.active = Active;
     }
+
+    public void setUnits(String units){
+        this.units=units;
+    }
+    public String getUnits(){
+        return units;
+    }
+
 
 }

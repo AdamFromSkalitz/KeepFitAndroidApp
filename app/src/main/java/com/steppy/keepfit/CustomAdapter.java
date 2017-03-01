@@ -82,7 +82,6 @@ public class CustomAdapter extends BaseAdapter {
             imgActive.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-
                     dbHelper = new DBHelper(context);
                     Cursor cur = dbHelper.getGoal(g.getName());
                     cur.moveToFirst();
@@ -97,7 +96,6 @@ public class CustomAdapter extends BaseAdapter {
                     String date =  cur.getString(cur.getColumnIndex(DBHelper.COLUMN_DATE));
                     String units = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_UNITS));
                     cur.close();
-
                     if(active.equals("true")) {
                         //if active, make unactive
                         dbHelper.updateGoal(id, name, goal, "false", date,units);
@@ -105,7 +103,6 @@ public class CustomAdapter extends BaseAdapter {
                         imgActive.setBackgroundResource(R.drawable.pause);
                         //imgActive.setBackgroundColor(Color.parseColor("#e99c9c"));
                     }
-
                     else if(active.equals("false")){
 
                         //make all goals inactive
@@ -134,7 +131,6 @@ public class CustomAdapter extends BaseAdapter {
                         //imgActive.setBackgroundColor(Color.parseColor("#00704a"));
                     }
                     dbHelper.close();
-
                 }
             });
 

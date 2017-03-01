@@ -6,7 +6,7 @@
         android:id="@+id/tab_graph"
         android:enabled="true"
         android:icon="@drawable/chart"
-        android:title="Graph"
+        android:title="History"
         android:checkable="true"
         app:showAsAction="ifRoom" />
     <item
@@ -14,7 +14,7 @@
         android:enabled="true"
         android:icon="@drawable/step"
         android:checkable="true"
-        android:title="Main"
+        android:title="Home"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/tab_goals"

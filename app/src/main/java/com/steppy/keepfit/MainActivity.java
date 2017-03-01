@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.replace(R.id.progressMiddle, mainFragment);
-        fragmentTransaction.addToBackStack(null);
+        //fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         //Toast.makeText(MainActivity.this,"month"+monthh,Toast.LENGTH_LONG).show();

@@ -67,15 +67,16 @@ public class AddGoalsActivity extends AppCompatActivity {
             steps.setVisibility(View.VISIBLE);
             steps.setHint("Steps Taken");
 
+            final Calendar c = Calendar.getInstance();
+            mYear = c.get(Calendar.YEAR);
+            mMonth = c.get(Calendar.MONTH);
+            mDay = c.get(Calendar.DAY_OF_MONTH);
+
             final Button dateBut = (Button) findViewById(R.id.addDateBut);//new Button(this);
             dateBut.setVisibility(View.VISIBLE);
             dateBut.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    final Calendar c = Calendar.getInstance();
-                    mYear = c.get(Calendar.YEAR);
-                    mMonth = c.get(Calendar.MONTH);
-                    mDay = c.get(Calendar.DAY_OF_MONTH);
 
                     DatePickerDialog dpd = new DatePickerDialog(AddGoalsActivity.this,
                             new DatePickerDialog.OnDateSetListener() {

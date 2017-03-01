@@ -6,9 +6,14 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +43,7 @@ import static android.R.attr.data;
 public class ViewGoalsFragment extends Fragment{
     ListView listView;
     ArrayList<Goal> ItemGoalList;
-    CustomAdapter customAdapter;
+    //CustomAdapter customAdapter;
     DBHelper dbHelper;
 
     FileInputStream fis;
@@ -52,12 +57,21 @@ public class ViewGoalsFragment extends Fragment{
         // Inflate the layout for this fragment
         final View goalView = inflater.inflate(R.layout.fragment_goals, container, false);
 
-        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Goals");
-        listView = (ListView) goalView.findViewById(R.id.goalList);
         ItemGoalList = new ArrayList<Goal>();
-        customAdapter = new CustomAdapter(getActivity(), goalView,ItemGoalList);
-        listView.setEmptyView(goalView.findViewById(R.id.empty));
-        listView.setAdapter(customAdapter);
+
+        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Goals");
+
+        RecyclerView rv = (RecyclerView) goalView.findViewById(R.id.rv);
+        rv.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(goalView.getContext());
+        rv.setLayoutManager(llm);
+        RVAdapter adapter = new RVAdapter(ItemGoalList,goalView.getContext());
+        rv.setAdapter(adapter);
+
+//        listView = (ListView) goalView.findViewById(R.id.goalList);
+//        customAdapter = new CustomAdapter(getActivity(), goalView,ItemGoalList);
+//        listView.setEmptyView(goalView.findViewById(R.id.empty));
+//        listView.setAdapter(customAdapter);
 
 
         populateList();
@@ -94,14 +108,17 @@ public class ViewGoalsFragment extends Fragment{
         while(!cursor.isAfterLast()){
             String active = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_ACTIVE));
             boolean activeBool = Boolean.parseBoolean(active);
-            String goalValue = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
-            int goalValueInt = Integer.parseInt(goalValue);
+            Float goalValue = cursor.getFloat(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+
             String name = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_NAME));
-            Goal goal = new Goal(name,goalValueInt,activeBool);
+            String units = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
+            int goalValueInt = (int) convertToUnits(units, goalValue);
+
+            Goal goal = new Goal(name,goalValueInt,activeBool,units);
             ItemGoalList.add(goal);
             cursor.moveToNext();
         }
-        customAdapter.notifyDataSetChanged();
+        //customAdapter.notifyDataSetChanged();
         cursor.close();
         dbHelper.close();
     }
@@ -126,6 +143,26 @@ public class ViewGoalsFragment extends Fragment{
     public void addSteps(){
         Intent intent = new Intent(getActivity(),AddStepsActivity.class);
         startActivity(intent);
+    }
+    public float convertToUnits(String unitsSpinString,float progress){
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());;
+
+        switch (unitsSpinString){
+            case "Kilometres":
+                float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+                int progressStepsCM = (int)progress*(int)cmMap;
+                progress = (float)progressStepsCM/100000;
+                break;
+            case "Miles":
+                float inch = Float.parseFloat(SP.getString("mappingImp","30"));
+                float progressStepsINC = progress*inch;
+                progress = progressStepsINC/(36*1760);
+                break;
+            case "Steps":
+                break;
+        }
+        return progress;
     }
 
 }

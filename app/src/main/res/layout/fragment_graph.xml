@@ -10,28 +10,43 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="0dp">
+        android:layout_marginTop="10dp">
 
         <LinearLayout
-            android:layout_margin="6dp"
+            android:id="@+id/datePicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:id="@+id/datePicker">
+            android:layout_margin="10dp">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Choose Period:     "/>
+                android:layout_marginLeft="5dp"
+                android:text="Choose Period:"
+                android:textSize="17sp" />
+
             <Button
-                android:layout_width="wrap_content"
                 android:id="@+id/buttonStartDate"
-                android:layout_height="wrap_content"
-                android:text="start date"/>
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_marginLeft="35dp"
+                android:background="@drawable/buttonshape"
+                android:text="Start Date"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
             <Button
                 android:id="@+id/buttonEndDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="end date"/>
+                android:layout_width="100dp"
+                android:layout_height="31dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/buttonshape"
+                android:text="End Date"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -41,19 +56,20 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/datePicker"
             android:layout_centerHorizontal="true"
-            android:layout_margin="5dp">
+            android:layout_margin="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="Units:     "
+                android:layout_marginLeft="7dp"
+                android:text="Units Progress:     "
                 android:textSize="17sp" />
 
             <Spinner
                 android:id="@+id/spinnerUnits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="11dp"
                 android:entries="@array/listArray"
                 android:textSize="17dp">
 
@@ -61,41 +77,68 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/percent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/percent"
-            android:layout_below="@id/layoutUnits">
+            android:layout_below="@id/layoutUnits"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="30dp">
 
             <Spinner
                 android:id="@+id/spinnerCutOff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:entries="@array/history"
-               >
+                android:layout_marginLeft="4dp">
+
             </Spinner>
 
-            <EditText
+            <SeekBar
+                android:id="@+id/seekBarCutOff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/editTextCutOff"
-                android:hint="Percentage"
+                android:layout_weight=".8"
+                android:progress="100"
+                android:secondaryProgress="0" />
+
+            <TextView
+                android:id="@+id/seektvCutOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="-1dp"
+                android:layout_weight=".1"
                 android:text="0"
+                android:textSize="17sp" />
+ <!--           <EditText
+                android:id="@+id/editTextCutOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Percentage"
                 android:inputType="phone"
-                />
+                android:text="0" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="%"
-                />
-
+                android:text="%" />
+-->
         </LinearLayout>
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="31dp"
+            android:layout_margin="10dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/buttonshape"
+            android:shadowColor="#A8A8A8"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textAllCaps="false"
+            android:textColor="#000000"
             android:id="@+id/buttonConfirm"
             android:layout_below="@id/percent"
-            android:layout_height="wrap_content"
-            android:text="Confirm Options"/>
+            android:text="Confirm Options" />
 
         <com.github.mikephil.charting.charts.BarChart
 
@@ -103,7 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/buttonConfirm"
-            android:layout_marginBottom="80dp">
+            android:layout_marginBottom="60dp">
 
         </com.github.mikephil.charting.charts.BarChart>
 

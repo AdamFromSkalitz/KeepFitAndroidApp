@@ -2,10 +2,15 @@ package com.steppy.keepfit;
 
 import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.annotation.Target;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,6 +66,19 @@ public class StatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Statistics");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                onBackPressed();
+            }
+        });
+
+
         dbHelper = new DBHelper(StatisticsActivity.this);
 
 
@@ -77,10 +96,6 @@ public class StatisticsActivity extends AppCompatActivity {
         String dateString1 = sdf.format(date);
         endDate = dateString1;
 
-        //setInitalDates();
-//        monthPrev=mMonth;
-//        dayPrev=mDay;
-//        yearPrev=mYear;
         if(startDay-7<1){
             //change month to previous month
             if(startMonth-1<0) {
@@ -111,8 +126,6 @@ public class StatisticsActivity extends AppCompatActivity {
         date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
         sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
         startDate = sdf.format(date);
-
-
 
 
         final Button butStartDate = (Button) findViewById(R.id.buttonStartDate);
@@ -185,7 +198,6 @@ public class StatisticsActivity extends AppCompatActivity {
         final SeekBar sbBot = (SeekBar) findViewById(R.id.seekBarBot);
 
         sbTop.setProgress(100);
-
         sbTop.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -261,6 +273,7 @@ public class StatisticsActivity extends AppCompatActivity {
                 result.moveToFirst();
                 while(!result.isAfterLast()){
                     String name = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_NAME));
+                    String units = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
                     boolean active = true;
                     float steps=0f;
                     try {
@@ -276,7 +289,7 @@ public class StatisticsActivity extends AppCompatActivity {
                         min=steps;
                     }
 
-                    goals.add(new Goal(name,steps,active));
+                    goals.add(new Goal(name,steps,active,units));
                     result.moveToNext();
                 }
                 if(goals.size()==0){
@@ -287,10 +300,19 @@ public class StatisticsActivity extends AppCompatActivity {
                 gridAdapter.notifyDataSetChanged();
                 //updateTable()
                 tvGoalTitleNum.setText(""+goals.size());
-                tvAvg.setText(""+average);
-                tvMax.setText(""+max);
-                tvMin.setText(""+min);
-                tvTot.setText(""+total);
+
+                DecimalFormat df = new DecimalFormat("##.##");
+
+                String convertedAverage= df.format(convertToUnits(unitsSpinString,average));
+                String convertedMax= df.format(convertToUnits(unitsSpinString,max));
+                String convertedMin= df.format(convertToUnits(unitsSpinString,min));
+                String convertedTotal= df.format(convertToUnits(unitsSpinString,total));
+
+
+                tvAvg.setText(convertedAverage);
+                tvMax.setText(""+convertedMax);
+                tvMin.setText(""+convertedMin);
+                tvTot.setText(""+convertedTotal);
 
             }
         });
@@ -299,5 +321,28 @@ public class StatisticsActivity extends AppCompatActivity {
     public String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month];
     }
+
+
+    public float convertToUnits(String unitsSpinString,float progress){
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);;
+
+        switch (unitsSpinString){
+            case "Kilometres":
+                float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+                int progressStepsCM = (int)progress*(int)cmMap;
+                progress = (float)progressStepsCM/100000;
+                break;
+            case "Miles":
+                float inch = Float.parseFloat(SP.getString("mappingImp","30"));
+                float progressStepsINC = progress*inch;
+                progress = progressStepsINC/(36*1760);
+                break;
+            case "Steps":
+                break;
+        }
+        return progress;
+    }
+
 
 }

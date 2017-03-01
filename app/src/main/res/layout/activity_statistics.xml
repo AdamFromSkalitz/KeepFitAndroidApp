@@ -6,13 +6,20 @@
     android:layout_height="match_parent"
     tools:context="com.steppy.keepfit.StatisticsActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        >
+    </include>
+
     <LinearLayout
         android:id="@+id/datePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="20dp"
+        android:layout_below="@id/toolbar">
 
         <TextView
             android:layout_width="wrap_content"
@@ -33,10 +40,6 @@
             android:layout_width="100dp"
             android:layout_height="31dp"
             android:background="@drawable/buttonshape"
-            android:shadowColor="#A8A8A8"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:textSize="15sp"

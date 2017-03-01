@@ -14,20 +14,26 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp">
 
         <EditText
             android:id="@+id/stepsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:hint="Steps"
-            android:inputType="phone" />
+            android:layout_margin="10dp"
+            android:hint="Steps Taken"
+            android:inputType="phone"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"/>
 
         <Spinner
             android:id="@+id/spinnerUnits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
             android:layout_below="@id/stepsText"
             android:entries="@array/listArray">
 
@@ -36,11 +42,13 @@
 
         <Button
             android:id="@+id/setButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/stepsText"
-            android:layout_marginRight="60dp"
-            android:layout_marginTop="60dp"
-            android:text="Save Steps" />
+            android:layout_gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/spinnerUnits"
+            android:text="Save Steps"
+            android:layout_width="100dp"
+            android:layout_height="31dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/buttonshape"/>
     </RelativeLayout>
 </RelativeLayout>

@@ -2,6 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:layout_marginBottom="100dp"
         android:title="Testing"
         android:key="test">
 
@@ -49,13 +50,14 @@
         android:title="Default Presentation Mode"
         android:key="defaultPres">
 
-        <EditTextPreference
-            android:defaultValue="hmm"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="Ummmm, what?"
-            android:summary="select the default mode for the presentation of the activity and goal history and the statistics (basically the view that would be presented to the user)."
-            android:key="pres" />
+        <ListPreference
+            android:title="Past View"
+            android:key="pastLength"
+            android:defaultValue="1"
+            android:summary="Set how far into the past Statistics and History show on default"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues"/>
+
     </PreferenceCategory>
 
 

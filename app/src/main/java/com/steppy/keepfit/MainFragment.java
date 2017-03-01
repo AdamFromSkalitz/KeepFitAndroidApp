@@ -1,6 +1,9 @@
 package com.steppy.keepfit;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -54,10 +57,12 @@ public class MainFragment extends Fragment {
     TextView progress;
     TextView goalValue;
     TextView unitsView;
+    TextView goalName;
     DBHelper dbHelper;
     private String stepsProgress="0";
     private String goal="0";
     private String units = "";
+    private String name="";
     public static final String PREFS_NAME = "MyPrefsFile";
     List<PieEntry> entries = new ArrayList<>();
 
@@ -80,9 +85,11 @@ public class MainFragment extends Fragment {
         DecimalFormat df = new DecimalFormat("##.##");
         goalValue = (TextView) mainView.findViewById(R.id.tvgoal);
         unitsView = (TextView) mainView.findViewById(R.id.tvunits);
+        goalName = (TextView) mainView.findViewById(R.id.tvName);
         Cursor cursor = dbHelper.getActiveGoal();
         cursor.moveToFirst();
         try {
+            name = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_NAME));
             units = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
             int goalInt = cursor.getInt(cursor.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
             float stepsFloat=stepsToUnits(goalInt);
@@ -90,8 +97,10 @@ public class MainFragment extends Fragment {
         }catch(Exception e){
             goal="0";
             units="";
+            name="";
             e.printStackTrace();
         }
+        goalName.setText(name);
         unitsView.setText(units);
         goalValue.setText(goal);
         cursor.close();
@@ -163,7 +172,8 @@ public class MainFragment extends Fragment {
 //        entries.add(new BarEntry(4,4));
 
         PieDataSet dataSet = new PieDataSet(entries,"");
-        dataSet.setValueTextSize(15f);
+        dataSet.setValueTextSize(17f);
+        dataSet.setValueTextColor(Color.BLACK);
         dataSet.setColor(Color.BLACK);
 
         // add many colors
@@ -190,10 +200,16 @@ public class MainFragment extends Fragment {
         dataSet.setColors(colors);
 
         PieData pieData = new PieData(dataSet);
+        pieData.setValueTextSize(15f);
+        pieData.setValueTextColor(Color.BLACK);
         pieData.setValueFormatter(new PercentFormatter());
+
+        chart.setEntryLabelColor(Color.BLACK);
+        chart.setEntryLabelTextSize(15f);
 
         chart.setData(pieData);
         chart.invalidate();
+
 
 
         FloatingActionButton goalFab = (FloatingActionButton) mainView.findViewById(R.id.fabGoals);
@@ -204,8 +220,13 @@ public class MainFragment extends Fragment {
         });
         FloatingActionButton stepFab = (FloatingActionButton) mainView.findViewById(R.id.fabSteps);
         stepFab.setOnClickListener(new View.OnClickListener(){
+            @TargetApi(21)
             public void onClick(View v){
-                addSteps();
+               // AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                FragmentManager fragmentManager = getFragmentManager();
+                DialogFragment addstepsfrag = new AddStepsDialog();
+                addstepsfrag.show(fragmentManager,"hello");
+
             }
         });
 

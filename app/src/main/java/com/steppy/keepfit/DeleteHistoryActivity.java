@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,6 +17,18 @@ public class DeleteHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_history);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Delete History");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                onBackPressed();
+            }
+        });
+
         dbHelper = new DBHelper(this);
         Button del = (Button) findViewById(R.id.buttonDel);
 
@@ -27,13 +40,13 @@ public class DeleteHistoryActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                Toast.makeText(DeleteHistoryActivity.this,"yes",Toast.LENGTH_LONG).show();
+                                //Toast.makeText(DeleteHistoryActivity.this,"yes",Toast.LENGTH_LONG).show();
                                 dbHelper.deleteAllOldGoals();
                                 dbHelper.close();
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
-                                Toast.makeText(DeleteHistoryActivity.this,"no",Toast.LENGTH_LONG).show();
+                                //Toast.makeText(DeleteHistoryActivity.this,"no",Toast.LENGTH_LONG).show();
                                 //No button clicked
                                 break;
                         }
