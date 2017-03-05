@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:fab="http://schemas.android.com/apk/res-auto">
 
@@ -12,26 +14,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="70dp"
-
-
         >
-
-<!--        <ListView
-            android:id="@+id/goalList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            />
--->
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/rv"
             android:scrollbars="vertical"
-
             />
 
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="There are no goals here :(">
+
+        </TextView>
 
         <com.github.clans.fab.FloatingActionMenu
             android:id="@+id/floatingMenu"
@@ -48,6 +48,8 @@
             fab:menu_colorPressed="#00C29F"
             fab:menu_colorRipple="#00C29F"
             android:padding="8dp">
+            <!--app:layout_behavior="com.steppy.keepfit.ScrollAwareFABBehaviour"-->
+
 
             <com.github.clans.fab.FloatingActionButton
                 android:id="@+id/fabSteps"

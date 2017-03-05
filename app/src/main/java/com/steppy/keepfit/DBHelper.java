@@ -40,8 +40,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String PROGRESS_COLUMN_GOAL = "goalName"; //? needed?
     public static final String PROGRESS_COLUMN_STEPS = "steps";
 
+    private Context mContext;
     public DBHelper(Context context) {
         super(context, DATABASE_NAME , null, DATABASE_VERSION);
+        mContext=context;
     }
 
     @Override
@@ -160,7 +162,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor resPro = db.rawQuery("SELECT * FROM " + PROGRESS_TABLE_NAME + " WHERE " +
                 COLUMN_ID + "=?", new String[] {"1"});
-
+//        resPro.setNotificationUri(mContext.getContentResolver(),uri);
         if(resPro.getCount()==0){
             //If there is no progress entry
             ContentValues contentValues = new ContentValues();
@@ -215,6 +217,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
+    public int resetDayProgress(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.delete(PROGRESS_TABLE_NAME,
+                null, null);
+    }
 
     // closing database
     public void closeDB() {

@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -46,6 +47,7 @@ import java.util.List;
 import static android.R.attr.color;
 import static android.R.attr.data;
 import static android.R.attr.entries;
+import static android.R.attr.fillAfter;
 import static android.R.attr.uncertainGestureColor;
 import static android.icu.lang.UCharacter.SentenceBreak.SP;
 
@@ -58,6 +60,7 @@ public class MainFragment extends Fragment {
     TextView goalValue;
     TextView unitsView;
     TextView goalName;
+    TextView emptyView;
     DBHelper dbHelper;
     private String stepsProgress="0";
     private String goal="0";
@@ -82,6 +85,7 @@ public class MainFragment extends Fragment {
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Home");
 
         dbHelper = new DBHelper(getActivity());
+        emptyView = (TextView) mainView.findViewById(R.id.empty_view);
         DecimalFormat df = new DecimalFormat("##.##");
         goalValue = (TextView) mainView.findViewById(R.id.tvgoal);
         unitsView = (TextView) mainView.findViewById(R.id.tvunits);
@@ -96,8 +100,8 @@ public class MainFragment extends Fragment {
             goal=df.format(stepsFloat);//""+stepsFloat;
         }catch(Exception e){
             goal="0";
-            units="";
-            name="";
+            units=" -- ";
+            name=" -- ";
             e.printStackTrace();
         }
         goalName.setText(name);
@@ -166,11 +170,18 @@ public class MainFragment extends Fragment {
             percent=100;
             percentToComplete=0;
         }
+        if(goal.equals("0")){
+            Toast.makeText(getActivity(),""+entries.size(),Toast.LENGTH_SHORT).show();
+            chart.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
 
-        entries.add(new PieEntry((int)percent,"Progress"));
-        entries.add(new PieEntry(percentToComplete,"Goal left"));
+        }else {
+            chart.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+            entries.add(new PieEntry((int) percent, "Progress"));
+            entries.add(new PieEntry(percentToComplete, "Goal left"));
 //        entries.add(new BarEntry(4,4));
-
+        }
         PieDataSet dataSet = new PieDataSet(entries,"");
         dataSet.setValueTextSize(17f);
         dataSet.setValueTextColor(Color.BLACK);
@@ -206,7 +217,7 @@ public class MainFragment extends Fragment {
 
         chart.setEntryLabelColor(Color.BLACK);
         chart.setEntryLabelTextSize(15f);
-
+        //chart.setNoDataText("Please make a goal active");
         chart.setData(pieData);
         chart.invalidate();
 
@@ -216,17 +227,14 @@ public class MainFragment extends Fragment {
         goalFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addGoals();
+
             }
         });
         FloatingActionButton stepFab = (FloatingActionButton) mainView.findViewById(R.id.fabSteps);
         stepFab.setOnClickListener(new View.OnClickListener(){
             @TargetApi(21)
             public void onClick(View v){
-               // AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                FragmentManager fragmentManager = getFragmentManager();
-                DialogFragment addstepsfrag = new AddStepsDialog();
-                addstepsfrag.show(fragmentManager,"hello");
-
+                addSteps();
             }
         });
 

@@ -43,29 +43,4 @@
         android:inputType="phone"
         android:hint="Goal Value"
         android:layout_centerHorizontal="true"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:id="@+id/stepsText"
-        android:hint="Steps Taken"
-        android:visibility="gone"
-        android:layout_below="@id/goalsText"
-        android:inputType="phone"
-        android:layout_gravity="center_horizontal"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"/>
-
-    <Button
-        android:text="Pick Date"
-        android:id="@+id/addDateBut"
-        android:layout_below="@id/stepsText"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        android:layout_width="100dp"
-        android:layout_height="31dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/buttonshape"
-        />
 </LinearLayout>

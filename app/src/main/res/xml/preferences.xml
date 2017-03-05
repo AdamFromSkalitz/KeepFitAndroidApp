@@ -3,60 +3,68 @@
 
     <PreferenceCategory
         android:layout_marginBottom="100dp"
-        android:title="Testing"
-        android:key="test">
+        android:key="test"
+        android:title="Testing">
 
         <SwitchPreference
-            android:title="Test Mode"
-            android:key="enableTest"
             android:id="@+id/testMode"
+            android:defaultValue="false"
+            android:key="enableTest"
             android:summary="Allow insertion of goal with any date"
-            android:defaultValue="false"/>
+            android:title="Test Mode" />
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="User Preferences"
-        android:key="prefs">
+        android:key="prefs"
+        android:title="User Preferences">
+
+
+        <SwitchPreference
+            android:id="@+id/notifications"
+            android:defaultValue="false"
+            android:key="enableNotify"
+            android:summary="Turn notifications on or off"
+            android:title="Notifications" />
 
         <ListPreference
-            android:title="Units"
-            android:key="units"
             android:defaultValue="1"
-            android:summary="Change units the 'steps' are in"
             android:entries="@array/listArray"
-            android:entryValues="@array/listValues"/>
+            android:entryValues="@array/listValues"
+            android:key="units"
+            android:summary="Change units the 'steps' are in"
+            android:title="Units" />
 
         <EditTextPreference
             android:defaultValue="75"
+            android:inputType="number"
+            android:key="mappingMet"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Metric Units Mapping"
             android:summary="How many metres long is your step?"
-            android:key="mappingMet"
-            android:inputType="number"/>
+            android:title="Metric Units Mapping" />
 
         <EditTextPreference
             android:defaultValue="30"
             android:inputType="number"
+            android:key="mappingImp"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Silly Units Mapping"
             android:summary="How many inches long is your step?"
-            android:key="mappingImp" />
+            android:title="Silly Units Mapping" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Default Presentation Mode"
-        android:key="defaultPres">
+        android:key="defaultPres"
+        android:title="Default Presentation Mode">
 
         <ListPreference
-            android:title="Past View"
-            android:key="pastLength"
             android:defaultValue="1"
+            android:entries="@array/pastArray"
+            android:entryValues="@array/listValues"
+            android:key="pastLength"
             android:summary="Set how far into the past Statistics and History show on default"
-            android:entries="@array/listArray"
-            android:entryValues="@array/listValues"/>
+            android:title="Past View" />
 
     </PreferenceCategory>
 

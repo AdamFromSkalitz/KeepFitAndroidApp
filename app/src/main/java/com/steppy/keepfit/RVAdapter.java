@@ -63,6 +63,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
     public GoalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
         GoalViewHolder gvh = new GoalViewHolder(v);
+
         return gvh;
     }
 
@@ -71,9 +72,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
         //Toast.makeText(context,"onBind",Toast.LENGTH_SHORT).show();
 
         if (goals.get(i).isActive()) {
-            personViewHolder.active.setBackgroundResource(R.drawable.play);
-        } else {
             personViewHolder.active.setBackgroundResource(R.drawable.pause);
+        } else {
+            personViewHolder.active.setBackgroundResource(R.drawable.play);
         }
 
         personViewHolder.goalName.setText(goals.get(i).getName());
@@ -102,7 +103,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                     //if active, make unactive
                     goals.get(i).makeActive(false);
                     dbHelper.updateGoal(id, name, goal, "false", date, units);
-                    personViewHolder.active.setBackgroundResource(R.drawable.pause);
+                    personViewHolder.active.setBackgroundResource(R.drawable.play);
                 } else if (active.equals("false")) {
                     //make all goals inactive
                     final Cursor cursor = dbHelper.getAllGoals();
@@ -115,14 +116,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                         String unitsTemp = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
                         dbHelper.updateGoal(idTemp, nameTemp, goalTemp, "false", dateTemp, unitsTemp);
                         cursor.moveToNext();
-                        personViewHolder.active.setBackgroundResource(R.drawable.pause);
+                        personViewHolder.active.setBackgroundResource(R.drawable.play);
                     }
                     for (Goal g : goals) {
                         g.makeActive(false);
                     }
                     //if unactive, make active
                     goals.get(i).makeActive(true);
-                    personViewHolder.active.setBackgroundResource(R.drawable.play);
+                    personViewHolder.active.setBackgroundResource(R.drawable.pause);
                     dbHelper.updateGoal(id, name, goal, "true", date, units);
                     cursor.close();
                     //imgActive.setBackgroundColor(Color.parseColor("#00704a"));
@@ -144,7 +145,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
 
                 // Inflate and set the layout for the dialog
                 // Pass null as the parent view because its going in the dialog layout
-                final View dialogView = inflater.inflate(R.layout.fragment_add_steps_dialog, null);
+                final View dialogView = inflater.inflate(R.layout.fragment_edit_steps_dialog, null);
 
 
                 dbHelper = new DBHelper(context);

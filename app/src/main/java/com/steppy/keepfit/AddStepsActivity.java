@@ -1,5 +1,6 @@
 package com.steppy.keepfit;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 
 import java.util.Date;
 
-public class AddStepsActivity extends AppCompatActivity {
+public class AddStepsActivity extends Activity {
 
     DBHelper dbHelper;
 
@@ -37,11 +38,13 @@ public class AddStepsActivity extends AppCompatActivity {
                 float progressInt=0f;
                 try {
                     progressInt = Float.parseFloat(progressString);
-                }catch (NumberFormatException e){
-                    Toast.makeText(AddStepsActivity.this,"Please add a number", Toast.LENGTH_SHORT).show();
-                    return;
+//                }catch (NumberFormatException e){
+//                    Toast.makeText(AddStepsActivity.this,"Please add a number", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 }catch (Exception e){
-                    Toast.makeText(AddStepsActivity.this,"Please do it properly", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddStepsActivity.this,"Please do it properly", Toast.LENGTH_SHORT).show();
+                    goalProgress.setError("Field cannot be blank nor contain special characters");
                     e.printStackTrace();
                     return;
                 }

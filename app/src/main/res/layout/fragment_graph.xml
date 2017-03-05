@@ -140,6 +140,16 @@
             android:layout_below="@id/percent"
             android:text="Confirm Options" />
 
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="No goals found :(">
+        </TextView>
+
+
         <com.github.mikephil.charting.charts.BarChart
 
             android:id="@+id/chart"

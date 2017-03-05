@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -35,6 +36,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import static android.R.attr.data;
+import static android.R.attr.fingerprintAuthDrawable;
 
 /**
  * Created by Turkleton's on 03/02/2017.
@@ -62,6 +64,8 @@ public class ViewGoalsFragment extends Fragment{
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Goals");
 
         RecyclerView rv = (RecyclerView) goalView.findViewById(R.id.rv);
+
+
         rv.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(goalView.getContext());
         rv.setLayoutManager(llm);
@@ -76,12 +80,21 @@ public class ViewGoalsFragment extends Fragment{
 
         populateList();
 
+        TextView emptyView = (TextView) goalView.findViewById(R.id.empty_view);
+        if (ItemGoalList.isEmpty()) {
+            rv.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            rv.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
 
-        FloatingActionButton myFab = (FloatingActionButton) goalView.findViewById(R.id.fabGoals);
-        myFab.setOnClickListener(new View.OnClickListener() {
+        final FloatingActionMenu goalMenu =(FloatingActionMenu) goalView.findViewById(R.id.floatingMenu);
+        final FloatingActionButton goalFab = (FloatingActionButton) goalView.findViewById(R.id.fabGoals);
+        goalFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 addGoals();
-
             }
         });
         FloatingActionButton stepFab = (FloatingActionButton) goalView.findViewById(R.id.fabSteps);
@@ -90,6 +103,36 @@ public class ViewGoalsFragment extends Fragment{
                 addSteps();
             }
         });
+
+        rv.addOnScrollListener(new RecyclerView.OnScrollListener()
+        {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
+            {
+                int scrollDistance=0;
+//                if (dy > 0 ||dy<0 && goalMenu.isShown())
+//                {
+//                    goalMenu.hideMenu(true);
+//                }
+                if(dy > scrollDistance){
+                    goalMenu.hideMenu(true);
+                }else if(dy<scrollDistance){
+                    goalMenu.showMenu(true);
+                }
+            }
+
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState)
+//            {
+//                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+//                {
+//                    goalMenu.showMenu(true);
+//                }
+//
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+        });
+
         return goalView;
     }
 

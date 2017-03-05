@@ -5,8 +5,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:label="KeepFit"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_n"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <receiver android:name=".AlarmReceiver" />
@@ -25,12 +26,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".AddGoalsActivity">
+        <activity android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar" android:name=".AddGoalsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
-        <activity android:name=".AddStepsActivity" >
+        <activity android:theme="@android:style/Theme.Material.Light.Dialog.NoActionBar" android:name=".AddStepsActivity" >
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".MainActivity"/>

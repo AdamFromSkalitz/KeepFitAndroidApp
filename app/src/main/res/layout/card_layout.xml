@@ -22,11 +22,13 @@
 
                 <TextView
                     android:id="@+id/goal_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:hint="gooooooooals"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:id="@+id/goal_value_title"
@@ -37,12 +39,14 @@
 
                 <TextView
                     android:id="@+id/goal_value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/goal_name"
                     android:layout_toRightOf="@id/goal_value_title"
                     android:layout_marginLeft="5dp"
-                    android:hint="1232" />
+                    android:hint="1232"
+                    android:ellipsize="end"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:id="@+id/goal_units"
@@ -50,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/goal_name"
                     android:layout_toRightOf="@id/goal_value"
-                    android:hint="Kilometrse"
+                    android:hint="Kilometres"
                     android:layout_marginLeft="5dp"/>
 
             </RelativeLayout>

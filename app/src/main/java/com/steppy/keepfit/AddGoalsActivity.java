@@ -1,5 +1,6 @@
 package com.steppy.keepfit;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +40,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-public class AddGoalsActivity extends AppCompatActivity {
+public class AddGoalsActivity extends Activity {
     MainActivity mainact;
     private BottomBar bottomBar;
     final Handler handler = new Handler();
@@ -98,24 +99,43 @@ public class AddGoalsActivity extends AppCompatActivity {
         but.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EditText goalValue = (EditText) findViewById(R.id.goalsText);
+                Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
+                EditText name = (EditText) findViewById(R.id.nameText);
+
+                String nameString = (name.getText().toString()).trim();
+                String goalString = goalValue.getText().toString().trim();
+                String units = unitsSpin.getSelectedItem().toString();
+
+                if((nameString.equals("")) || (nameString.equals("0"))){
+                    name.setError("Field cannot be empty nor just 0");
+                    return;
+                }
+                try{
+                    float goalValueFloat = Float.parseFloat(goalString);
+                }catch (Exception e){
+                    goalValue.setError("Field cannot be blank nor contain special characters");
+                    return;
+                }
+
                 if(testMode){
                     dbHelper = new DBHelper(AddGoalsActivity.this);
-                    EditText name = (EditText) findViewById(R.id.nameText);
-                    EditText goalValue = (EditText) findViewById(R.id.goalsText);
                     EditText stepsValue = (EditText) findViewById(R.id.stepsText);
-                    String nameString = name.getText().toString();
-                    String goalString = goalValue.getText().toString();
                     String stepsString = stepsValue.getText().toString();
-                    Date date = new GregorianCalendar(mYear,mMonth,mDay).getTime();
+                    float stepsStringFloat=0f;
+                    try {
+                        stepsStringFloat = Float.parseFloat(stepsString);
+                    }catch (Exception e){
+                        stepsValue.setError("Field cannot be blank nor contain special characters");
+                        return;
+                    }
+                    Date date = new GregorianCalendar(mYear,mMonth,mDay-1).getTime();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateString1 = sdf.format(date);
-                    Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
-                    String units = unitsSpin.getSelectedItem().toString();
-                    //Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+dateString1,Toast.LENGTH_SHORT).show();
 
                     float i =Float.parseFloat(goalString);
                     float goalValueInt = turnIntoSteps(i);
-                    float stepsProgressInt = turnIntoSteps(Float.parseFloat(stepsString));
+                    float stepsProgressInt = turnIntoSteps(stepsStringFloat);
                     //int goalValueInt = Integer.parseInt(goalString);
                     //int stepsProgressInt = Integer.parseInt(stepsString);
 
@@ -134,22 +154,7 @@ public class AddGoalsActivity extends AppCompatActivity {
 
                 }else {
 
-                    EditText name = (EditText) findViewById(R.id.nameText);
-                    EditText goal = (EditText) findViewById(R.id.goalsText);
-                    Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
-                    String units = unitsSpin.getSelectedItem().toString();
-
-//                    Calendar cal = Calendar.getInstance();
-//                    cal.setTime(date);
-//                    int day = cal.get(Calendar.DAY_OF_MONTH);
-//                    int month = cal.get(Calendar.MONTH);
-//                    int year = cal.get(Calendar.YEAR);
-
                     dbHelper = new DBHelper(AddGoalsActivity.this);
-                    String nameString = name.getText().toString();
-                    String goalString = goal.getText().toString();
-
-
                     float stepsGoal = turnIntoSteps(Float.parseFloat(goalString));
 
                     Date date = new Date();
@@ -165,7 +170,8 @@ public class AddGoalsActivity extends AppCompatActivity {
                     }
                     dbHelper.close();
                 }
-                backToPrevFrag();
+                finish();
+                //backToPrevFrag();
             }
         });
     }

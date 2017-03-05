@@ -79,6 +79,7 @@ public class GraphFragment extends Fragment {
     private String cutOffDirection="No Selection";
     private String cutOffPercentage="0";
     private Button buttonConfirm;
+    TextView emptyState;
     //private Cursor customResult;
     View graphView;
 
@@ -89,42 +90,42 @@ public class GraphFragment extends Fragment {
         graphView = inflater.inflate(R.layout.fragment_graph, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("History");
 
+        emptyState = (TextView) graphView.findViewById(R.id.empty_view);
 
         //Set up initial start and end dates
         final Calendar c = Calendar.getInstance();
         endYear = c.get(Calendar.YEAR);
         endMonth = c.get(Calendar.MONTH);
         endDay = c.get(Calendar.DAY_OF_MONTH);
-        startYear=endYear;
-        startMonth=endMonth;
-        startDay=endDay;
+        startYear=c.get(Calendar.YEAR);
+        startMonth=c.get(Calendar.MONTH);
+        startDay=c.get(Calendar.DAY_OF_MONTH);
 
-
-        if(startDay-7<1){
-            //change month to previous month
-            if(startMonth-1<0) {
-                //month is zero indexed, yes from this dialogue
-                startYear = startYear - 1;
-                startMonth=0;
-                startDay=31-(7-startDay);
-            }else{
-                String month = getMonth(startMonth-1);
-                if(month.equals("September") | month.equals("April") | month.equals("June")|month.equals("November")){
-                    int fullMonthDays=30;
-                    startDay=fullMonthDays-(7-startDay);
-                }else if(month.equals("February")) {
-                    int fullMonthDays=29;
-                    startDay=fullMonthDays-(7-startDay);
-                }else{
-                    int fullMonthDays=31;
-                    startDay=fullMonthDays-(7-startDay);
-                }
-                startMonth = startDay - 1;
-            }
-        }else{
-            startDay=startDay-7;
-        }
-
+//
+//        if(startDay-7<1){
+//            //change month to previous month
+//            if(startMonth-1<0) {
+//                //month is zero indexed, yes from this dialogue
+//                startYear = startYear - 1;
+//                startMonth=0;
+//                startDay=31-(7-startDay);
+//            }else{
+//                String month = getMonth(startMonth-1);
+//                if(month.equals("September") | month.equals("April") | month.equals("June")|month.equals("November")){
+//                    int fullMonthDays=30;
+//                    startDay=fullMonthDays-(7-startDay);
+//                }else if(month.equals("February")) {
+//                    int fullMonthDays=28;
+//                    startDay=fullMonthDays-(7-startDay);
+//                }else{
+//                    int fullMonthDays=31;
+//                    startDay=fullMonthDays-(7-startDay);
+//                }
+//                startMonth = startDay - 1;
+//            }
+//        }else{
+//            startDay=startDay-7;
+//        }
 
 
         butStartDate = (Button) graphView.findViewById(R.id.buttonStartDate);
@@ -149,6 +150,7 @@ public class GraphFragment extends Fragment {
                             }
                         }, startYear, startMonth, startDay);
                 dpd.show();
+                Toast.makeText(getActivity(),startYear+"",Toast.LENGTH_SHORT).show();
             }
         });
         butEndDate = (Button) graphView.findViewById(R.id.buttonEndDate);
@@ -171,7 +173,7 @@ public class GraphFragment extends Fragment {
                                 Toast.makeText(getActivity(),dateString1,Toast.LENGTH_SHORT).show();
                                 butEndDate.setText(dateString1);
                             }
-                        }, startYear, startMonth, startDay);
+                        }, endYear,endMonth,endDay);
                 dpd.show();
             }
         });
@@ -204,11 +206,10 @@ public class GraphFragment extends Fragment {
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //create query with user given stuff
+
                 cutOffDirection = cutOffSpin.getSelectedItem().toString();
                 cutOffPercentage = Integer.toString(cutOffSeek.getProgress());
                 //unitsString = unitsSpin.getSelectedItem().toString();
-
                 Cursor customResult  = dbHelper.getCustomUserOldGoals(statistics,startDate,endDate,cutOffDirection,cutOffPercentage);
                 popGraph(customResult);
 
@@ -250,6 +251,7 @@ public class GraphFragment extends Fragment {
             }catch (Exception e){
                 e.printStackTrace();
             }
+
 
 
             int progressInt = Integer.parseInt(progressString);
@@ -351,8 +353,20 @@ public class GraphFragment extends Fragment {
         dataSets.add(dataSet);
 
         BarData barData = new BarData(dataSets);
-
+        chart.setNoDataText("Please select some options to see a graph");
         chart.setData(barData);
+
+
+        if(dates.isEmpty()){
+
+            emptyState.setVisibility(View.VISIBLE);
+            chart.setVisibility(View.GONE);
+            return;
+        }else{
+            emptyState.setVisibility(View.GONE);
+            chart.setVisibility(View.VISIBLE);
+        }
+
         chart.invalidate();
 
 
