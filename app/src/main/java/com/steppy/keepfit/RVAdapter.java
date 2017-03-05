@@ -7,8 +7,10 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.Image;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.AlertDialogLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -63,14 +65,21 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
     public GoalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
         GoalViewHolder gvh = new GoalViewHolder(v);
-
         return gvh;
     }
 
     @Override
     public void onBindViewHolder(final GoalViewHolder personViewHolder, final int i) {
-        //Toast.makeText(context,"onBind",Toast.LENGTH_SHORT).show();
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean editGoals = SP.getBoolean("enableGoalEdit",true);
 
+        ImageView editView = (ImageView) personViewHolder.cv.findViewById(R.id.imgEdit);
+
+        if(editGoals) {
+            editView.setVisibility(View.VISIBLE);
+        }else{
+            editView.setVisibility(View.GONE);
+            }
         if (goals.get(i).isActive()) {
             personViewHolder.active.setBackgroundResource(R.drawable.pause);
         } else {
@@ -147,7 +156,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 // Pass null as the parent view because its going in the dialog layout
                 final View dialogView = inflater.inflate(R.layout.fragment_edit_steps_dialog, null);
 
-
                 dbHelper = new DBHelper(context);
                 final Cursor result = dbHelper.getGoal(goals.get(i).getName());
                 result.moveToNext();
@@ -173,7 +181,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                     case "Miles":
                         unitsSpin.setSelection(2);
                 }
-
 
                 result.close();
                 // Add action buttons
@@ -208,13 +215,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 dbHelper.close();
                 res.close();
                 if (!goalActiveName.equals(goal.getName())) {
-
                     builder.show();
                     //dl.show();
                 }
-
-
-
             }
         });
         personViewHolder.remove.setOnClickListener(new View.OnClickListener() {

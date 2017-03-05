@@ -50,12 +50,14 @@ public class AddGoalsActivity extends Activity {
 
     private DBHelper dbHelper;
     private boolean testMode;
-
+    private ArrayList<Goal> ItemGoalList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_goals);
+
+        ItemGoalList = (ArrayList<Goal>) getIntent().getSerializableExtra("list");
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
         testMode = SP.getBoolean("enableTest", false);
@@ -136,14 +138,12 @@ public class AddGoalsActivity extends Activity {
                     float i =Float.parseFloat(goalString);
                     float goalValueInt = turnIntoSteps(i);
                     float stepsProgressInt = turnIntoSteps(stepsStringFloat);
-                    //int goalValueInt = Integer.parseInt(goalString);
-                    //int stepsProgressInt = Integer.parseInt(stepsString);
 
                     float percent = ((float)stepsProgressInt/(float)goalValueInt) *100;
                     int percentInt = (int) percent;
                     String percentString = Integer.toString(percentInt);
 
-                    Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+goalValueInt+" "+stepsProgressInt,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddGoalsActivity.this,"OLDGOAL:"+goalValueInt+" "+stepsProgressInt,Toast.LENGTH_SHORT).show();
 
                     if(dbHelper.insertOldGoal(nameString,(int)goalValueInt,(int)stepsProgressInt,percentString,dateString1,units)){
                         Toast.makeText(AddGoalsActivity.this, "Test Goal Added Successfully",Toast.LENGTH_SHORT).show();
@@ -161,10 +161,11 @@ public class AddGoalsActivity extends Activity {
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateString = sdf.format(date);
 
-                    Toast.makeText(AddGoalsActivity.this,""+stepsGoal,Toast.LENGTH_SHORT).show();
-
+                    //Toast.makeText(AddGoalsActivity.this,""+stepsGoal,Toast.LENGTH_SHORT).show();
+                    ItemGoalList.add(new Goal(nameString,(float)stepsGoal, false,units));
+                    //ViewGoalsFragment.adapter.notifyDataSetChanged();
                     if (dbHelper.insertGoal(nameString,(int)stepsGoal, "false", dateString,units)) {
-                        Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_LONG).show();
                     }else{
                         Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_LONG).show();
                     }

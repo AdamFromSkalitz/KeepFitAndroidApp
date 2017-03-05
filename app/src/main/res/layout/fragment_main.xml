@@ -14,9 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomBar"
-        android:layout_marginBottom="70dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginBottom="50dp"
         android:layout_marginTop="20dp">
 
         <RelativeLayout
@@ -178,7 +176,6 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:padding="8dp"
-
             fab:menu_animationDelayPerItem="0"
             fab:menu_backgroundColor="#ccffffff"
             fab:menu_colorNormal="@color/colorAccent"
@@ -192,6 +189,7 @@
                 android:id="@+id/fabSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_small"
                 fab:fab_label="Add Steps"
                 fab:fab_size="mini" />
 

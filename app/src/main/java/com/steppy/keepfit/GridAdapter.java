@@ -1,6 +1,7 @@
 package com.steppy.keepfit;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
@@ -18,11 +19,13 @@ import java.util.ArrayList;
 public class GridAdapter extends BaseAdapter {
     private Context mContext;
     ArrayList<Goal> itemGoalList;
+    private DBHelper dbhelper;
     //public String[] message = {"Goal1","Goal2", "Goal3","Goal4","Goal5","Goal6","Goal7"};
 
     public GridAdapter(Context c,ArrayList<Goal> goalList){
         mContext=c;
         itemGoalList=goalList;
+        dbhelper = new DBHelper(mContext);
     }
 
     @Override
@@ -42,20 +45,27 @@ public class GridAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TextView textView=null;
+        TextView goalNameTV=null;
 
         if(convertView==null){
-            textView = new TextView(mContext);
-            textView.setLayoutParams(new GridView.LayoutParams(350,350));
+            goalNameTV = new TextView(mContext);
+            goalNameTV.setLayoutParams(new GridView.LayoutParams(350,350));
             //textView.setPadding(8,8,8,8);
-            textView.setGravity(Gravity.CENTER);
-            textView.setBackgroundResource(R.color.colorPrimary);
+            goalNameTV.setGravity(Gravity.CENTER);
+            goalNameTV.setBackgroundResource(R.color.colorPrimary);
             //textView.setTextColor(ContextCompat.getColor(mContext,R.color.black));
-
         }else{
-            textView = (TextView) convertView;
+            goalNameTV = (TextView) convertView;
         }
-        textView.setText(itemGoalList.get(position).getName());
-        return textView;
+        String goalName=itemGoalList.get(position).getName();
+        Cursor res = dbhelper.getOldGoal(goalName);
+        res.moveToFirst();
+        String goalValue = res.getString(res.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_GOALVALUE));
+        String goalProgress = res.getString(res.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS));
+        //convert to units
+        goalNameTV.setText(goalName+"\n Goal: "+goalValue+"\n Progress: "+goalProgress);
+        res.close();
+
+        return goalNameTV;
     }
 }

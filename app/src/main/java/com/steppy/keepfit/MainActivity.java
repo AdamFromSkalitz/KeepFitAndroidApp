@@ -13,11 +13,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -51,10 +53,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     Toolbar toolbar;
     View dateButtonMain;
     ArrayList<Goal> ItemGoalList = new ArrayList<Goal>();
-    private PendingIntent pendingIntent;
 
     private float stepCount;
     DBHelper dbHelper;
+
+    private PendingIntent pendingIntent;
+    private AlarmManager manager;
 
     public Context getContext() {
         return mai;
@@ -67,11 +71,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             getFragmentManager().popBackStack();
         }
 
+        // Retrieve a PendingIntent that will perform a broadcast
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
+        //startAlarm();
+//        Intent i = new Intent(MainActivity.this,StepDetector.class);
+//        startService(i);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         dbHelper=new DBHelper(MainActivity.this);
 
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
@@ -97,28 +110,21 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         FragmentTransaction fragmentTransaction;// = fragmentManager.beginTransaction();
 
                         switch (item.getItemId()) {
-                            //if (tabId == R.id.tab_goals) {
                             case R.id.tab_goals:
                                 fragmentManager = getFragmentManager();
                                 fragmentTransaction = fragmentManager.beginTransaction();
                                 toolbar.removeView(dateButtonMain);
                                 ViewGoalsFragment goalsFragment = new ViewGoalsFragment();
-
                                 fragmentTransaction.replace(R.id.progressMiddle, goalsFragment);
-                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
                                 break;
-                                //viewGoals();
-                                //}else if (tabId == R.id.tab_graph) {
                             case R.id.tab_graph:
                                 toolbar.removeView(dateButtonMain);
                                 GraphFragment graphFragment = new GraphFragment();
                                 fragmentManager = getFragmentManager();
                                 fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.progressMiddle, graphFragment);
-                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
-                                //} else if (tabId == R.id.tab_main) {
                                 break;
                             case R.id.tab_main:
                                 try {
@@ -130,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                                 fragmentManager = getFragmentManager();
                                 fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.progressMiddle, mainFragment);
-                                //fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
                                 break;
                         }
@@ -138,10 +143,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     }
                 });
 
-        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
+//        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+//        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
 
-        startAt10();
+        //startAt10();
     }
 //    public static class MainFragment extends Fragment {
 //        @Override
@@ -207,30 +212,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
     }
 
-    public void startAt10() {
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//    public void startAt10() {
+//        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//        int interval = 10000;
+//
+//        /* Set the alarm to start at 10:30 AM */
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.set(Calendar.HOUR_OF_DAY, 12);
+//        calendar.set(Calendar.MINUTE, 24);
+//
+//        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+//        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
+//        int mMin = calendar.get(Calendar.MINUTE);
+//        Toast.makeText(this, mHour+":"+mMin,Toast.LENGTH_SHORT).show();
+//
+//        /* Repeating on every 20 minutes interval */
+//        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                AlarmManager.INTERVAL_DAY, pendingIntent);
+//    }
+
+    public void startAlarm() {
+        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         int interval = 10000;
-
-        /* Set the alarm to start at 10:30 AM */
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 24);
-
-        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int mMin = calendar.get(Calendar.MINUTE);
-        Toast.makeText(this, mHour+":"+mMin,Toast.LENGTH_SHORT).show();
-
-        /* Repeating on every 20 minutes interval */
-        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.AM_PM, Calendar.AM);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        Toast.makeText(this, "Alarm Set for"+c.get(Calendar.HOUR_OF_DAY), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float stepNew = event.values[0];
-        stepCount+=stepNew;
+        //stepCount+=stepNew;
        // Toast.makeText(this,"steps"+stepCount,Toast.LENGTH_SHORT).show();
 //        if (steps%100==0){
 //            save to db
@@ -239,19 +257,42 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Cursor existingSteps = dbHelper.getDayProgress();
         existingSteps.moveToFirst();
 
-        float stepsOld= existingSteps.getFloat(existingSteps.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+        //need to see if notifications is off
+        float stepsOld=0;
+        try {
+            stepsOld= existingSteps.getFloat(existingSteps.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+        }catch (Exception e){
+
+        }
+
         existingSteps.close();
-        float updateStep = stepsOld+stepCount;
+
+        float updateStep = stepsOld+stepNew;
         TextView progressTV = (TextView) findViewById(R.id.tvprogress);
         try {
-            progressTV.setText("" + updateStep);
+            progressTV.setText("" + (int)updateStep);
             dbHelper.updateDayProgress((int)stepNew);
         }catch (Exception e){
             e.printStackTrace();
         }
 
+        Cursor res = dbHelper.getActiveGoal();
+        res.moveToFirst();
+        int goalValue=666;
+        try {
+            goalValue= res.getInt(res.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+        }catch (Exception e){
 
-        if(updateStep==140){
+        }
+ //       TextView goalValueTV = (TextView) findViewById(R.id.goal_value);
+//        int goalValue=0;
+//        try {
+//            goalValue = Integer.parseInt(goalValueTV.getText().toString());
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            goalValue=666;
+//        }
+        if(updateStep==goalValue){
             NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(this)
                             .setSmallIcon(R.drawable.step)

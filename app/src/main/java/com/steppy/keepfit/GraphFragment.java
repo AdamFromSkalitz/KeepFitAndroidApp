@@ -97,36 +97,8 @@ public class GraphFragment extends Fragment {
         endYear = c.get(Calendar.YEAR);
         endMonth = c.get(Calendar.MONTH);
         endDay = c.get(Calendar.DAY_OF_MONTH);
-        startYear=c.get(Calendar.YEAR);
-        startMonth=c.get(Calendar.MONTH);
-        startDay=c.get(Calendar.DAY_OF_MONTH);
 
-//
-//        if(startDay-7<1){
-//            //change month to previous month
-//            if(startMonth-1<0) {
-//                //month is zero indexed, yes from this dialogue
-//                startYear = startYear - 1;
-//                startMonth=0;
-//                startDay=31-(7-startDay);
-//            }else{
-//                String month = getMonth(startMonth-1);
-//                if(month.equals("September") | month.equals("April") | month.equals("June")|month.equals("November")){
-//                    int fullMonthDays=30;
-//                    startDay=fullMonthDays-(7-startDay);
-//                }else if(month.equals("February")) {
-//                    int fullMonthDays=28;
-//                    startDay=fullMonthDays-(7-startDay);
-//                }else{
-//                    int fullMonthDays=31;
-//                    startDay=fullMonthDays-(7-startDay);
-//                }
-//                startMonth = startDay - 1;
-//            }
-//        }else{
-//            startDay=startDay-7;
-//        }
-
+        setDefaultDates();
 
         butStartDate = (Button) graphView.findViewById(R.id.buttonStartDate);
         butStartDate.setOnClickListener(new View.OnClickListener() {
@@ -138,15 +110,12 @@ public class GraphFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 //startDate = dayOfMonth+"/"+monthOfYear+"/"+year;
-                                Date date = new GregorianCalendar(year,monthOfYear,dayOfMonth).getTime();
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
-                                String dateString1 = sdf.format(date);
-                                startDate = dateString1;
                                 startYear=year;
                                 startMonth=monthOfYear;
                                 startDay=dayOfMonth;
-                                Toast.makeText(getActivity(),dateString1,Toast.LENGTH_SHORT).show();
-                                butStartDate.setText(startDate);
+                                //Toast.makeText(getActivity(),dateString1,Toast.LENGTH_SHORT).show();
+                                //butStartDate.setText(startDate);
+                                butStartDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
                         }, startYear, startMonth, startDay);
                 dpd.show();
@@ -163,15 +132,12 @@ public class GraphFragment extends Fragment {
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 //endDate = dayOfMonth+"/"+monthOfYear+"/"+year;
-                                Date date = new GregorianCalendar(year,monthOfYear,dayOfMonth).getTime();
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                String dateString1 = sdf.format(date);
-                                endDate = dateString1;
                                 endYear=year;
                                 endMonth=monthOfYear;
                                 endDay=dayOfMonth;
-                                Toast.makeText(getActivity(),dateString1,Toast.LENGTH_SHORT).show();
-                                butEndDate.setText(dateString1);
+                                //Toast.makeText(getActivity(),dateString1,Toast.LENGTH_SHORT).show();
+                                //butEndDate.setText(dateString1);
+                                butEndDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
                         }, endYear,endMonth,endDay);
                 dpd.show();
@@ -209,14 +175,19 @@ public class GraphFragment extends Fragment {
 
                 cutOffDirection = cutOffSpin.getSelectedItem().toString();
                 cutOffPercentage = Integer.toString(cutOffSeek.getProgress());
-                //unitsString = unitsSpin.getSelectedItem().toString();
+
+                Date date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+                startDate = sdf.format(date);
+                date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
+                sdf = new SimpleDateFormat("yyyy-MM-dd");
+                endDate = sdf.format(date);
+
                 Cursor customResult  = dbHelper.getCustomUserOldGoals(statistics,startDate,endDate,cutOffDirection,cutOffPercentage);
                 popGraph(customResult);
 
             }
         });
-        //drawCombiChart();
-        //generateBarTwoData();
         return graphView;
     }
 
@@ -236,7 +207,6 @@ public class GraphFragment extends Fragment {
             String dateString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_DATE));
             String progressString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS));
             String goalString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_GOALVALUE));
-            //String percent = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PERCENTAGE));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date date;
             String blah="";
@@ -246,8 +216,6 @@ public class GraphFragment extends Fragment {
                 date = df.parse(dateString);
                 blah = df.format(date);
                 dates.add(date.getDate()+"/"+date.getMonth()+"-"+name);
-                //Toast.makeText(getActivity(),dateString,Toast.LENGTH_SHORT).show();
-                //Toast.makeText(getActivity(),blah,Toast.LENGTH_SHORT).show();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -358,7 +326,6 @@ public class GraphFragment extends Fragment {
 
 
         if(dates.isEmpty()){
-
             emptyState.setVisibility(View.VISIBLE);
             chart.setVisibility(View.GONE);
             return;
@@ -399,6 +366,44 @@ public class GraphFragment extends Fragment {
         return new DateFormatSymbols().getMonths()[month];
     }
 
+    public void setDefaultDates(){
+        final Calendar c = Calendar.getInstance();
+        endYear = c.get(Calendar.YEAR);
+        endMonth = c.get(Calendar.MONTH);
+        endDay = c.get(Calendar.DAY_OF_MONTH);
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String array = SP.getString("pastLength","1");
+
+        int curMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int backLength=0;
+        switch (array){
+            case "1":
+                backLength=-7;
+                break;
+            case "2":
+                backLength=-14;
+                break;
+            case "3":
+                backLength=-curMonth;
+                break;
+            case "4":
+                backLength=-(curMonth*2);
+                break;
+        }
+
+        c.add(Calendar.DATE,backLength);
+        startYear=c.get(Calendar.YEAR);
+        startMonth=c.get(Calendar.MONTH);
+        startDay=c.get(Calendar.DAY_OF_MONTH);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setDefaultDates();
+    }
 }
 
 

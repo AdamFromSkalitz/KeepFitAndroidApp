@@ -78,55 +78,9 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-
         dbHelper = new DBHelper(StatisticsActivity.this);
 
-
-        //Set up initial start and end dates
-        final Calendar c = Calendar.getInstance();
-        endYear = c.get(Calendar.YEAR);
-        endMonth = c.get(Calendar.MONTH);
-        endDay = c.get(Calendar.DAY_OF_MONTH);
-        startYear=endYear;
-        startMonth=endMonth;
-        startDay=endDay;
-
-        Date date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
-        String dateString1 = sdf.format(date);
-        endDate = dateString1;
-
-        if(startDay-7<1){
-            //change month to previous month
-            if(startMonth-1<0) {
-                //month is zero indexed, yes from this dialogue
-                startYear = startYear - 1;
-                startMonth=0;
-                startDay=31-(7-startDay);
-            }else{
-                String month = getMonth(startMonth-1);
-                if(month.equals("September") | month.equals("April") | month.equals("June")|month.equals("November")){
-                    int fullMonthDays=30;
-                    startDay=fullMonthDays-(7-startDay);
-                }else if(month.equals("February")) {
-                    int fullMonthDays=29;
-                    startDay=fullMonthDays-(7-startDay);
-                }else{
-                    int fullMonthDays=31;
-                    startDay=fullMonthDays-(7-startDay);
-                }
-                startMonth = startDay - 1;
-            }
-        }else{
-            startDay=startDay-7;
-        }
-
-        Toast.makeText(StatisticsActivity.this,"day "+startDay+" month "+startMonth+ " y "+startYear,Toast.LENGTH_SHORT).show();
-
-        date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
-        sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
-        startDate = sdf.format(date);
-
+        setDefaultDates();
 
         final Button butStartDate = (Button) findViewById(R.id.buttonStartDate);
         butStartDate.setOnClickListener(new View.OnClickListener() {
@@ -138,15 +92,10 @@ public class StatisticsActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-                                //startDate = dayOfMonth+"/"+monthOfYear+"/"+year;
-                                Date date = new GregorianCalendar(year,monthOfYear,dayOfMonth).getTime();
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
-                                String dateString1 = sdf.format(date);
-                                startDate = dateString1;
                                 startDay=dayOfMonth;
                                 startMonth=monthOfYear;
                                 startYear=year;
-                                Toast.makeText(StatisticsActivity.this,dateString1,Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(StatisticsActivity.this,dateString1,Toast.LENGTH_SHORT).show();
                                 butStartDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
                         }, startYear, startMonth, startDay);
@@ -163,15 +112,10 @@ public class StatisticsActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-                                //endDate = dayOfMonth+"/"+monthOfYear+"/"+year;
-                                Date date = new GregorianCalendar(year,monthOfYear,dayOfMonth).getTime();
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                                String dateString1 = sdf.format(date);
-                                endDate = dateString1;
                                 endDay=dayOfMonth;
                                 endMonth=monthOfYear;
                                 endYear=year;
-                                Toast.makeText(StatisticsActivity.this,dateString1,Toast.LENGTH_SHORT).show();
+                               //Toast.makeText(StatisticsActivity.this,dateString1,Toast.LENGTH_SHORT).show();
                                 butEndDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
                         }, endYear, endMonth, endDay  );
@@ -180,7 +124,6 @@ public class StatisticsActivity extends AppCompatActivity {
         });
 
         unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
-
 
         gridAdapter = new GridAdapter(this,goals);
         GridView gridView = (GridView) findViewById(R.id.gridView);
@@ -266,6 +209,14 @@ public class StatisticsActivity extends AppCompatActivity {
                 min=Float.MAX_VALUE;
                 String startPercent = Integer.toString(sbBot.getProgress());
                 String endPercent = Integer.toString(sbTop.getProgress());
+
+                Date date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+                startDate = sdf.format(date);
+                date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
+                sdf = new SimpleDateFormat("yyyy-MM-dd");
+                endDate = sdf.format(date);
+
                 Cursor result = dbHelper.getStatistics(startDate,endDate,startPercent,endPercent);
 
                 //put that result into the table
@@ -305,6 +256,9 @@ public class StatisticsActivity extends AppCompatActivity {
 
                 String convertedAverage= df.format(convertToUnits(unitsSpinString,average));
                 String convertedMax= df.format(convertToUnits(unitsSpinString,max));
+                if(min==Float.MAX_VALUE){
+                    min=0f;
+                }
                 String convertedMin= df.format(convertToUnits(unitsSpinString,min));
                 String convertedTotal= df.format(convertToUnits(unitsSpinString,total));
 
@@ -344,5 +298,41 @@ public class StatisticsActivity extends AppCompatActivity {
         return progress;
     }
 
+    public void setDefaultDates(){
+        final Calendar c = Calendar.getInstance();
+        endYear = c.get(Calendar.YEAR);
+        endMonth = c.get(Calendar.MONTH);
+        endDay = c.get(Calendar.DAY_OF_MONTH);
 
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
+        String array = SP.getString("pastLength","1");
+
+        int curMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int backLength=0;
+        switch (array){
+            case "1":
+                backLength=-7;
+                break;
+            case "2":
+                backLength=-14;
+                break;
+            case "3":
+                backLength=-curMonth;
+                break;
+            case "4":
+                backLength=-(curMonth*2);
+                break;
+        }
+
+        c.add(Calendar.DATE,backLength);
+        startYear=c.get(Calendar.YEAR);
+        startMonth=c.get(Calendar.MONTH);
+        startDay=c.get(Calendar.DAY_OF_MONTH);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setDefaultDates();
+    }
 }

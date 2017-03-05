@@ -10,7 +10,8 @@
         android:icon="@mipmap/ic_launcher_n"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".AlarmReceiver" />
+        <receiver android:name=".AlarmReceiver"> </receiver>
+
         <receiver
             android:name=".DeviceBootReceiver"
             android:enabled="true">
@@ -48,6 +49,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
+
+        <service
+            android:name=".StepDetector"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>

@@ -18,6 +18,12 @@
         android:key="prefs"
         android:title="User Preferences">
 
+        <SwitchPreference
+            android:id="@+id/activateStepCounter"
+            android:defaultValue="false"
+            android:key="enableCounter"
+            android:summary="Turn Step Counter on or off"
+            android:title="Step Counter" />
 
         <SwitchPreference
             android:id="@+id/notifications"
@@ -25,6 +31,13 @@
             android:key="enableNotify"
             android:summary="Turn notifications on or off"
             android:title="Notifications" />
+
+        <SwitchPreference
+            android:id="@+id/editGoals"
+            android:defaultValue="true"
+            android:key="enableGoalEdit"
+            android:summary="Allow goals to be edited"
+            android:title="Edit Goals" />
 
         <ListPreference
             android:defaultValue="1"
@@ -61,10 +74,11 @@
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/pastArray"
-            android:entryValues="@array/listValues"
+            android:entryValues="@array/pastArrayValues"
             android:key="pastLength"
             android:summary="Set how far into the past Statistics and History show on default"
-            android:title="Past View" />
+            android:title="Past View"
+            />
 
     </PreferenceCategory>
 

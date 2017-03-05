@@ -171,7 +171,8 @@ public class MainFragment extends Fragment {
             percentToComplete=0;
         }
         if(goal.equals("0")){
-            Toast.makeText(getActivity(),""+entries.size(),Toast.LENGTH_SHORT).show();
+            //
+            // Toast.makeText(getActivity(),""+entries.size(),Toast.LENGTH_SHORT).show();
             chart.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
 
@@ -267,6 +268,7 @@ public class MainFragment extends Fragment {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
         float stepsCM = Float.parseFloat(SP.getString("mappingMet","75"));
         float stepsInch = Float.parseFloat(SP.getString("MappingImp","30"));
+        stepsFloat=steps;
         switch (units){
             case "Kilometres":
                 float cm = stepsCM*(float)steps;
@@ -278,9 +280,6 @@ public class MainFragment extends Fragment {
                 stepsFloat= (float)inches/(1760*36);
                 //stepsProgress=""+stepsFloat;
                 break;
-            case "Steps":
-                //stepsProgress=""+steps;
-                stepsFloat=steps;
         }
 
         return stepsFloat;

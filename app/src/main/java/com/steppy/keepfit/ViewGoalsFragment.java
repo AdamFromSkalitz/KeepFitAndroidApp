@@ -45,11 +45,13 @@ import static android.R.attr.fingerprintAuthDrawable;
 public class ViewGoalsFragment extends Fragment{
     ListView listView;
     ArrayList<Goal> ItemGoalList;
+    RVAdapter adapter;
     //CustomAdapter customAdapter;
     DBHelper dbHelper;
-
+    View goalView;
     FileInputStream fis;
     ObjectInputStream is;
+    RecyclerView rv;
 
     static final int READ_BLOCK_SIZE = 100;
     @Override
@@ -57,38 +59,22 @@ public class ViewGoalsFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        final View goalView = inflater.inflate(R.layout.fragment_goals, container, false);
+        goalView = inflater.inflate(R.layout.fragment_goals, container, false);
 
-        ItemGoalList = new ArrayList<Goal>();
+
 
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Goals");
 
-        RecyclerView rv = (RecyclerView) goalView.findViewById(R.id.rv);
-
-
+        ItemGoalList = new ArrayList<Goal>();
+        rv = (RecyclerView) goalView.findViewById(R.id.rv);
         rv.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(goalView.getContext());
         rv.setLayoutManager(llm);
-        RVAdapter adapter = new RVAdapter(ItemGoalList,goalView.getContext());
+        adapter = new RVAdapter(ItemGoalList,goalView.getContext());
         rv.setAdapter(adapter);
-
-//        listView = (ListView) goalView.findViewById(R.id.goalList);
-//        customAdapter = new CustomAdapter(getActivity(), goalView,ItemGoalList);
-//        listView.setEmptyView(goalView.findViewById(R.id.empty));
-//        listView.setAdapter(customAdapter);
-
-
         populateList();
 
-        TextView emptyView = (TextView) goalView.findViewById(R.id.empty_view);
-        if (ItemGoalList.isEmpty()) {
-            rv.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
-        else {
-            rv.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-        }
+
 
         final FloatingActionMenu goalMenu =(FloatingActionMenu) goalView.findViewById(R.id.floatingMenu);
         final FloatingActionButton goalFab = (FloatingActionButton) goalView.findViewById(R.id.fabGoals);
@@ -142,7 +128,7 @@ public class ViewGoalsFragment extends Fragment{
     private void populateList() {
 
         dbHelper = new DBHelper(getActivity());
-
+        ItemGoalList.clear();
         //final Cursor curs = dbHelper.getAllOldGoals();
 
 
@@ -164,6 +150,17 @@ public class ViewGoalsFragment extends Fragment{
         //customAdapter.notifyDataSetChanged();
         cursor.close();
         dbHelper.close();
+
+        TextView emptyView = (TextView) goalView.findViewById(R.id.empty_view);
+        if (ItemGoalList.isEmpty()) {
+            rv.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+        else {
+            rv.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     public void addGoalsFrag(){
@@ -180,7 +177,8 @@ public class ViewGoalsFragment extends Fragment{
         Intent intent = new Intent(getActivity(), AddGoalsActivity.class);
         //EditText editText = (EditText) findViewById(R.id.edit_message);
         //String message = editText.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
+        intent.putExtra("list", ItemGoalList);
+        //intent.putExtra("adapter",adapter);
         startActivity(intent);
     }
     public void addSteps(){
@@ -208,4 +206,9 @@ public class ViewGoalsFragment extends Fragment{
         return progress;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        populateList();
+    }
 }
