@@ -37,22 +37,21 @@ public class AlarmReceiver extends BroadcastReceiver {
         Cursor resProgress = dbHelper.getDayProgress();
         resProgress.moveToFirst();
         String goalProgressString="";
-        int goalProgress=0;
-        int percentage=0;
+        float goalProgress=0;
+        float percentage=0;
         try {
             goalProgressString = resProgress.getString(resProgress.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
             goalProgress= Integer.parseInt(goalProgressString);
-            percentage = (int)(goalProgress/goalValue)*100;
+            percentage = ((float)goalProgress/goalValue)*100;
         }catch (Exception e){
             e.printStackTrace();
         }
-            resProgress.close();
-
 
         if(!goalName.equals("")) {
-            dbHelper.insertOldGoal(goalName, (int) goalValue, goalProgress, Integer.toString(percentage), goalDate, goalUnits);
+            dbHelper.insertOldGoal(goalName, (int) goalValue, (int)goalProgress, Float.toString(percentage), goalDate, goalUnits);
             dbHelper.resetDayProgress();
         }
+        resProgress.close();
         dbHelper.close();
 
         // For our recurring task, we'll just display a message

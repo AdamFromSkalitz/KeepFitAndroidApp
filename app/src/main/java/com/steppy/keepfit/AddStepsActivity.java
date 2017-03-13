@@ -38,12 +38,7 @@ public class AddStepsActivity extends Activity {
                 float progressInt=0f;
                 try {
                     progressInt = Float.parseFloat(progressString);
-//                }catch (NumberFormatException e){
-//                    Toast.makeText(AddStepsActivity.this,"Please add a number", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
                 }catch (Exception e){
-                    //Toast.makeText(AddStepsActivity.this,"Please do it properly", Toast.LENGTH_SHORT).show();
                     goalProgress.setError("Field cannot be blank nor contain special characters");
                     e.printStackTrace();
                     return;
@@ -97,8 +92,6 @@ public class AddStepsActivity extends Activity {
                         break;
                 }
 
-
-                Toast.makeText(AddStepsActivity.this,""+stepsInt, Toast.LENGTH_SHORT).show();
                 dbHelper = new DBHelper(AddStepsActivity.this);
 
                 if(dbHelper.updateDayProgress(stepsInt)){

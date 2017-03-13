@@ -15,12 +15,14 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,16 +75,17 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-//        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//        boolean strUserName = SP.getBoolean("enableTest", false);
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean testMode = SP.getBoolean("enableTest", false);
+
 //        Toast.makeText(getActivity(), Boolean.toString(strUserName), Toast.LENGTH_LONG).show();
 
         // Inflate the layout for this fragment
         final View mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
-//        Toolbar toolbar = (Toolbar) mainView.findViewById(R.id.toolbar);
-//        ((ActionBarActivity)getActivity()).setSupportActionBar(toolbar);
-        ((MainActivity)getActivity()).getSupportActionBar().setTitle("Home");
+        ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
+        actionBar.setTitle("Home");
+        putWarning();
 
         dbHelper = new DBHelper(getActivity());
         emptyView = (TextView) mainView.findViewById(R.id.empty_view);
@@ -218,7 +221,6 @@ public class MainFragment extends Fragment {
 
         chart.setEntryLabelColor(Color.BLACK);
         chart.setEntryLabelTextSize(15f);
-        //chart.setNoDataText("Please make a goal active");
         chart.setData(pieData);
         chart.invalidate();
 
@@ -283,5 +285,22 @@ public class MainFragment extends Fragment {
         }
 
         return stepsFloat;
+    }
+
+    public void putWarning() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean testMode = SP.getBoolean("enableTest", false);
+        ImageView iv = (ImageView) getActivity().findViewById(R.id.alertTestMode);
+        if (testMode) {
+            iv.setVisibility(View.VISIBLE);
+        } else {
+            iv.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        putWarning();
     }
 }

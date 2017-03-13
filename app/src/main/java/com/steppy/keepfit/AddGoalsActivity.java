@@ -2,6 +2,7 @@ package com.steppy.keepfit;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.backup.BackupHelper;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,13 +42,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class AddGoalsActivity extends Activity {
-    MainActivity mainact;
-    private BottomBar bottomBar;
-    final Handler handler = new Handler();
-    private ArrayList<Goal> listToBeSaved = new ArrayList<>();
-
     private int mYear, mMonth, mDay = 0;
-
     private DBHelper dbHelper;
     private boolean testMode;
     private ArrayList<Goal> ItemGoalList;
@@ -57,13 +52,10 @@ public class AddGoalsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_goals);
 
-        ItemGoalList = (ArrayList<Goal>) getIntent().getSerializableExtra("list");
+        //ItemGoalList = (ArrayList<Goal>) getIntent().getSerializableExtra("list");
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
         testMode = SP.getBoolean("enableTest", false);
-        //Toast.makeText(this, Boolean.toString(testMode), Toast.LENGTH_LONG).show();
-
-        Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
 
         if(testMode){
             EditText steps = (EditText) findViewById(R.id.stepsText); //new EditText(this);
@@ -155,24 +147,36 @@ public class AddGoalsActivity extends Activity {
                 }else {
 
                     dbHelper = new DBHelper(AddGoalsActivity.this);
-                    float stepsGoal = turnIntoSteps(Float.parseFloat(goalString));
+                    Cursor allGoals = dbHelper.getAllGoals();
+                    allGoals.moveToFirst();
+                    while(!allGoals.isAfterLast()) {
+                        String nameCheck = allGoals.getString(allGoals.getColumnIndex(DBHelper.COLUMN_NAME));
+                        if(nameString.equals(nameCheck)){
+                            name.setError("Goal cannot have the same name as another goal");
+                            return;
+                        }
+                        allGoals.moveToNext();
+                    }
+                    allGoals.close();
 
+
+                    float stepsGoal = turnIntoSteps(Float.parseFloat(goalString));
                     Date date = new Date();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateString = sdf.format(date);
-
-                    //Toast.makeText(AddGoalsActivity.this,""+stepsGoal,Toast.LENGTH_SHORT).show();
-                    ItemGoalList.add(new Goal(nameString,(float)stepsGoal, false,units));
-                    //ViewGoalsFragment.adapter.notifyDataSetChanged();
+                    try {
+                        ItemGoalList.add(new Goal(nameString, (float) stepsGoal, false, units));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     if (dbHelper.insertGoal(nameString,(int)stepsGoal, "false", dateString,units)) {
-                        //Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_LONG).show();
                     }else{
                         Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_LONG).show();
                     }
                     dbHelper.close();
                 }
                 finish();
-                //backToPrevFrag();
             }
         });
     }

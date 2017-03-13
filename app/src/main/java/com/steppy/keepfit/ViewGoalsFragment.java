@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -61,10 +62,9 @@ public class ViewGoalsFragment extends Fragment{
         // Inflate the layout for this fragment
         goalView = inflater.inflate(R.layout.fragment_goals, container, false);
 
-
-
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("Goals");
 
+        putWarning();
         ItemGoalList = new ArrayList<Goal>();
         rv = (RecyclerView) goalView.findViewById(R.id.rv);
         rv.setHasFixedSize(true);
@@ -73,7 +73,6 @@ public class ViewGoalsFragment extends Fragment{
         adapter = new RVAdapter(ItemGoalList,goalView.getContext());
         rv.setAdapter(adapter);
         populateList();
-
 
 
         final FloatingActionMenu goalMenu =(FloatingActionMenu) goalView.findViewById(R.id.floatingMenu);
@@ -96,10 +95,6 @@ public class ViewGoalsFragment extends Fragment{
             public void onScrolled(RecyclerView recyclerView, int dx, int dy)
             {
                 int scrollDistance=0;
-//                if (dy > 0 ||dy<0 && goalMenu.isShown())
-//                {
-//                    goalMenu.hideMenu(true);
-//                }
                 if(dy > scrollDistance){
                     goalMenu.hideMenu(true);
                 }else if(dy<scrollDistance){
@@ -206,9 +201,23 @@ public class ViewGoalsFragment extends Fragment{
         return progress;
     }
 
+    public void putWarning(){
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean testMode = SP.getBoolean("enableTest", false);
+        ImageView iv = (ImageView) getActivity().findViewById(R.id.alertTestMode);
+        if(testMode){
+            iv.setVisibility(View.VISIBLE);
+        }else{
+            iv.setVisibility(View.INVISIBLE);
+        }
+
+    }
     @Override
     public void onResume() {
         super.onResume();
+        putWarning();
         populateList();
     }
+
+
 }

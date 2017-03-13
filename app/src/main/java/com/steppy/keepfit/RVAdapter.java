@@ -210,8 +210,14 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
 
                 dbHelper = new DBHelper(context);
                 Cursor res = dbHelper.getActiveGoal();
+                String goalActiveName="";
                 res.moveToFirst();
-                String goalActiveName = res.getString(res.getColumnIndex(DBHelper.COLUMN_NAME));
+                try {
+                    goalActiveName = res.getString(res.getColumnIndex(DBHelper.COLUMN_NAME));
+                }catch (Exception e){
+                    //there is no active goal
+                    e.printStackTrace();
+                }
                 dbHelper.close();
                 res.close();
                 if (!goalActiveName.equals(goal.getName())) {

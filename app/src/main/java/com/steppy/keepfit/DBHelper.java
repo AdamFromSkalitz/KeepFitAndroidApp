@@ -198,11 +198,11 @@ public class DBHelper extends SQLiteOpenHelper {
             int stepsOld = resPro.getInt(resPro.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
             int stepsCombine = steps + stepsOld;
             resultGoal.moveToFirst();
-            String goalActive = resultGoal.getString(resultGoal.getColumnIndex(DBHelper.COLUMN_NAME));
+            //String goalActive = resultGoal.getString(resultGoal.getColumnIndex(DBHelper.COLUMN_NAME));
             int id = resPro.getInt(resPro.getColumnIndex(DBHelper.PROGRESS_COLUMN_ID));
             resultGoal.close();
             resPro.close();
-            contentValues1.put(PROGRESS_COLUMN_GOAL, goalActive);
+            //contentValues1.put(PROGRESS_COLUMN_GOAL, goalActive);
             contentValues1.put(PROGRESS_COLUMN_STEPS,stepsCombine);
             db.update(PROGRESS_TABLE_NAME, contentValues1, PROGRESS_COLUMN_ID + " = ? ", new String[] { Integer.toString(id) } );
         }

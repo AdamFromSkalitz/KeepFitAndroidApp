@@ -7,4 +7,5 @@
     <color name="black">#000000</color>
     <color name="offwhite">#E1E3FA</color>
     <color name="lightblue">#377EDB</color>
+    <color name="alertRed">#FF0303</color>
 </resources>

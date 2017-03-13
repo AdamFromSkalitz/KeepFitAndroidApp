@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -47,7 +48,13 @@ public class StatisticsActivity extends AppCompatActivity {
 
     private Spinner unitsSpin;
     private DBHelper dbHelper;
-    private int m;
+    private TextView tvAvg;
+    private TextView tvTot;
+    private TextView tvMax;
+    private TextView tvMin;
+    private SeekBar sbTop;
+    private SeekBar sbBot;
+    private TextView tvGoalTitleNum;
 
     private float total=0f;
     private float average=0f;
@@ -78,6 +85,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
+        putWarning();
         dbHelper = new DBHelper(StatisticsActivity.this);
 
         setDefaultDates();
@@ -129,16 +137,16 @@ public class StatisticsActivity extends AppCompatActivity {
         GridView gridView = (GridView) findViewById(R.id.gridView);
         gridView.setAdapter(gridAdapter);
 
-        final TextView tvAvg = (TextView) findViewById(R.id.avgNum);
-        final TextView tvTot = (TextView) findViewById(R.id.totalNum);
-        final TextView tvMax = (TextView) findViewById(R.id.maxNum);
-        final TextView tvMin = (TextView) findViewById(R.id.minNum);
+        tvAvg = (TextView) findViewById(R.id.avgNum);
+        tvTot = (TextView) findViewById(R.id.totalNum);
+        tvMax = (TextView) findViewById(R.id.maxNum);
+        tvMin = (TextView) findViewById(R.id.minNum);
 
-        final TextView tvGoalTitleNum = (TextView) findViewById(R.id.goalsTitleNum);
+        tvGoalTitleNum = (TextView) findViewById(R.id.goalsTitleNum);
 
         final TextView tvstop = (TextView) findViewById(R.id.seektvtop);
-        final SeekBar sbTop = (SeekBar) findViewById(R.id.seekBarTop);
-        final SeekBar sbBot = (SeekBar) findViewById(R.id.seekBarBot);
+        sbTop = (SeekBar) findViewById(R.id.seekBarTop);
+        sbBot = (SeekBar) findViewById(R.id.seekBarBot);
 
         sbTop.setProgress(100);
         sbTop.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -146,7 +154,6 @@ public class StatisticsActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
                 if(progress<=minUpperBound){
-                    m=1;
                     tvstop.setText(minUpperBound+"");
                     sbTop.setProgress(minUpperBound);
                     maxLowerBound=minUpperBound;
@@ -202,74 +209,10 @@ public class StatisticsActivity extends AppCompatActivity {
         confirmBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String unitsSpinString = unitsSpin.getSelectedItem().toString();
-                goals.clear();
-                total=0f;
-                max=Float.MIN_VALUE;
-                min=Float.MAX_VALUE;
-                String startPercent = Integer.toString(sbBot.getProgress());
-                String endPercent = Integer.toString(sbTop.getProgress());
-
-                Date date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
-                startDate = sdf.format(date);
-                date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
-                sdf = new SimpleDateFormat("yyyy-MM-dd");
-                endDate = sdf.format(date);
-
-                Cursor result = dbHelper.getStatistics(startDate,endDate,startPercent,endPercent);
-
-                //put that result into the table
-                //and grid layout
-                result.moveToFirst();
-                while(!result.isAfterLast()){
-                    String name = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_NAME));
-                    String units = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
-                    boolean active = true;
-                    float steps=0f;
-                    try {
-                        steps = Float.parseFloat(result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS)));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    total+=steps;
-                    if(steps>max){
-                        max=steps;
-                    }
-                    if(steps<min){
-                        min=steps;
-                    }
-
-                    goals.add(new Goal(name,steps,active,units));
-                    result.moveToNext();
-                }
-                if(goals.size()==0){
-                    average=0f;
-                }else {
-                    average = total / goals.size();
-                }
-                gridAdapter.notifyDataSetChanged();
-                //updateTable()
-                tvGoalTitleNum.setText(""+goals.size());
-
-                DecimalFormat df = new DecimalFormat("##.##");
-
-                String convertedAverage= df.format(convertToUnits(unitsSpinString,average));
-                String convertedMax= df.format(convertToUnits(unitsSpinString,max));
-                if(min==Float.MAX_VALUE){
-                    min=0f;
-                }
-                String convertedMin= df.format(convertToUnits(unitsSpinString,min));
-                String convertedTotal= df.format(convertToUnits(unitsSpinString,total));
-
-
-                tvAvg.setText(convertedAverage);
-                tvMax.setText(""+convertedMax);
-                tvMin.setText(""+convertedMin);
-                tvTot.setText(""+convertedTotal);
-
+            popStats();
             }
         });
+        popStats();
     }
 
     public String getMonth(int month) {
@@ -279,7 +222,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
     public float convertToUnits(String unitsSpinString,float progress){
 
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);;
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
 
         switch (unitsSpinString){
             case "Kilometres":
@@ -296,6 +239,74 @@ public class StatisticsActivity extends AppCompatActivity {
                 break;
         }
         return progress;
+    }
+
+    public void popStats(){
+        String unitsSpinString = unitsSpin.getSelectedItem().toString();
+        goals.clear();
+        total=0f;
+        max=Float.MIN_VALUE;
+        min=Float.MAX_VALUE;
+        String startPercent = Integer.toString(sbBot.getProgress());
+        String endPercent = Integer.toString(sbTop.getProgress());
+
+        Date date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+        startDate = sdf.format(date);
+        date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
+        endDate = sdf.format(date);
+
+        Cursor result = dbHelper.getStatistics(startDate,endDate,startPercent,endPercent);
+
+        //put that result into the table
+        //and grid layout
+        result.moveToFirst();
+        while(!result.isAfterLast()){
+            String name = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_NAME));
+            String units = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
+            boolean active = true;
+            float steps=0f;
+            try {
+                steps = Float.parseFloat(result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS)));
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            total+=steps;
+            if(steps>max){
+                max=steps;
+            }
+            if(steps<min){
+                min=steps;
+            }
+
+            goals.add(new Goal(name,steps,active,units));
+            result.moveToNext();
+        }
+        if(goals.size()==0){
+            average=0f;
+        }else {
+            average = total / goals.size();
+        }
+        gridAdapter.notifyDataSetChanged();
+        //updateTable()
+        tvGoalTitleNum.setText(""+goals.size());
+
+        DecimalFormat df = new DecimalFormat("##.##");
+
+        String convertedAverage= df.format(convertToUnits(unitsSpinString,average));
+        String convertedMax= df.format(convertToUnits(unitsSpinString,max));
+        if(min==Float.MAX_VALUE){
+            min=0f;
+        }
+        String convertedMin= df.format(convertToUnits(unitsSpinString,min));
+        String convertedTotal= df.format(convertToUnits(unitsSpinString,total));
+
+        tvAvg.setText(convertedAverage);
+        tvMax.setText(""+convertedMax);
+        tvMin.setText(""+convertedMin);
+        tvTot.setText(""+convertedTotal);
+
     }
 
     public void setDefaultDates(){
@@ -330,9 +341,21 @@ public class StatisticsActivity extends AppCompatActivity {
         startDay=c.get(Calendar.DAY_OF_MONTH);
     }
 
+    public void putWarning() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean testMode = SP.getBoolean("enableTest", false);
+        ImageView iv = (ImageView) findViewById(R.id.alertTestMode);
+        if (testMode) {
+            iv.setVisibility(View.VISIBLE);
+        } else {
+            iv.setVisibility(View.INVISIBLE);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        putWarning();
         setDefaultDates();
     }
 }

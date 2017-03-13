@@ -152,7 +152,7 @@
                 android:gravity="center"
                 android:layout_below="@id/table"
                 android:visibility="gone"
-                android:text="Please make a goal active"/>
+                android:text="There is no active goal"/>
 
             <com.github.mikephil.charting.charts.PieChart
 

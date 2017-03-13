@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,6 +26,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     DBHelper dbHelper;
 
     private PendingIntent pendingIntent;
+    private PendingIntent mainPendingIntent;
     private AlarmManager manager;
 
     public Context getContext() {
@@ -67,21 +70,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        if(getIntent().hasExtra("openPrevFrag")){
+        if (getIntent().hasExtra("openPrevFrag")) {
             getFragmentManager().popBackStack();
         }
 
         // Retrieve a PendingIntent that will perform a broadcast
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
-        //startAlarm();
-//        Intent i = new Intent(MainActivity.this,StepDetector.class);
-//        startService(i);
+        startAlarm();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dbHelper=new DBHelper(MainActivity.this);
+        dbHelper = new DBHelper(MainActivity.this);
 
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -101,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         bottomBar = (BottomNavigationView) findViewById(R.id.bottomBar);
         bottomBar.setId(R.id.tab_main);
+        bottomBar.getMenu().findItem(R.id.tab_main).setChecked(true);
+        //bottomBar.getMenu().getItem(1).setChecked(true);
+
         //bottomBar.setDefaultTab(R.id.tab_main);
         bottomBar.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -182,11 +186,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             openSettings();
-        }else if(id == R.id.deleteHistory){
+        } else if (id == R.id.deleteHistory) {
             Intent intent = new Intent(MainActivity.this, DeleteHistoryActivity.class);
             startActivity(intent);
-        }else if(id == R.id.statistics){
-            Intent intent = new Intent(MainActivity.this,StatisticsActivity.class);
+        } else if (id == R.id.statistics) {
+            Intent intent = new Intent(MainActivity.this, StatisticsActivity.class);
             startActivity(intent);
         }
 
@@ -198,93 +202,73 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         startActivity(intent);
     }
 
-//    public void start() {
-//        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        int interval = 8000;
-//
-//        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), interval, pendingIntent);
-//        Toast.makeText(this, "Alarm Set", Toast.LENGTH_SHORT).show();
-//    }
-
     public void cancel() {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         manager.cancel(pendingIntent);
         Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
     }
 
-//    public void startAt10() {
-//        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//        int interval = 10000;
-//
-//        /* Set the alarm to start at 10:30 AM */
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.set(Calendar.HOUR_OF_DAY, 12);
-//        calendar.set(Calendar.MINUTE, 24);
-//
-//        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
-//        int mHour = calendar.get(Calendar.HOUR_OF_DAY);
-//        int mMin = calendar.get(Calendar.MINUTE);
-//        Toast.makeText(this, mHour+":"+mMin,Toast.LENGTH_SHORT).show();
-//
-//        /* Repeating on every 20 minutes interval */
-//        manager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-//                AlarmManager.INTERVAL_DAY, pendingIntent);
-//    }
+
 
     public void startAlarm() {
-        manager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         int interval = 10000;
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.HOUR, 23);
         c.set(Calendar.AM_PM, Calendar.AM);
+
         manager.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        Toast.makeText(this, "Alarm Set for"+c.get(Calendar.HOUR_OF_DAY), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Alarm Set for" + c.get(Calendar.HOUR_OF_DAY), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         float stepNew = event.values[0];
-        //stepCount+=stepNew;
-       // Toast.makeText(this,"steps"+stepCount,Toast.LENGTH_SHORT).show();
-//        if (steps%100==0){
-//            save to db
-//        }
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
 
         Cursor existingSteps = dbHelper.getDayProgress();
         existingSteps.moveToFirst();
 
         //need to see if notifications is off
-        float stepsOld=0;
+        float stepsOld = 0;
         try {
-            stepsOld= existingSteps.getFloat(existingSteps.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
-        }catch (Exception e){
+            stepsOld = existingSteps.getFloat(existingSteps.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+        } catch (Exception e) {
 
         }
 
         existingSteps.close();
 
-        float updateStep = stepsOld+stepNew;
+        float updateStep = stepsOld + stepNew;
+
+
+        boolean counter = SP.getBoolean("enableCounter", false);
+
         TextView progressTV = (TextView) findViewById(R.id.tvprogress);
         try {
-            progressTV.setText("" + (int)updateStep);
-            dbHelper.updateDayProgress((int)stepNew);
-        }catch (Exception e){
+            if (counter) {
+                progressTV.setText("" + (int) updateStep);
+                dbHelper.updateDayProgress((int) stepNew);
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         Cursor res = dbHelper.getActiveGoal();
         res.moveToFirst();
-        int goalValue=666;
+        int goalValue = 666;
         try {
-            goalValue= res.getInt(res.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
-        }catch (Exception e){
+            goalValue = res.getInt(res.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+        } catch (Exception e) {
 
         }
- //       TextView goalValueTV = (TextView) findViewById(R.id.goal_value);
+
+
+        //       TextView goalValueTV = (TextView) findViewById(R.id.goal_value);
 //        int goalValue=0;
 //        try {
 //            goalValue = Integer.parseInt(goalValueTV.getText().toString());
@@ -292,17 +276,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            e.printStackTrace();
 //            goalValue=666;
 //        }
-        if(updateStep==goalValue){
-            NotificationCompat.Builder mBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.step)
-                            .setContentTitle("Goal Reached!")
-                            .setContentText("You have walked "+updateStep+" steps, Well done.");
-            int mNotId=001;
-            NotificationManager mNotifyMgr =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(mNotId,mBuilder.build());
-        }
+        boolean notify = SP.getBoolean("enableNotify", false);
+        if (notify) {
+            if (updateStep == goalValue) {
+                int requestID = (int) System.currentTimeMillis();
 
+                Intent mainIntent = new Intent(this, MainActivity.class);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                stackBuilder.addParentStack(MainActivity.class);
+                stackBuilder.addNextIntent(mainIntent);
+                //mainPendingIntent = PendingIntent.getBroadcast(this,requestID, mainIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                mainPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                //notification.flags |= Notification.FLAG_AUTO_CANCEL;
+                Cursor result=null;
+
+                String units="";
+                try {
+                    result = dbHelper.getActiveGoal();
+                    result.moveToFirst();
+                    units = result.getString(result.getColumnIndex(DBHelper.COLUMN_UNITS));
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(this)
+                                .setSmallIcon(R.drawable.step)
+                                .setContentTitle("Goal Reached!")
+                                .setContentText("You have walked " + updateStep + " " + units + ", Well done.");
+                mBuilder.setContentIntent(mainPendingIntent);
+                int mNotId = 1;
+                mBuilder.build().flags |= Notification.FLAG_AUTO_CANCEL;
+
+                NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mNotifyMgr.notify(mNotId, mBuilder.build());
+            }
+        }
 
 
     }
@@ -321,8 +332,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onPause() {
         super.onPause();
-       // mSensorManager.unregisterListener(this);
+        // mSensorManager.unregisterListener(this);
     }
-    }
+}
 
 

@@ -20,14 +20,14 @@
 
         <SwitchPreference
             android:id="@+id/activateStepCounter"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="enableCounter"
             android:summary="Turn Step Counter on or off"
             android:title="Step Counter" />
 
         <SwitchPreference
             android:id="@+id/notifications"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="enableNotify"
             android:summary="Turn notifications on or off"
             android:title="Notifications" />

@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import android.view.WindowManager;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.XAxis.XAxisPosition;
@@ -81,7 +83,9 @@ public class GraphFragment extends Fragment {
     private Button buttonConfirm;
     TextView emptyState;
     //private Cursor customResult;
-    View graphView;
+    private View graphView;
+    private Spinner cutOffSpin;
+    private SeekBar cutOffSeek;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +93,8 @@ public class GraphFragment extends Fragment {
         // Inflate the layout for this fragment
         graphView = inflater.inflate(R.layout.fragment_graph, container, false);
         ((MainActivity)getActivity()).getSupportActionBar().setTitle("History");
+
+        putWarning();
 
         emptyState = (TextView) graphView.findViewById(R.id.empty_view);
 
@@ -146,10 +152,10 @@ public class GraphFragment extends Fragment {
 
         unitsSpin = (Spinner) graphView.findViewById(R.id.spinnerUnits);
 
-        final Spinner cutOffSpin = (Spinner) graphView.findViewById(R.id.spinnerCutOff);
+        cutOffSpin = (Spinner) graphView.findViewById(R.id.spinnerCutOff);
 
         final TextView cutOffTV = (TextView) graphView.findViewById(R.id.seektvCutOff);
-        final SeekBar cutOffSeek = (SeekBar) graphView.findViewById(R.id.seekBarCutOff);
+        cutOffSeek = (SeekBar) graphView.findViewById(R.id.seekBarCutOff);
         cutOffSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -172,55 +178,57 @@ public class GraphFragment extends Fragment {
         buttonConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                cutOffDirection = cutOffSpin.getSelectedItem().toString();
-                cutOffPercentage = Integer.toString(cutOffSeek.getProgress());
-
-                Date date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
-                startDate = sdf.format(date);
-                date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
-                sdf = new SimpleDateFormat("yyyy-MM-dd");
-                endDate = sdf.format(date);
-
-                Cursor customResult  = dbHelper.getCustomUserOldGoals(statistics,startDate,endDate,cutOffDirection,cutOffPercentage);
-                popGraph(customResult);
-
+                popGraph();
             }
         });
+
+        popGraph();
         return graphView;
     }
 
-    public void popGraph(Cursor customResult){
+    public void popGraph(){
+
+        cutOffDirection = cutOffSpin.getSelectedItem().toString();
+        cutOffPercentage = Integer.toString(cutOffSeek.getProgress());
+
+        Date date = new GregorianCalendar(startYear,startMonth,startDay).getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+        startDate = sdf.format(date);
+        date = new GregorianCalendar(endYear,endMonth,endDay).getTime();
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
+        endDate = sdf.format(date);
+        Cursor customResult  = dbHelper.getCustomUserOldGoals(statistics,startDate,endDate,cutOffDirection,cutOffPercentage);
+
         //Cursor result = dbHelper.getAllOldGoals();
         //Cursor result = customResult;
         List<BarEntry> entries = new ArrayList<>();
         dates = new ArrayList<>();
-        List<String> goalNames = new ArrayList<>();
+        //List<String> goalNames = new ArrayList<>();
 
         customResult.moveToFirst();
 
         int i=0;
         while(!customResult.isAfterLast()){
             String name = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_NAME));
-            goalNames.add(name);
+            String percentage = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PERCENTAGE));
             String dateString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_DATE));
             String progressString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS));
             String goalString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_GOALVALUE));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            Date date;
+            //Date date;
             String blah="";
             String unitsDBString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
 
             try{
                 date = df.parse(dateString);
                 blah = df.format(date);
-                dates.add(date.getDate()+"/"+date.getMonth()+"-"+name);
+                if(name.length()>10){
+                    name=name.substring(0,8)+"...";
+                }
+                dates.add(date.getDate()+"/"+date.getMonth()+"\n"+name);
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-
 
             int progressInt = Integer.parseInt(progressString);
             int goalInt = Integer.parseInt(goalString);
@@ -236,16 +244,13 @@ public class GraphFragment extends Fragment {
                     float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
                     int progressStepsCM = (int)progressInt*(int)cmMap;
                     progressUnits = (float)progressStepsCM/100000;
-
                     int goalStepsCM = (int)goalInt*(int)cmMap;
                     goalUnits = (float)goalStepsCM/100000;
-
                     break;
                 case "Miles":
                     int inch = Integer.parseInt(SP.getString("mappingImp","30"));
                     int progressStepsINC = progressInt*inch;
                     progressUnits = (float)progressStepsINC/(36*1760);
-
                     int goalsStepsINC = goalInt*inch;
                     goalUnits = (float)goalsStepsINC/(36*1760);
                     break;
@@ -258,10 +263,7 @@ public class GraphFragment extends Fragment {
                 remainder=0f;
             }
 
-            //new BarEntry()
             entries.add(new BarEntry(i,new float[]{progressUnits,remainder},name));
-
-            final String finalBlah=blah;
 
             i++;
             customResult.moveToNext();
@@ -272,25 +274,19 @@ public class GraphFragment extends Fragment {
 
 
         IAxisValueFormatter formatter = new IAxisValueFormatter() {
-            //final String[] quarters = new String[dates.size()]; //{ dates.get(0), "1/2/67", "Q3", "Q4" };
-            final String[] quarters = dates.toArray(new String[dates.size()]);
+            final String[] datesArray = dates.toArray(new String[dates.size()]);
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return quarters[(int) value];
+                return datesArray[(int) value];
             }
         };
 
         BarChart chart = (BarChart) graphView.findViewById(R.id.chart);
-
         chart = clearBarChart(chart);
-
         XAxis xAxis = chart.getXAxis();
         xAxis.setGranularity(1f);
         xAxis.setValueFormatter(formatter);
-
-
         BarDataSet dataSet = new BarDataSet(entries,"");
-
 
         // add many colors
         ArrayList<Integer> colors = new ArrayList<Integer>();
@@ -323,7 +319,9 @@ public class GraphFragment extends Fragment {
         BarData barData = new BarData(dataSets);
         chart.setNoDataText("Please select some options to see a graph");
         chart.setData(barData);
-
+        Description description = new Description();
+        description.setText("");
+        chart.setDescription(description);
 
         if(dates.isEmpty()){
             emptyState.setVisibility(View.VISIBLE);
@@ -398,10 +396,21 @@ public class GraphFragment extends Fragment {
         startDay=c.get(Calendar.DAY_OF_MONTH);
     }
 
+    public void putWarning() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean testMode = SP.getBoolean("enableTest", false);
+        ImageView iv = (ImageView) getActivity().findViewById(R.id.alertTestMode);
+        if (testMode) {
+            iv.setVisibility(View.VISIBLE);
+        } else {
+            iv.setVisibility(View.INVISIBLE);
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        putWarning();
         setDefaultDates();
     }
 }
