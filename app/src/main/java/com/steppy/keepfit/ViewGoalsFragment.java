@@ -70,7 +70,7 @@ public class ViewGoalsFragment extends Fragment{
         rv.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(goalView.getContext());
         rv.setLayoutManager(llm);
-        adapter = new RVAdapter(ItemGoalList,goalView.getContext());
+        adapter = new RVAdapter(ItemGoalList,goalView.getContext(),getActivity());
         rv.setAdapter(adapter);
         populateList();
 

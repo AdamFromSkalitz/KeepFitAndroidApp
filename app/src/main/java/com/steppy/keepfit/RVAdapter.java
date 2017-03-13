@@ -1,5 +1,6 @@
 package com.steppy.keepfit;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.Image;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AlertDialogLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -33,11 +35,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
     List<Goal> goals;
     Context context;
     DBHelper dbHelper;
+    Activity view;
     //Goal goal;
 
-    public RVAdapter(List<Goal> goals, Context context) {
+    public RVAdapter(List<Goal> goals, Context context, Activity view) {
         this.goals = goals;
         this.context = context;
+        this.view = view;
     }
 
     public class GoalViewHolder extends RecyclerView.ViewHolder {
@@ -229,21 +233,32 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
         personViewHolder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Goal goal = goals.get(i);
                 dbHelper = new DBHelper(context);
                 Cursor res = dbHelper.getActiveGoal();
                 String goalActiveName = "";
+                int goalProgress=0;
+                String goalPercent="0";
+                String goalDate="";
                 res.moveToFirst();
                 try {
                     goalActiveName = res.getString(res.getColumnIndex(DBHelper.COLUMN_NAME));
+                    goalProgress = res.getInt(res.getColumnIndex(DBHelper.COLUMN_PROGRESS));
+                    goalPercent = res.getString(res.getColumnIndex(DBHelper.COLUMN_PERCENTAGE));
+                    goalDate = res.getString(res.getColumnIndex(DBHelper.COLUMN_DATE));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 if (!goalActiveName.equals(goal.getName())) {
                     //if not active goal
                     //remove from internal storage
+                    Snackbar deleteSB = Snackbar.make(view.findViewById(R.id.activity_main),"Goal deleted",Snackbar.LENGTH_LONG);
+                    deleteSB.setAction("Undo",new undoGoalDeleteListener(goal,context,goalProgress,goalPercent,goalDate,RVAdapter.this, goals));
                     goals.remove(i);
                     dbHelper.deleteGoal(goal.getName());
+                    deleteSB.show();
                 }
                 notifyDataSetChanged();
                 dbHelper.close();

@@ -140,12 +140,11 @@ public class AddGoalsActivity extends Activity {
                     if(dbHelper.insertOldGoal(nameString,(int)goalValueInt,(int)stepsProgressInt,percentString,dateString1,units)){
                         Toast.makeText(AddGoalsActivity.this, "Test Goal Added Successfully",Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_SHORT).show();
                     }
                     dbHelper.close();
 
                 }else {
-
                     dbHelper = new DBHelper(AddGoalsActivity.this);
                     Cursor allGoals = dbHelper.getAllGoals();
                     allGoals.moveToFirst();
@@ -159,20 +158,19 @@ public class AddGoalsActivity extends Activity {
                     }
                     allGoals.close();
 
-
                     float stepsGoal = turnIntoSteps(Float.parseFloat(goalString));
                     Date date = new Date();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateString = sdf.format(date);
-                    try {
-                        ItemGoalList.add(new Goal(nameString, (float) stepsGoal, false, units));
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        //ItemGoalList.add(new Goal(nameString, (float) stepsGoal, false, units));
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
                     if (dbHelper.insertGoal(nameString,(int)stepsGoal, "false", dateString,units)) {
-                        Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_SHORT).show();
                     }else{
-                        Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddGoalsActivity.this, "Failed to add", Toast.LENGTH_SHORT).show();
                     }
                     dbHelper.close();
                 }
