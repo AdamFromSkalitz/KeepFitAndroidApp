@@ -39,14 +39,6 @@
             android:summary="Allow goals to be edited"
             android:title="Edit Goals" />
 
-        <ListPreference
-            android:defaultValue="1"
-            android:entries="@array/listArray"
-            android:entryValues="@array/listValues"
-            android:key="units"
-            android:summary="Change units the 'steps' are in"
-            android:title="Units" />
-
         <EditTextPreference
             android:defaultValue="75"
             android:inputType="number"
@@ -63,7 +55,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:summary="How many inches long is your step?"
-            android:title="Silly Units Mapping" />
+            android:title="Imperial Units Mapping" />
 
     </PreferenceCategory>
 

@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * Created by Turkleton's on 12/02/2017.
  */
@@ -48,6 +53,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         if(!goalName.equals("")) {
+            final Calendar c = Calendar.getInstance();
+            int mYear = c.get(Calendar.YEAR);
+            int mMonth = c.get(Calendar.MONTH);
+            int mDay = c.get(Calendar.DAY_OF_MONTH);
+            Date date = new GregorianCalendar(mYear,mMonth,mDay-1).getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateString = sdf.format(date);
+
             dbHelper.insertOldGoal(goalName, (int) goalValue, (int)goalProgress, Float.toString(percentage), goalDate, goalUnits);
             dbHelper.resetDayProgress();
         }

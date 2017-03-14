@@ -3,13 +3,17 @@
     <string-array name="listArray">
         <item>Steps</item>
         <item>Kilometres</item>
+        <item>Metres</item>
         <item>Miles</item>
+        <item>Yards</item>
     </string-array>
 
     <string-array name="listValues">
         <item>1</item>
         <item>2</item>
         <item>3</item>
+        <item>4</item>
+        <item>5</item>
     </string-array>
 
     <string-array name="pastArray">

@@ -115,12 +115,9 @@ public class GraphFragment extends Fragment {
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-                                //startDate = dayOfMonth+"/"+monthOfYear+"/"+year;
                                 startYear=year;
                                 startMonth=monthOfYear;
                                 startDay=dayOfMonth;
-                                //Toast.makeText(getActivity(),dateString1,Toast.LENGTH_SHORT).show();
-                                //butStartDate.setText(startDate);
                                 butStartDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
                         }, startYear, startMonth, startDay);
@@ -141,8 +138,6 @@ public class GraphFragment extends Fragment {
                                 endYear=year;
                                 endMonth=monthOfYear;
                                 endDay=dayOfMonth;
-                                //Toast.makeText(getActivity(),dateString1,Toast.LENGTH_SHORT).show();
-                                //butEndDate.setText(dateString1);
                                 butEndDate.setText(dayOfMonth+" "+getMonth(monthOfYear));
                             }
                         }, endYear,endMonth,endDay);
@@ -214,49 +209,48 @@ public class GraphFragment extends Fragment {
             String dateString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_DATE));
             String progressString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS));
             String goalString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_GOALVALUE));
+            String goalUnit = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            //Date date;
-            String blah="";
-            String unitsDBString = customResult.getString(customResult.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
 
             try{
                 date = df.parse(dateString);
-                blah = df.format(date);
                 if(name.length()>10){
                     name=name.substring(0,8)+"...";
                 }
-                dates.add(date.getDate()+"/"+date.getMonth()+"\n"+name);
+                dates.add(date.getDate()+"/"+date.getMonth()+" "+goalUnit.charAt(0)+"\n"+name);
             }catch (Exception e){
                 e.printStackTrace();
             }
 
-            int progressInt = Integer.parseInt(progressString);
-            int goalInt = Integer.parseInt(goalString);
+            float progress = Float.parseFloat(progressString);
+            float goal = Float.parseFloat(goalString);
 
             String unitsSpinString = unitsSpin.getSelectedItem().toString();
-            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            //SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-            float progressUnits= (float) progressInt;
-            float goalUnits = (float) goalInt;
+            float progressUnits=  stepsToUnits(progress,unitsSpinString);
+            float goalUnits =  stepsToUnits(goal,unitsSpinString);
             //convert data in db from steps into the units specified by the user
-            switch (unitsSpinString){
-                case "Kilometres":
-                    float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
-                    int progressStepsCM = (int)progressInt*(int)cmMap;
-                    progressUnits = (float)progressStepsCM/100000;
-                    int goalStepsCM = (int)goalInt*(int)cmMap;
-                    goalUnits = (float)goalStepsCM/100000;
-                    break;
-                case "Miles":
-                    int inch = Integer.parseInt(SP.getString("mappingImp","30"));
-                    int progressStepsINC = progressInt*inch;
-                    progressUnits = (float)progressStepsINC/(36*1760);
-                    int goalsStepsINC = goalInt*inch;
-                    goalUnits = (float)goalsStepsINC/(36*1760);
-                    break;
-                case "Steps":
-                    break;
-            }
+
+
+//            switch (unitsSpinString){
+//                case "Kilometres":
+//                    float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+//                    int progressStepsCM = (int)progress*(int)cmMap;
+//                    progressUnits = (float)progressStepsCM/100000;
+//                    int goalStepsCM = (int)goalInt*(int)cmMap;
+//                    goalUnits = (float)goalStepsCM/100000;
+//                    break;
+//                case "Miles":
+//                    int inch = Integer.parseInt(SP.getString("mappingImp","30"));
+//                    int progressStepsINC = progress*inch;
+//                    progressUnits = (float)progressStepsINC/(36*1760);
+//                    int goalsStepsINC = goalInt*inch;
+//                    goalUnits = (float)goalsStepsINC/(36*1760);
+//                    break;
+//                case "Steps":
+//                    break;
+//            }
 
             float remainder = goalUnits-progressUnits;
             if(remainder<0){
@@ -406,7 +400,32 @@ public class GraphFragment extends Fragment {
             iv.setVisibility(View.INVISIBLE);
         }
     }
-
+    public float stepsToUnits(float steps, String units){
+        float stepsFloat=0f;
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        float stepsCM = Float.parseFloat(SP.getString("mappingMet","75"));
+        float stepsInch = Float.parseFloat(SP.getString("MappingImp","30"));
+        stepsFloat=steps;
+        switch (units){
+            case "Kilometres":
+                float cm = stepsCM*steps;
+                stepsFloat= cm/100000;
+                break;
+            case "Metres":
+                float cmMetres = stepsCM*steps;
+                stepsFloat=cmMetres/100;
+                break;
+            case "Miles":
+                float inches = stepsInch*steps;
+                stepsFloat= inches/(1760*36);
+                break;
+            case "Yards":
+                float inchesYards = stepsInch*steps;
+                stepsFloat=inchesYards/36;
+                break;
+        }
+        return stepsFloat;
+    }
     @Override
     public void onResume() {
         super.onResume();

@@ -221,21 +221,26 @@ public class StatisticsActivity extends AppCompatActivity {
 
 
     public float convertToUnits(String unitsSpinString,float progress){
-
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
+        float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+        float inchMap = Float.parseFloat(SP.getString("mappingImp","30"));
 
         switch (unitsSpinString){
             case "Kilometres":
-                float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
-                int progressStepsCM = (int)progress*(int)cmMap;
-                progress = (float)progressStepsCM/100000;
+                float progressStepsCM = progress*cmMap;
+                progress = progressStepsCM/100000;
+                break;
+            case "Metres":
+                float cmMetres = progress*cmMap;
+                progress=cmMetres/100;
                 break;
             case "Miles":
-                float inch = Float.parseFloat(SP.getString("mappingImp","30"));
-                float progressStepsINC = progress*inch;
+                float progressStepsINC = progress*inchMap;
                 progress = progressStepsINC/(36*1760);
                 break;
-            case "Steps":
+            case "Yards":
+                float inchesYards = progress*inchMap;
+                progress=inchesYards/36;
                 break;
         }
         return progress;

@@ -62,8 +62,9 @@ public class GridAdapter extends BaseAdapter {
         res.moveToFirst();
         String goalValue = res.getString(res.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_GOALVALUE));
         String goalProgress = res.getString(res.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS));
+        String goalPercent = res.getString(res.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PERCENTAGE));
         //convert to units
-        goalNameTV.setText(goalName+"\n Goal: "+goalValue+"\n Progress: "+goalProgress);
+        goalNameTV.setText(goalName+"\n Goal: "+goalValue+"\n Progress: "+goalProgress+ "\n Percentage: "+goalPercent+"%");
         res.close();
 
         return goalNameTV;

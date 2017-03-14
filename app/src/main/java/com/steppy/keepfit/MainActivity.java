@@ -238,28 +238,35 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         try {
             stepsOld = existingSteps.getFloat(existingSteps.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
 
         existingSteps.close();
 
         float updateStep = stepsOld + stepNew;
 
-
+        Cursor res = dbHelper.getActiveGoal();
+        res.moveToFirst();
+        String units ="Steps";
+        try{
+            units = res.getString(res.getColumnIndex(DBHelper.COLUMN_UNITS));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        float unitsStep = convertToUnits(units,updateStep);
         boolean counter = SP.getBoolean("enableCounter", false);
 
         TextView progressTV = (TextView) findViewById(R.id.tvprogress);
         try {
             if (counter) {
-                progressTV.setText("" + (int) updateStep);
+                progressTV.setText(""+unitsStep);
                 dbHelper.updateDayProgress((int) stepNew);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Cursor res = dbHelper.getActiveGoal();
-        res.moveToFirst();
+
         int goalValue = 666;
         try {
             goalValue = res.getInt(res.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
@@ -291,7 +298,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //notification.flags |= Notification.FLAG_AUTO_CANCEL;
                 Cursor result=null;
 
-                String units="";
+                //String units="";
                 try {
                     result = dbHelper.getActiveGoal();
                     result.moveToFirst();
@@ -334,6 +341,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         // mSensorManager.unregisterListener(this);
     }
+
+    public float convertToUnits(String unitsSpinString,float progress){
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
+        float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+        float inchMap = Float.parseFloat(SP.getString("mappingImp","30"));
+        switch (unitsSpinString){
+            case "Kilometres":
+                float progressStepsCM = progress*cmMap;
+                progress = progressStepsCM/100000;
+                break;
+            case "Metres":
+                float cmMetres = progress*cmMap;
+                progress=cmMetres/100;
+                break;
+            case "Miles":
+                float progressStepsINC = progress*inchMap;
+                progress = progressStepsINC/(36*1760);
+                break;
+            case "Yards":
+                float inchesYards = progress*inchMap;
+                progress=inchesYards/36;
+                break;
+        }
+        return progress;
+    }
+
+
 }
 
 

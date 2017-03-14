@@ -123,7 +123,8 @@ public class AddGoalsActivity extends Activity {
                         stepsValue.setError("Field cannot be blank nor contain special characters");
                         return;
                     }
-                    Date date = new GregorianCalendar(mYear,mMonth,mDay-1).getTime();
+
+                    Date date = new GregorianCalendar(mYear,mMonth,mDay).getTime();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateString1 = sdf.format(date);
 
@@ -224,7 +225,7 @@ public class AddGoalsActivity extends Activity {
             case "Metres":
 //              // 1 meters = 100cm
                 cms = goalFloat*100;
-                cm = SP.getFloat("mappingMet",75);
+                cm = Float.parseFloat(SP.getString("mappingMet","75"));
                 steps = cms/cm;
                 stepsInt = (int) steps;
                 break;
@@ -240,7 +241,7 @@ public class AddGoalsActivity extends Activity {
             case "Yards":
                 //1 yard = 36 inches
                 inches = goalFloat*36;
-                inch = (float) SP.getInt("mappingImp",30);
+                inch = Float.parseFloat(SP.getString("mappingImp","30"));
                 steps = inches/inch;
                 stepsInt = (int) steps;
                 break;
@@ -249,13 +250,12 @@ public class AddGoalsActivity extends Activity {
                 float yards = goalFloat*1760;
                 //1 yard = 36 inches
                 inches = yards*36;
-                inch = Integer.parseInt(SP.getString("mappingImp","30"));
+                inch = Float.parseFloat(SP.getString("mappingImp","30"));
                 steps = inches/inch;
                 // steps in inches atm
                 stepsInt = (int) steps;
                 break;
         }
-
         return stepsInt;
     }
 }

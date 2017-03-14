@@ -12,10 +12,12 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.Image;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AlertDialogLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -160,12 +162,13 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 // Pass null as the parent view because its going in the dialog layout
                 final View dialogView = inflater.inflate(R.layout.fragment_edit_steps_dialog, null);
 
+
                 dbHelper = new DBHelper(context);
                 final Cursor result = dbHelper.getGoal(goals.get(i).getName());
                 result.moveToNext();
                 final int idGoal = Integer.parseInt(result.getString(result.getColumnIndex(DBHelper.COLUMN_ID)));
-                String name = result.getString(result.getColumnIndex(DBHelper.COLUMN_NAME));
-                String value = result.getString(result.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
+                final String name = result.getString(result.getColumnIndex(DBHelper.COLUMN_NAME));
+                float value = result.getFloat(result.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
                 final String date = result.getString(result.getColumnIndex(DBHelper.COLUMN_DATE));
                 final String active = result.getString(result.getColumnIndex(DBHelper.COLUMN_ACTIVE));
                 final String units = result.getString(result.getColumnIndex(DBHelper.COLUMN_UNITS));
@@ -173,8 +176,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 final TextView goalValue=(TextView)dialogView.findViewById(R.id.goalsText);
                 final Spinner unitsSpin=(Spinner)dialogView.findViewById(R.id.spinnerUnits);
 
+
                 goalName.setText(name);
-                goalValue.setText(value);
+                float valueConverted = Math.round(convertToUnits(units, value));
+                goalValue.setText(Float.toString(valueConverted));
+
                 switch (units){
                     case "Steps":
                         unitsSpin.setSelection(0);
@@ -191,16 +197,40 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        Goal goal = goals.get(i);
-                        final String nameD = goalName.getText().toString();
-                        final String valueD = goalValue.getText().toString();
-                        final String unitsD = unitsSpin.getSelectedItem().toString();
-                        goal.setUnits(unitsD);
-                        goal.setName(nameD);
-                        goal.setSteps(Float.parseFloat(valueD));
-                        dbHelper.updateGoal(idGoal,nameD,valueD,active,date,unitsD);
-                        dbHelper.close();
-                        notifyDataSetChanged();
+                        dbHelper = new DBHelper(context);
+
+                        boolean edit=true;
+                        String nameEdit = goalName.getText().toString();
+                        String valueEdit = goalValue.getText().toString();
+                        String unitsEdit = unitsSpin.getSelectedItem().toString();
+
+                        Cursor allGoals = dbHelper.getAllGoals();
+                        allGoals.moveToFirst();
+                        String nameOriginal = goals.get(i).getName();
+                        while(!allGoals.isAfterLast()) {
+                            String nameCheck = allGoals.getString(allGoals.getColumnIndex(DBHelper.COLUMN_NAME));
+                            if(nameEdit.equals(nameCheck)){
+                                if(!nameEdit.equals(nameOriginal)){
+                                    goalName.setError("Goal cannot have the same name as another goal");
+                                    edit = false;
+                                }
+                            }
+                            allGoals.moveToNext();
+                        }
+                        allGoals.close();
+
+                        if(edit) {
+                            Goal goal = goals.get(i);
+                            goal.setUnits(unitsEdit);
+                            goal.setName(nameEdit);
+                            goal.setSteps(Float.parseFloat(valueEdit));
+                            float goalValueInt = turnIntoSteps(unitsEdit,Float.parseFloat(valueEdit));
+                            dbHelper.updateGoal(idGoal, nameEdit, Float.toString(goalValueInt), active, date, unitsEdit);
+                            dbHelper.close();
+                            notifyDataSetChanged();
+                        }else{
+                            Toast.makeText(context,"Goal cannot have the same name as another goal",Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -225,8 +255,11 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 dbHelper.close();
                 res.close();
                 if (!goalActiveName.equals(goal.getName())) {
+
                     builder.show();
                     //dl.show();
+                }else{
+                    Toast.makeText(context,"Cannot edit active goal",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -259,6 +292,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                     goals.remove(i);
                     dbHelper.deleteGoal(goal.getName());
                     deleteSB.show();
+                }else{
+                    Toast.makeText(context,"Cannot delete active goal",Toast.LENGTH_SHORT).show();
                 }
                 notifyDataSetChanged();
                 dbHelper.close();
@@ -274,7 +309,78 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+    public float convertToUnits(String unitsSpinString,float progress){
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
+
+        switch (unitsSpinString){
+            case "Kilometres":
+                float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+                int progressStepsCM = (int)progress*(int)cmMap;
+                progress = (float)progressStepsCM/100000;
+                break;
+            case "Miles":
+                float inch = Float.parseFloat(SP.getString("mappingImp","30"));
+                float progressStepsINC = progress*inch;
+                progress = progressStepsINC/(36*1760);
+                break;
+            case "Steps":
+                break;
+        }
+        return progress;
 
 
+    }
 
+    public float turnIntoSteps(String units, float goalInSomeUnits){
+
+        //Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
+        //String units = unitsSpin.getSelectedItem().toString();
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
+
+        float stepsInt = goalInSomeUnits;
+        float goalFloat = (float) goalInSomeUnits;
+        float steps=0;
+        float inches=0;
+        float cms=0;
+        float inch=0;
+        float cm=0;
+        switch (units){
+            case "Metres":
+//              // 1 meters = 100cm
+                cms = goalFloat*100;
+                cm =Float.parseFloat(SP.getString("mappingMet","75"));
+                steps = cms/cm;
+                stepsInt = (int) steps;
+                break;
+            case "Kilometres":
+                // 1 kilometer = 1000 metres
+                float m = goalFloat*1000;
+                // 1 meters = 100cm
+                cms = m*100;
+                cm = Float.parseFloat(SP.getString("mappingMet","75"));
+                steps = cms/cm;
+                stepsInt = (int) steps;
+                break;
+            case "Yards":
+                //1 yard = 36 inches
+                inches = goalFloat*36;
+                inch = Float.parseFloat(SP.getString("mappingImp","30"));
+                steps = inches/inch;
+                stepsInt = (int) steps;
+                break;
+            case "Miles":
+                //1 mile = 1760 yards
+                float yards = goalFloat*1760;
+                //1 yard = 36 inches
+                inches = yards*36;
+                inch = Integer.parseInt(SP.getString("mappingImp","30"));
+                steps = inches/inch;
+                // steps in inches atm
+                stepsInt = (int) steps;
+                break;
+        }
+
+        return stepsInt;
+    }
 }

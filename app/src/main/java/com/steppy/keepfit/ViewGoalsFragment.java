@@ -136,7 +136,7 @@ public class ViewGoalsFragment extends Fragment{
 
             String name = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_NAME));
             String units = cursor.getString(cursor.getColumnIndex(DBHelper.COLUMN_UNITS));
-            int goalValueInt = (int) convertToUnits(units, goalValue);
+            int goalValueInt = Math.round(convertToUnits(units, goalValue));
 
             Goal goal = new Goal(name,goalValueInt,activeBool,units);
             ItemGoalList.add(goal);
@@ -158,16 +158,6 @@ public class ViewGoalsFragment extends Fragment{
         adapter.notifyDataSetChanged();
     }
 
-    public void addGoalsFrag(){
-        AddGoalsFragment addGoalsFragment = new AddGoalsFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.progressMiddle, addGoalsFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
     public void addGoals() {
         Intent intent = new Intent(getActivity(), AddGoalsActivity.class);
         //EditText editText = (EditText) findViewById(R.id.edit_message);
@@ -182,20 +172,26 @@ public class ViewGoalsFragment extends Fragment{
     }
     public float convertToUnits(String unitsSpinString,float progress){
 
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());;
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
+        float inchMap = Float.parseFloat(SP.getString("mappingImp","30"));
 
         switch (unitsSpinString){
             case "Kilometres":
-                float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
-                int progressStepsCM = (int)progress*(int)cmMap;
-                progress = (float)progressStepsCM/100000;
+                float progressStepsCM = progress*cmMap;
+                progress = progressStepsCM/100000;
+                break;
+            case "Metres":
+                float cmMetres = progress*cmMap;
+                progress=cmMetres/100;
                 break;
             case "Miles":
-                float inch = Float.parseFloat(SP.getString("mappingImp","30"));
-                float progressStepsINC = progress*inch;
+                float progressStepsINC = progress*inchMap;
                 progress = progressStepsINC/(36*1760);
                 break;
-            case "Steps":
+            case "Yards":
+                float inchesYards = progress*inchMap;
+                progress=inchesYards/36;
                 break;
         }
         return progress;

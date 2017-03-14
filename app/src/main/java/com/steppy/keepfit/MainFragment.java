@@ -117,9 +117,10 @@ public class MainFragment extends Fragment {
         cursor = dbHelper.getDayProgress();
         cursor.moveToFirst();
         try {
-            int steps= cursor.getInt(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
+            float steps= cursor.getFloat(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
             float stepsFloat=stepsToUnits(steps);
-            stepsProgress = df.format(stepsFloat);
+            stepsProgress = Float.toString(stepsFloat);
+                    //= df.format(stepsFloat);
             //stepsProgress=""+stepsFloat;
         }catch (Exception e){
             stepsProgress = "0";
@@ -244,15 +245,7 @@ public class MainFragment extends Fragment {
         return mainView;
     }
 
-    public void addGoalsFrag(){
-        AddGoalsFragment addGoalsFragment = new AddGoalsFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.replace(R.id.progressMiddle, addGoalsFragment);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
 
     public void addGoals() {
         Intent intent = new Intent(getActivity(), AddGoalsActivity.class);
@@ -265,7 +258,7 @@ public class MainFragment extends Fragment {
         startActivity(intent);
     }
 
-    public float stepsToUnits(int steps){
+    public float stepsToUnits(float steps){
         float stepsFloat=0f;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
         float stepsCM = Float.parseFloat(SP.getString("mappingMet","75"));
@@ -275,15 +268,20 @@ public class MainFragment extends Fragment {
             case "Kilometres":
                 float cm = stepsCM*(float)steps;
                 stepsFloat= (float)cm/100000;
-                //stepsProgress=""+stepsFloat;
+                break;
+            case "Metres":
+                float cmMetres = stepsCM*steps;
+                stepsFloat=cmMetres/100;
                 break;
             case "Miles":
                 float inches = stepsInch*(float)steps;
                 stepsFloat= (float)inches/(1760*36);
-                //stepsProgress=""+stepsFloat;
+                break;
+            case "Yards":
+                float inchesYards = stepsInch*steps;
+                stepsFloat=inchesYards/36;
                 break;
         }
-
         return stepsFloat;
     }
 

@@ -43,7 +43,6 @@ public class AddStepsActivity extends Activity {
                     e.printStackTrace();
                     return;
                 }
-                Date date = new Date();
 
                 Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
                 String units = unitsSpin.getSelectedItem().toString();
@@ -60,7 +59,7 @@ public class AddStepsActivity extends Activity {
                     case "Metres":
 //                      // 1 meters = 100cm
                         cms = progressInt*100;
-                        cm = SP.getFloat("mappingMet",75);
+                        cm = Float.parseFloat(SP.getString("mappingMet","75"));
                         steps = cms/cm;
                         stepsInt = (int) steps;
                         break;
@@ -69,14 +68,14 @@ public class AddStepsActivity extends Activity {
                         float m = progressInt*1000;
                         // 1 meters = 100cm
                         cms = m*100;
-                        cm = SP.getInt("mappingMet",75);
+                        cm = Float.parseFloat(SP.getString("mappingMet","75"));
                         steps = cms/cm;
                         stepsInt = (int) steps;
                         break;
                     case "Yards":
                         //1 yard = 36 inches
                         inches = progressInt*36;
-                        inch = SP.getInt("mappingImp",30);
+                        inch = Float.parseFloat(SP.getString("mappingImp","30"));
                         steps = inches/inch;
                         stepsInt = (int) steps;
                         break;
@@ -85,9 +84,8 @@ public class AddStepsActivity extends Activity {
                         float yards = progressInt*1760;
                         //1 yard = 36 inches
                         inches = yards*36;
-                        inch = SP.getInt("mappingImp",30);
+                        inch = Float.parseFloat(SP.getString("mappingImp","30"));
                         steps = inches/inch;
-                        // steps in inches atm
                         stepsInt = (int) steps;
                         break;
                 }
@@ -95,7 +93,7 @@ public class AddStepsActivity extends Activity {
                 dbHelper = new DBHelper(AddStepsActivity.this);
 
                 if(dbHelper.updateDayProgress(stepsInt)){
-                    Toast.makeText(AddStepsActivity.this, "Goal "+stepsInt, Toast.LENGTH_LONG).show();
+                   // Toast.makeText(AddStepsActivity.this, "Goal "+stepsInt, Toast.LENGTH_LONG).show();
                 }else{
                     Toast.makeText(AddStepsActivity.this, "Please set an active goal", Toast.LENGTH_LONG).show();
                     return;
