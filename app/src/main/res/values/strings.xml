@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">KeepFit</string>
     <string name="action_settings">Settings</string>
+    <string name="history_settings">Clear history</string>
+    <string name="confirm_button">Confirm options</string>
+    <string name="startdate_button">Start date</string>
+    <string name="enddate_button">End date</string>
 </resources>

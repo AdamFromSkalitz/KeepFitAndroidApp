@@ -10,7 +10,11 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:shadowColor="#A8A8A8"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5">
 
         <LinearLayout
             android:id="@+id/datePicker"
@@ -29,21 +33,25 @@
             <Button
                 android:id="@+id/buttonStartDate"
                 android:layout_width="100dp"
-                android:layout_height="31dp"
+                android:layout_height="36dp"
                 android:layout_marginLeft="35dp"
                 android:background="@drawable/buttonshape"
-                android:text="Start Date"
+                android:text="@string/startdate_button"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:shadowColor="#A8A8A8"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="5"/>
 
             <Button
                 android:id="@+id/buttonEndDate"
                 android:layout_width="100dp"
-                android:layout_height="31dp"
+                android:layout_height="36dp"
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/buttonshape"
-                android:text="End Date"
+                android:text="@string/enddate_button"
                 android:textAllCaps="false"
                 android:textColor="#000000"
                 android:textSize="15sp" />
@@ -121,7 +129,7 @@
 
         <Button
             android:layout_width="150dp"
-            android:layout_height="31dp"
+            android:layout_height="36dp"
             android:layout_margin="10dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/buttonshape"
@@ -129,11 +137,12 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
+            android:textSize="15sp"
             android:textAllCaps="false"
             android:textColor="#000000"
             android:id="@+id/buttonConfirm"
             android:layout_below="@id/percent"
-            android:text="Confirm Options" />
+            android:text="@string/confirm_button" />
 
         <TextView
             android:id="@+id/empty_view"

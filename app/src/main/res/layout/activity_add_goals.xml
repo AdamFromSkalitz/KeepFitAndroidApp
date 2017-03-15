@@ -76,9 +76,9 @@
             android:background="@drawable/buttonshape"
             />
 
-        <Button
-
+  <!--      <Button
             android:layout_below="@id/addDateBut"
+
             android:id="@+id/setButton"
             android:text="Save Goal"
             android:layout_margin="10dp"
@@ -89,5 +89,31 @@
             android:layout_height="31dp"
             android:background="@drawable/buttonshape"
             />
+-->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginBottom="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:text="CANCEL"
+            android:id="@+id/cancelButton"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SAVE GOAL"
+            android:textColor="@color/colorAccent"
+            android:layout_marginLeft="20dp"
+            android:textStyle="bold"
+            android:id="@+id/setButton"/>
+    </LinearLayout>
+
 
 </LinearLayout>

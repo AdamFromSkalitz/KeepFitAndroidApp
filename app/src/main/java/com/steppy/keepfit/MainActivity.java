@@ -42,6 +42,8 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -257,9 +259,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         boolean counter = SP.getBoolean("enableCounter", false);
 
         TextView progressTV = (TextView) findViewById(R.id.tvprogress);
+        PieChart chart = (PieChart) findViewById(R.id.chartPie);
         try {
             if (counter) {
                 progressTV.setText(""+unitsStep);
+                chart.invalidate();
                 dbHelper.updateDayProgress((int) stepNew);
             }
         } catch (Exception e) {
@@ -275,17 +279,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
 
-        //       TextView goalValueTV = (TextView) findViewById(R.id.goal_value);
-//        int goalValue=0;
-//        try {
-//            goalValue = Integer.parseInt(goalValueTV.getText().toString());
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            goalValue=666;
-//        }
         boolean notify = SP.getBoolean("enableNotify", false);
         if (notify) {
-            if (updateStep == goalValue) {
+            if ( updateStep>=goalValue && updateStep <= (goalValue+5)) {
+
                 int requestID = (int) System.currentTimeMillis();
 
                 Intent mainIntent = new Intent(this, MainActivity.class);

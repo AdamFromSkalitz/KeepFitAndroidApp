@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimaryDark">#388E3C</color>
-    <color name="colorPrimary">#4CAF50</color> <!-- I know this is wrong but can't find how bot nav bar gets it-->
+    <color name="colorPrimary">#4CAF50</color>
     <color name="colorAccent">#7C4DFF</color>
+    <color name="colorFABRipple">#9575cd</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="offwhite">#E1E3FA</color>

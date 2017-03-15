@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Date;
@@ -26,8 +27,15 @@ public class AddStepsActivity extends Activity {
 
 
        // if getSharedPreferences()
+        TextView butCanc = (TextView) findViewById(R.id.cancelButton);
+        butCanc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        Button but = (Button) findViewById(R.id.setButton);
+        TextView but = (TextView) findViewById(R.id.setButton);
         but.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
+
         >
 
         <android.support.v7.widget.RecyclerView
@@ -45,11 +46,10 @@
             fab:menu_backgroundColor="#ccffffff"
             fab:menu_animationDelayPerItem="0"
             fab:menu_colorNormal="@color/colorAccent"
-            fab:menu_colorPressed="#00C29F"
-            fab:menu_colorRipple="#00C29F"
+            fab:menu_colorPressed="@color/colorFABRipple"
+            fab:menu_colorRipple="@color/colorFABRipple"
             android:padding="8dp"
             >
-            <!--app:layout_behavior="com.steppy.keepfit.ScrollAwareFABBehaviour"-->
 
 
             <com.github.clans.fab.FloatingActionButton

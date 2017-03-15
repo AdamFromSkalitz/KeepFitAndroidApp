@@ -89,7 +89,15 @@ public class AddGoalsActivity extends Activity {
             });
         }
 
-        Button but = (Button) findViewById(R.id.setButton);
+        TextView butCancel = (TextView) findViewById(R.id.cancelButton);
+        butCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        TextView but = (TextView) findViewById(R.id.setButton);
         but.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {

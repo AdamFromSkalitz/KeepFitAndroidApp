@@ -82,7 +82,7 @@ public class GraphFragment extends Fragment {
     private String cutOffPercentage="0";
     private Button buttonConfirm;
     TextView emptyState;
-    //private Cursor customResult;
+
     private View graphView;
     private Spinner cutOffSpin;
     private SeekBar cutOffSeek;
@@ -122,7 +122,6 @@ public class GraphFragment extends Fragment {
                             }
                         }, startYear, startMonth, startDay);
                 dpd.show();
-                Toast.makeText(getActivity(),startYear+"",Toast.LENGTH_SHORT).show();
             }
         });
         butEndDate = (Button) graphView.findViewById(R.id.buttonEndDate);
@@ -134,7 +133,6 @@ public class GraphFragment extends Fragment {
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
-                                //endDate = dayOfMonth+"/"+monthOfYear+"/"+year;
                                 endYear=year;
                                 endMonth=monthOfYear;
                                 endDay=dayOfMonth;

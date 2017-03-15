@@ -22,20 +22,22 @@
 
                 <TextView
                     android:id="@+id/goal_name"
-                    android:layout_width="230dp"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:hint="gooooooooals"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:ellipsize="end"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textColor="@color/black"/>
 
                 <TextView
+                    android:textColor="@color/colorAccent"
                     android:id="@+id/goal_value_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/goal_name"
-                    android:hint="Goal:" />
+                    android:text="Goal:" />
 
                 <TextView
                     android:id="@+id/goal_value"
@@ -44,9 +46,10 @@
                     android:layout_below="@+id/goal_name"
                     android:layout_toRightOf="@id/goal_value_title"
                     android:layout_marginLeft="5dp"
-                    android:hint="1232"
+                    android:text="1232"
                     android:ellipsize="end"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:textColor="@color/colorAccent"/>
 
                 <TextView
                     android:id="@+id/goal_units"
@@ -54,8 +57,9 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/goal_name"
                     android:layout_toRightOf="@id/goal_value"
-                    android:hint="Kilometres"
-                    android:layout_marginLeft="5dp"/>
+                    android:text="Kilometres"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@color/colorAccent"/>
 
             </RelativeLayout>
 

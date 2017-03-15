@@ -287,7 +287,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 if (!goalActiveName.equals(goal.getName())) {
                     //if not active goal
                     //remove from internal storage
-                    Snackbar deleteSB = Snackbar.make(view.findViewById(R.id.activity_main),"Goal deleted",Snackbar.LENGTH_LONG);
+                    Snackbar deleteSB = Snackbar.make(view.findViewById(R.id.main_content),"Goal deleted",Snackbar.LENGTH_LONG);
                     deleteSB.setAction("Undo",new undoGoalDeleteListener(goal,context,goalProgress,goalPercent,goalDate,RVAdapter.this, goals));
                     goals.remove(i);
                     dbHelper.deleteGoal(goal.getName());
