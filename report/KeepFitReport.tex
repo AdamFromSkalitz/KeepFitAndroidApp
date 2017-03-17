@@ -1,0 +1,438 @@
+\documentclass[12pt]{report}
+
+%\usepackage[utf8]{inputenc}
+%\usepackage[T1]{fontenc}
+%\usepackage{geometry}
+%\geometry{a4paper}
+\usepackage[english]{babel}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage{placeins} 
+\usepackage{flafter}
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{start} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{action} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm,text width=3cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{thought} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=orange!30]
+%\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=green!30]
+\tikzstyle{decision} = [ellipse,minimum width=1cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+%
+%
+%\\ start a new paragraph.
+%\\* start a new line but not a new paragraph.
+%\- OK to hyphenate a word here.
+%\cleardoublepage flush all material and start a new page, start new odd numbered page.
+%\clearpage plush all material and start a new page.
+%\hyphenation enter a sequence pf exceptional hyphenations.
+%\linebreak allow to break the line here.
+%\newline request a new line.
+%\newpage request a new page.
+%\nolinebreak no line break should happen here.
+%\nopagebreak no page break should happen here.
+%\pagebreak encourage page break.
+
+%\lstset{ %
+%  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+%  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+%  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+%  breaklines=true,                 % sets automatic line breaking
+%  captionpos=b,                    % sets the caption-position to bottom
+%  commentstyle=\color{mygreen},    % comment style
+%  deletekeywords={...},            % if you want to delete keywords from the given language
+%  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+%  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+%  frame=false,                    % adds a frame around the code
+%  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+%  keywordstyle=\color{blue},       % keyword style
+%  language=C,                 % the language of the code
+%  morekeywords={*,...},            % if you want to add more keywords to the set
+%  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+%  numbersep=7pt,                   % how far the line-numbers are from the code
+%  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+%  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+%  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+%  showstringspaces=false,          % underline spaces within strings only
+%  showtabs=false,                  % show tabs within strings adding particular underscores
+%  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+%  stringstyle=\color{mymauve},     % string literal style
+%  tabsize=2,                       % sets default tabsize to 2 spaces
+%  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+%}
+
+\lstdefinestyle{customc}{
+  numbers=left,
+  numberstyle=\scriptsize\color{mygray},
+  %belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=false,
+  xleftmargin=\parindent,
+  language=C,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{Fuchsia},
+  commentstyle=\itshape\color{green!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{mygray},
+  title=\lstname  
+}
+
+\lstset{escapechar=@,style=customc,label=DescriptiveLabel}
+
+
+
+%\paperheight=900pt
+\voffset=-80pt
+\textheight=650pt
+\hoffset = -20pt
+%\marginparwidth=100pt
+%\textwidth =50cm
+%\usepackage{a4wide}
+
+%\usepackage[top=3cm, bottom=3cm, left=3cm, right=60cm]{geometry}
+
+\usepackage{titlesec}
+\titleformat{\chapter}{}{}{0em}{\bf\LARGE}
+%\titleformat{\section}{}{}{0em}{\bf\Large}
+\titleformat{\subsubsection}{}{}{0em}{\bf\large\bfseries}
+
+\usepackage{layout}
+\renewcommand*{\familydefault}{\ttdefault}
+\renewcommand{\lstlistingname}{Code Example}
+%\newcommand*{\myfont}{\rmdefault{ppl}\selectfont}
+
+\title{The Unique Challenges of Mobile Forensics}
+\author {Adam Kidd\\
+	University of Strathclyde\\
+	4th Year\\
+	CS414}
+\date{25/10/2015}
+
+%comments
+
+\begin{document}
+\maketitle
+
+
+
+% Provide overview on the state of the art(with references) in the relevant areas of technology 
+% Discuss how these technical considerations have bearing on the topic
+% Identify key issues and present the authors position on these issues with justification based on the background survey and any other factors
+
+% Relevant Background survey - 40%
+% Account of main topical issues - 20%
+% Discussion - 20%
+% Conclusions - 10%
+%Organisation and presentation - 10%
+
+\chapter{}
+
+
+\section{Stages attempted}
+
+ All 
+
+
+\section{Compliance with Material Design Guidelines}
+App follows material design in terms of motion; it responds quickly to user input precisely where the user triggers it. Style; The app aims to use colours appropriate. Google has a colour palette to refer to and suggests using the 500 colours as the primary colours in your app and the other colours as accents. This was used when choosing the colour green as the primary colour with purple as the contrasting colour. 
+
+\subsection{Components}
+
+\subsubsection{Bottom Navigation}
+
+The app makes use of the bottom navigation bar for the users’ navigation of the main screen set.
+Bottom navigation provides quick navigation between top-level views of an app. Tapping on an icon takes you directly to the associated view or refreshes the currently active view. 
+There should be between three to five top-level destinations with icons that all fit on the bar with equal spacing. 
+
+\subsubsection{Button}
+There are four types of button used in this app; raised button, flat button and floating action button.
+\newline
+
+Raised Buttons are rectangular-shaped buttons which use app’s colour scheme. The buttons have a depth of 2dp so show a shadow. To ensure usability for people with disabilities, buttons have a height of 36dp.
+The Statistics and History screen have many variant elements, it is a busy screen so raised buttons, in place of flat buttons, were used to give more prominence to these actions. 
+\newline
+
+The arrow in a Dropdown Button and items in list ripple when pressed and the list, when opened, starts from the top and expands downward as specified by Google.\newline
+
+
+Flat Buttons are essentially just text but made more prominent with a different text size or colour than regular text. Flat buttons are printed on material and do not cast a shadow. \newline
+
+
+Floating action button is circular material button that floats above the material, casts a shadow and displays an ink reaction or ripple on press. It is used for the primary actions of the app which should be positive like create and not negative like delete. 
+When there are multiple, related actions, it can expand when pressed to display these. A screen should only contain one FAB with a default size of 56dp. The mini size is, for the multiple actions is 40dp. The floating action button should is placed 16dp minimum. The button remains on screen after the multiple actions menu is invoked. Tapping the button again causes it to close the menu.
+
+\subsubsection{Dialogues}
+
+The almost exclusively use confirmation dialogues, but there is one alert dialogue. These dialogues are used sparingly so as to not overwhelm the user.
+
+The app uses full-screen dialogues may open additional dialogues, for the addition of goals and steps, and the edit of goals. These actions require the full attention of the user are a way of providing additional layers of material without significantly increasing the app’s perceived z-depth or visual noise.
+
+The delete history action has an alerts dialogue to ensure user to sure they want to complete this action. The alert has no need of title bar. The written warning about deleting the history has come before and indeed can still be seen in the background when alert dialogue appears
+
+\subsubsection{Lists}
+
+Used GridView and RecyclerView list. Conformed to guidelines
+
+\subsubsection{Options Menu}
+
+Menus appear upon interaction with a button, action, or other control. They display a list of choices, with one choice per line. The label of a tile concisely and accurately reflect the items within the menu. The menu has only static content so the order of the list is so that the items placed at the top are the most frequently used.
+The menu appears on top of the material and creates a shadow.
+The menu can be dismissed by tapping outside of menu area or tapping an option.
+When an option is pressed there is ripple animation to alert user it has been pressed
+
+\subsubsection{Snackbars}
+The snackbar appear when a user deletes a goal from the list and they are given the option to undo the delete. It contains a single line of text, no icons. It animate upwards from the bottom edge of the screen and does not cover the bottom navigation bar.
+
+The font is Roboto Medium with a size of 14sp, height of 48dp, background fill: \#323232 100\% and the text is all-caps.
+The specification and animation are google defined so conforms to spec.
+
+\subsubsection{Toasts}
+
+They are primarily used for keeping the user notified about the state of the app. They also display at the bottom of the screen for a short time after an action has occurred. 
+
+\subsection{Patterns}
+
+\subsubsection{Confirm and Acknowledge}
+Components are used through the app to keep the user informed and highlight they are in control.
+Alert dialogue to confirm they want to delete history as this option is irreversible. 
+Snacks bar appears to tell user a goal has been deleted but it can be reversed if desired.
+Toast appear to tell user something they did changed the apps backend state. Which normally is acknowledge a normal action.
+
+\subsubsection{Date format }
+This format of dates are the lie 29 January to reduce user confusion as there are multiple date formats but this one translate to both.
+
+\subsubsection{Empty States}
+When there are no goals, in history or list view or an active goal. Their is a special screen to provide a some state to show that this lack of goals is normal and not an error. It also explains the situation so they know how fix it, with a positive tone. 
+
+\subsubsection{Errors}
+There are error Toasts when a there has been an error and the users action has not been completed. I.e. when goals/steps couldn’t are recorded properly.
+
+In the add goal and step dialogues if the user hasn't completed the necessary fields, the text view shows are error and explanation why it has appeared.
+
+\subsubsection{\textbf{Navigation}}
+back arrow in options, top left, goes back one,
+on main activity, back closes app
+
+\subsubsection{Notifications}
+have notify that appears in status bar/notification drawer. , has area for app name, dynamic content and title.
+If clicked the app opens, doesn’t disappear when clicked though
+can turn off notifications
+
+
+\section{Implemented Functionality}
+
+The app was built around the main activity and the Home, History and Goals fragments are swapped in and out. The tool bar contains the name of the current screen and a menu that allows the user to go to the Settings, Statistics and Delete History activities. All of the goal data is stored in various tables in the SQLite database. The dialogues for adding goal, steps and editing goals are actually activities but the theme is changed to a Dialog one. There is a broadcast receiver and an alarm service set for 23:59 which will copy the the active goal from the the goal list into the history and reset the floating progress. The alarm is set when the user opens the app for the first time and there is a DeviceBootReciver class so that the alarm is set if the device reboots but the user hasn't opened the app. The floating progress is a table in the datebase that holds the progress so it is not associated with any goal until the day has ended. 
+
+
+\subsection{Basic activity goal setting and recording}
+
+To add a goal, the user presses the FAB which expands into two options, one is add goals. Once pressed the dialogue appears \ref{fig:addgoal}. This then saves the goal into the sqlite database. In the goals fragment \ref{fig:goalviewfab} the list of goals is retrieved from the DB and displayed to user in a scrollable list, all the information about each goal is displayed in the card. There are three buttons to the right of each entry and they can be used to edit, delete or make active or nonactive a goal. The system will update to reflect these changes. The user cannot use these actions on an active goal. 
+In \ref{fig:goalviewnofab} the user has scrolled the list so the FAB disappears for an unobstructed view. The home screen contains information about the active goal, with the progress being representing both with a pie chart and text. The pie chart is made using a third party library called MPAndroid.
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/addgoal.png}
+  \caption{Add goal dialogue}
+  \label{fig:addgoal}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/goalviewfab.png}
+  \caption{RecyclerView with FAB}\label{fig:goalviewfab}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{pics/goalviewnoFAB.png}
+  \caption{RecyclerView after scroll}\label{fig:goalviewnofab}
+\endminipage
+\end{figure}
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/addsteps.png}
+  \caption{Add steps dialogue}
+  \label{fig:addsteps}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/editgoal.png}
+  \caption{Edit goal dialogue}\label{fig:editgoal}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{pics/maingoalfull.png}
+  \caption{Home screen}\label{fig:maingoalfull}
+\endminipage
+\end{figure}
+
+\subsection{Basic activity history}
+
+User can view the history in the history fragment. Can see the progress of that day versus the goal with the goal's name and date. The graph is made using a third party library called MPAndroid. The user can clear the history via the screen in \ref{fig:delhis}. The button opens up a alert dialogue to confirm the user meant this action.
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/graph.png}
+  \caption{History screen}
+  \label{fig:graph}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/graphunits.png}
+  \caption{Units dropdown}\label{fig:graphunits}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{pics/delhis.png}
+  \caption{Delete history screen}\label{fig:delhis}
+\endminipage
+\end{figure}
+
+\subsection{Test mode}
+
+The user can enable test mode in the settings, when they add a goal the add goal dialogue is a little different now. In addition, they can choose the amount of ``steps'' taken and the data as seen in figure \ref{fig:testmode}. When in test mode there is a small warning that appears next to the title to remind the user they are in test mode.
+
+
+\subsection{Enhanced activity goal setting and recording}
+
+The user can choose the units to be associated with a goal and can add progress in any units they want. The progress is all stored as ``steps'' in the backend and converted when needed.
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/testmode.png}
+  \caption{Test mode add goal dialogue}
+  \label{fig:testmode}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/stepsunits.png}
+  \caption{Units dropdown, Steps}
+  \label{fig:stepsunits}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/goalsunits.png}
+  \caption{Units dropdown, Goal}\label{fig:goalsunits}
+\endminipage
+\end{figure}
+
+\subsection{Enhanced activity history}
+
+User can now specify date ranges, percentage ranges and fully completed goals to view a portion of the history. Also, they can choose the units they wish to view the data in.
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/dategraph.png}
+  \caption{DatePicker dialogue}
+  \label{fig:dategraph}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/graphunits.png}
+  \caption{Units dropdown, History}\label{fig:graphunits}
+\endminipage
+\end{figure}
+
+\subsection{Activity and goal statistics}
+
+An alternate view of the history is available. It can be constrained by dates, by percentage ranges and shown in any of the units. Generated from the results are the values Average, Total, Maximum and Minimum. The goals are available to view at the bottom of the screen in a grid layout. 
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/statsnormal.png}
+  \caption{Statistics screen}
+  \label{fig:statsnormal}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/statscontraint.png}
+  \caption{Percentage goal constrained}\label{fig:statscontraint}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{pics/statsunits.png}
+  \caption{Units dropdown}\label{fig:statsunits}
+\endminipage
+\end{figure}
+
+\subsection{User preferences and settings}
+
+The user is given the freedom to customise the mapping between the steps and imperial and metric units and the default presentation view, which is the standard period of time the history and statistics screens use. The units mapping are EditPref components and the past view is a list component.  They can turn on or off test mode, step counter, notifications and the ability to edit goals. 
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/prefs1.png}
+  \caption{Settings}
+  \label{fig:prefs1}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/prefs2.png}
+  \caption{Settings}\label{fig:prefs2}
+\endminipage
+\end{figure}
+
+\subsection{User notifications}
+
+When the progress reaches the goal value the app will issue a notification to the user. 
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/nots.png}
+  \caption{Notification drawer}
+  \label{fig:prefs1}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/notsmall.png}
+  \caption{Notification icon}\label{fig:prefs2}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=4.3cm,height=3cm]{pics/fab.png}
+  \caption{Expanded FAB}\label{fig:fab}
+\endminipage
+\end{figure}
+
+\subsection{Step detection}
+
+The app uses the Step Detector sensor to detect when the user has taken a step. When a step is detected a counter is incremented and store in the database. 
+
+\subsection{Floating Action Button}
+
+The clans used in the app is the clans FAB. It is a third party library that easily allows the addition of multiple options, \ref{fig:fab} to the FAB. 
+
+\subsection{Errors warnings}
+
+The app constrains the user so that they don't enter data that wouldn't work well in the system. The only place the user can input custom data is in the add goal and steps dialogues screens so this is where the error warnings ware found. The user can only add numbers, no blanks, in the goal value and steps edit text views and each goal must have a unique name. The errors are displayed using TextView.setError and the messages can be seen below.
+
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/addgoalerror.png}
+  \caption{Goal value error}
+  \label{fig:addgoalerror}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/addstepserror.png}
+  \caption{Steps value error}\label{fig:addstepserror}
+\endminipage\hfill
+\minipage{0.32\textwidth}%
+  \includegraphics[width=\linewidth]{pics/goalnameerror.png}
+  \caption{Goal name error}\label{fig:goalnameerror}
+\endminipage
+\end{figure}
+
+\subsection{Toasts and Snackbars}
+
+Toasts are displayed to notify the user of the success or lack there of a particular action that was expected to change the state of the app. Snackbars occur when the user has performed a permanent change and they are given the change to reverse it. The snackbar has an UNDO button which has a listener attached. This contains the data that is to be changed, a deleted goal in this case, and when activated adds the goal back into the database.
+
+\begin{figure}[!htb]
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/toastnodelete.png}
+  \caption{Toast message}
+  \label{fig:toastnodelete}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/snackbardel.png}
+  \caption{Snackbar message}\label{fig:snackbardel}
+\endminipage
+\end{figure}
+
+\section{Feedback Consideration}
+
+The take away from the feedback of stage 1 was that more thought needed to be point in about the location of statics and setings. They were put in the options as they were considered to be places the user wouldn't be navigating to as often. 
+From stage 2, it was suggested to put in a warning in the toolbar so the user was reminded they were in testmode and to use a card layout with a recycler view in the goals view as this is much cleaner when displaying a lit of information compared to a list view. The colour scheme was much improved, errors and feedback were implemented so that user could understand what was happening. Empty states were implemented for the main screens. The FAB was made to disappear on list scroll. 
+\end{document}
