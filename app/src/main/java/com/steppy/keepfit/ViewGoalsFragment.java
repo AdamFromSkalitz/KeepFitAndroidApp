@@ -44,17 +44,13 @@ import static android.R.attr.fingerprintAuthDrawable;
  */
 
 public class ViewGoalsFragment extends Fragment{
-    ListView listView;
+
     ArrayList<Goal> ItemGoalList;
     RVAdapter adapter;
-    //CustomAdapter customAdapter;
     DBHelper dbHelper;
     View goalView;
-    FileInputStream fis;
-    ObjectInputStream is;
     RecyclerView rv;
 
-    static final int READ_BLOCK_SIZE = 100;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -124,8 +120,6 @@ public class ViewGoalsFragment extends Fragment{
 
         dbHelper = new DBHelper(getActivity());
         ItemGoalList.clear();
-        //final Cursor curs = dbHelper.getAllOldGoals();
-
 
         final Cursor cursor = dbHelper.getAllGoals();
         cursor.moveToFirst();
@@ -142,7 +136,6 @@ public class ViewGoalsFragment extends Fragment{
             ItemGoalList.add(goal);
             cursor.moveToNext();
         }
-        //customAdapter.notifyDataSetChanged();
         cursor.close();
         dbHelper.close();
 
@@ -160,10 +153,7 @@ public class ViewGoalsFragment extends Fragment{
 
     public void addGoals() {
         Intent intent = new Intent(getActivity(), AddGoalsActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
-        //String message = editText.getText().toString();
         intent.putExtra("list", ItemGoalList);
-        //intent.putExtra("adapter",adapter);
         startActivity(intent);
     }
     public void addSteps(){

@@ -190,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_add_small"
-                fab:fab_label="Add Steps"
+                fab:fab_label="Add Progress"
                 fab:fab_size="mini" />
 
             <com.github.clans.fab.FloatingActionButton

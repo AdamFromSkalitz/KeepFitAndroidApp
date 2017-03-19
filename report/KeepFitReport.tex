@@ -109,12 +109,12 @@
 \renewcommand{\lstlistingname}{Code Example}
 %\newcommand*{\myfont}{\rmdefault{ppl}\selectfont}
 
-\title{The Unique Challenges of Mobile Forensics}
+\title{KeepFit Android Application}
 \author {Adam Kidd\\
 	University of Strathclyde\\
-	4th Year\\
-	CS414}
-\date{25/10/2015}
+	5th Year\\
+	CS551}
+\date{20/03/2017}
 
 %comments
 
@@ -136,106 +136,97 @@
 \chapter{}
 
 
-\section{Stages attempted}
+\subsubsection{Stages attempted}
 
- All 
+All of the possible stages were attempted and are detailed below.
 
+\subsubsection{Components}
 
-\section{Compliance with Material Design Guidelines}
-App follows material design in terms of motion; it responds quickly to user input precisely where the user triggers it. Style; The app aims to use colours appropriate. Google has a colour palette to refer to and suggests using the 500 colours as the primary colours in your app and the other colours as accents. This was used when choosing the colour green as the primary colour with purple as the contrasting colour. 
+Bottom Navigation
 
-\subsection{Components}
-
-\subsubsection{Bottom Navigation}
-
-The app makes use of the bottom navigation bar for the users’ navigation of the main screen set.
-Bottom navigation provides quick navigation between top-level views of an app. Tapping on an icon takes you directly to the associated view or refreshes the currently active view. 
-There should be between three to five top-level destinations with icons that all fit on the bar with equal spacing. 
-
-\subsubsection{Button}
-There are four types of button used in this app; raised button, flat button and floating action button.
+The app makes use of the bottom navigation bar for the user's navigation of the main screen set. There is the recommend number of top-level destinations with icons that all fit on the bar with equal spacing. 
 \newline
-
-Raised Buttons are rectangular-shaped buttons which use app’s colour scheme. The buttons have a depth of 2dp so show a shadow. To ensure usability for people with disabilities, buttons have a height of 36dp.
-The Statistics and History screen have many variant elements, it is a busy screen so raised buttons, in place of flat buttons, were used to give more prominence to these actions. 
 \newline
+Raised Buttons
 
-The arrow in a Dropdown Button and items in list ripple when pressed and the list, when opened, starts from the top and expands downward as specified by Google.\newline
+They are rectangular-shaped buttons which use the app’s colour scheme and have a shadow. The Statistics and History screens have many elements and is a busy screen so raised buttons, in place of flat buttons, were used to give more prominence to the actions represented by the buttons. 
+\newline
+\newline
+Dropdown Button
 
+The arrow in a Dropdown and items in the list ripple when pressed and the list, when opened, starts from the top and expands downward as specified by Google.
+\newline
+\newline
+Flat Buttons 
 
-Flat Buttons are essentially just text but made more prominent with a different text size or colour than regular text. Flat buttons are printed on material and do not cast a shadow. \newline
+They are essentially just text but made more prominent with a different text size or colour than regular text. Flat buttons are printed on material and do not cast a shadow.
+ \newline
+ \newline
+ Floating action button
+ 
+It is circular material button that floats above the material, casts a shadow and displays an ink reaction or ripple on press. It is used for the primary actions of the app which should be positive like create and not negative like delete. 
+ \newline
+ \newline
+Dialogues
 
+The app uses full-screen dialogues for the addition of goals and steps, and the edit of goals. These actions require the full attention of the user and are a way of providing additional layers of material without significantly increasing the app’s perceived z-depth or visual noise.
+ \newline
+ \newline
+Options Menu
 
-Floating action button is circular material button that floats above the material, casts a shadow and displays an ink reaction or ripple on press. It is used for the primary actions of the app which should be positive like create and not negative like delete. 
-When there are multiple, related actions, it can expand when pressed to display these. A screen should only contain one FAB with a default size of 56dp. The mini size is, for the multiple actions is 40dp. The floating action button should is placed 16dp minimum. The button remains on screen after the multiple actions menu is invoked. Tapping the button again causes it to close the menu.
+The menu appears in the top right of app. It contains Settings, Statistics and Delete history. The label of a tile concisely and accurately reflects the items within the menu. The menu has only static content so the order of the list is from most to least frequently used in a downward order.
+ \newline
+ \newline
+Snackbars
 
-\subsubsection{Dialogues}
+The snackbar appear when a user deletes a goal from the list and they are given the option to undo the delete. It contains a single line of text, no icons. It animates upwards from the bottom edge of the screen and does not cover the bottom navigation bar.
+ \newline
+ \newline
+Toasts
 
-The almost exclusively use confirmation dialogues, but there is one alert dialogue. These dialogues are used sparingly so as to not overwhelm the user.
+They are primarily used for keeping the user notified about the state of the app. They display at the bottom of the screen for a short time after an action has occurred. 
 
-The app uses full-screen dialogues may open additional dialogues, for the addition of goals and steps, and the edit of goals. These actions require the full attention of the user are a way of providing additional layers of material without significantly increasing the app’s perceived z-depth or visual noise.
+\subsubsection{Patterns}
 
-The delete history action has an alerts dialogue to ensure user to sure they want to complete this action. The alert has no need of title bar. The written warning about deleting the history has come before and indeed can still be seen in the background when alert dialogue appears
+Confirm and Acknowledge
 
-\subsubsection{Lists}
-
-Used GridView and RecyclerView list. Conformed to guidelines
-
-\subsubsection{Options Menu}
-
-Menus appear upon interaction with a button, action, or other control. They display a list of choices, with one choice per line. The label of a tile concisely and accurately reflect the items within the menu. The menu has only static content so the order of the list is so that the items placed at the top are the most frequently used.
-The menu appears on top of the material and creates a shadow.
-The menu can be dismissed by tapping outside of menu area or tapping an option.
-When an option is pressed there is ripple animation to alert user it has been pressed
-
-\subsubsection{Snackbars}
-The snackbar appear when a user deletes a goal from the list and they are given the option to undo the delete. It contains a single line of text, no icons. It animate upwards from the bottom edge of the screen and does not cover the bottom navigation bar.
-
-The font is Roboto Medium with a size of 14sp, height of 48dp, background fill: \#323232 100\% and the text is all-caps.
-The specification and animation are google defined so conforms to spec.
-
-\subsubsection{Toasts}
-
-They are primarily used for keeping the user notified about the state of the app. They also display at the bottom of the screen for a short time after an action has occurred. 
-
-\subsection{Patterns}
-
-\subsubsection{Confirm and Acknowledge}
-Components are used through the app to keep the user informed and highlight they are in control.
+Components such as Toasts and Snackbars and visual feedback such as an item disappearing from a list are used throughout the app to keep the user informed and highlight they are in control.
 Alert dialogue to confirm they want to delete history as this option is irreversible. 
-Snacks bar appears to tell user a goal has been deleted but it can be reversed if desired.
-Toast appear to tell user something they did changed the apps backend state. Which normally is acknowledge a normal action.
+Snackbars appears to tell user a goal has been deleted but it can be reversed if desired.
+Toasts appear to tell the user something has changed app's backend state.
+ \newline
+ \newline
+Date format 
 
-\subsubsection{Date format }
-This format of dates are the lie 29 January to reduce user confusion as there are multiple date formats but this one translate to both.
+This format of dates are the date in number format and the month as a written word, 19 march, to reduce user confusion as there are multiple date formats but this one translates to both.
+ \newline
+ \newline
+Empty States
 
-\subsubsection{Empty States}
-When there are no goals, in history or list view or an active goal. Their is a special screen to provide a some state to show that this lack of goals is normal and not an error. It also explains the situation so they know how fix it, with a positive tone. 
+When there are simply no goals to display, in the history, goals or statistics screens, or no active goal for the home screen. The app displays a special screen to show that this lack of goals is normal and not an error. It also explains the situation, with a positive tone, so the user knows how fix it. 
+ \newline
+ \newline
+Errors
 
-\subsubsection{Errors}
-There are error Toasts when a there has been an error and the users action has not been completed. I.e. when goals/steps couldn’t are recorded properly.
-
+When a error occurs, the user is warned with a Toast i.e. when goals/steps weren't recorded properly.
 In the add goal and step dialogues if the user hasn't completed the necessary fields, the text view shows are error and explanation why it has appeared.
+ \newline
+ \newline
+Notifications
 
-\subsubsection{\textbf{Navigation}}
-back arrow in options, top left, goes back one,
-on main activity, back closes app
-
-\subsubsection{Notifications}
-have notify that appears in status bar/notification drawer. , has area for app name, dynamic content and title.
-If clicked the app opens, doesn’t disappear when clicked though
-can turn off notifications
+The app has notifications that appear in the phone's status bar/notification drawer when the goal value is reached. The notification contains app name, dynamic content and title. If the notification is pressed the app opens. The user has the option to turn off notifications.
 
 
 \section{Implemented Functionality}
 
-The app was built around the main activity and the Home, History and Goals fragments are swapped in and out. The tool bar contains the name of the current screen and a menu that allows the user to go to the Settings, Statistics and Delete History activities. All of the goal data is stored in various tables in the SQLite database. The dialogues for adding goal, steps and editing goals are actually activities but the theme is changed to a Dialog one. There is a broadcast receiver and an alarm service set for 23:59 which will copy the the active goal from the the goal list into the history and reset the floating progress. The alarm is set when the user opens the app for the first time and there is a DeviceBootReciver class so that the alarm is set if the device reboots but the user hasn't opened the app. The floating progress is a table in the datebase that holds the progress so it is not associated with any goal until the day has ended. 
+The app was built around a main activity with the Home, History and Goals fragments being swapped in and out. The tool bar contains the name of the current screen and a menu that allows the user to go to the Settings, Statistics and Delete History activities. All of the goal data is stored in various tables in the SQLite database. The dialogues for adding goal, steps and editing goals are actually activities but the theme is changed to a Dialog one. There is an alarm service set for 23:59 and a corresponding broadcast receiver which will add the floating progress into the active goal then copy it from the goal list into the history and reset the floating progress. The alarm is set when the user opens the app for the first time and there is a DeviceBootReciver class so that the alarm is set if the device reboots but the user hasn't opened the app. The floating progress is a table in the datebase that holds the progress so it is not associated with any goal until the day has ended. The Grid View, statistics blocks, and Recycler View, goals list, have their own custom adapters which define the behaviour and appearance of the contents of the lists.
 
 
 \subsection{Basic activity goal setting and recording}
 
-To add a goal, the user presses the FAB which expands into two options, one is add goals. Once pressed the dialogue appears \ref{fig:addgoal}. This then saves the goal into the sqlite database. In the goals fragment \ref{fig:goalviewfab} the list of goals is retrieved from the DB and displayed to user in a scrollable list, all the information about each goal is displayed in the card. There are three buttons to the right of each entry and they can be used to edit, delete or make active or nonactive a goal. The system will update to reflect these changes. The user cannot use these actions on an active goal. 
-In \ref{fig:goalviewnofab} the user has scrolled the list so the FAB disappears for an unobstructed view. The home screen contains information about the active goal, with the progress being representing both with a pie chart and text. The pie chart is made using a third party library called MPAndroid.
+To add a goal, the user presses the FAB, made using Clans FAB, which expands into two options, one is add goals. Once pressed the dialogue appears, figure \ref{fig:addgoal}. This then saves the goal into the sqlite database. In the goals fragment, figure \ref{fig:goalviewfab}, the list of goals is retrieved from the DB and displayed to the user in a scrollable list, all the information about each goal is displayed in the cards. There are three buttons to the right of each entry and they can be used to delete, edit or make active or nonactive a goal. The icons are ordered so delete is in the middle of the entry so the user has to make more effort to press it as it is has a larger side effect than the other two buttons. The active button is on the far right as the user is expected to press it the most. The user cannot use the edit and delete actions on an active goal. The system and UI will update instantaneously to reflect these changes. 
+In figure \ref{fig:goalviewnofab} the user has scrolled the list so the FAB disappears for an unobstructed view. The home screen, figure \ref{fig:maingoalfull} contains information about the active goal, with the progress being representing both with a pie chart and text. The pie chart was made using a third party library called MPAndroidChart.
+The user can choose the other FAB button option to add progress, figure \ref{fig:addprogress}. The non active goals can be edited by pressing the pencil icon, figure \ref{fig:editgoal}.
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -254,9 +245,9 @@ In \ref{fig:goalviewnofab} the user has scrolled the list so the FAB disappears 
 \end{figure}
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth]{pics/addsteps.png}
-  \caption{Add steps dialogue}
-  \label{fig:addsteps}
+  \includegraphics[width=\linewidth]{pics/addprogress.png}
+  \caption{Add progress dialogue}
+  \label{fig:addprogress}
 \endminipage\hfill
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/editgoal.png}
@@ -270,17 +261,13 @@ In \ref{fig:goalviewnofab} the user has scrolled the list so the FAB disappears 
 
 \subsection{Basic activity history}
 
-User can view the history in the history fragment. Can see the progress of that day versus the goal with the goal's name and date. The graph is made using a third party library called MPAndroid. The user can clear the history via the screen in \ref{fig:delhis}. The button opens up a alert dialogue to confirm the user meant this action.
+The user can view the history in the history fragment. They can see the progress of each day versus the goal value with the goal's name and date. The graph is made using a third party library called MPAndroidChart. The user can clear the history via the screen in figure \ref{fig:delhis}. The button opens up a alert dialogue to confirm the user's intention to clear the history.
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/graph.png}
   \caption{History screen}
   \label{fig:graph}
-\endminipage\hfill
-\minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth]{pics/graphunits.png}
-  \caption{Units dropdown}\label{fig:graphunits}
 \endminipage\hfill
 \minipage{0.32\textwidth}%
   \includegraphics[width=\linewidth]{pics/delhis.png}
@@ -290,12 +277,12 @@ User can view the history in the history fragment. Can see the progress of that 
 
 \subsection{Test mode}
 
-The user can enable test mode in the settings, when they add a goal the add goal dialogue is a little different now. In addition, they can choose the amount of ``steps'' taken and the data as seen in figure \ref{fig:testmode}. When in test mode there is a small warning that appears next to the title to remind the user they are in test mode.
+The user can enable test mode in the settings. With test mode on they can now choose, in addition to the normal parameters, the number of ``steps'' taken and the date of the goal as seen in figure \ref{fig:testmode}. When in test mode there is a small warning that appears next to the toolbar's title to remind the user they are in test mode.
 
 
 \subsection{Enhanced activity goal setting and recording}
 
-The user can choose the units to be associated with a goal and can add progress in any units they want. The progress is all stored as ``steps'' in the backend and converted when needed.
+The user can choose the units to be associated with a goal and can add progress in any units they want, figures \ref{fig:stepsunits} and \ref{fig:goalsunits}. The progress is all stored as ``steps'' in the backend and converted when needed.
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -316,13 +303,17 @@ The user can choose the units to be associated with a goal and can add progress 
 
 \subsection{Enhanced activity history}
 
-User can now specify date ranges, percentage ranges and fully completed goals to view a portion of the history. Also, they can choose the units they wish to view the data in.
+The user can now specify date ranges, figure \ref{fig:dategraph}, percentage ranges, whether the goal was fully completed goals or not, figure \ref{fig:percentgraph}, and choose units, figure \ref{fig:graphunits}, when viewing a portion of the history. 
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/dategraph.png}
   \caption{DatePicker dialogue}
   \label{fig:dategraph}
+\endminipage\hfill
+\minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/percentgraph.png}
+  \caption{Percentage selection}\label{fig:percentgraph}
 \endminipage\hfill
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/graphunits.png}
@@ -332,7 +323,7 @@ User can now specify date ranges, percentage ranges and fully completed goals to
 
 \subsection{Activity and goal statistics}
 
-An alternate view of the history is available. It can be constrained by dates, by percentage ranges and shown in any of the units. Generated from the results are the values Average, Total, Maximum and Minimum. The goals are available to view at the bottom of the screen in a grid layout. 
+An alternate view of the statistics is available. It can be constrained by dates, by percentage ranges, figure \ref{fig:statscontraint} and data can be displayed in any units, figure \ref{fig:statsunits}. Statistics uses a date picker like in history to find the dates. Generated from the results are the values Average, Total, Maximum and Minimum. The goals are available to view at the bottom of the screen in a grid layout. 
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -352,7 +343,7 @@ An alternate view of the history is available. It can be constrained by dates, b
 
 \subsection{User preferences and settings}
 
-The user is given the freedom to customise the mapping between the steps and imperial and metric units and the default presentation view, which is the standard period of time the history and statistics screens use. The units mapping are EditPref components and the past view is a list component.  They can turn on or off test mode, step counter, notifications and the ability to edit goals. 
+The user is given the freedom to customise the mapping between the steps and imperial and metric units and for Statistics and History, the default presentation view, which is the default length of time the history and statistics screens use when displaying historical data, the default units, and default percentage range information, figure \ref{fig:prefs2}. They can turn on or off test mode, step counter, notifications and the ability to edit goals using switches, figure\ref{fig:prefs1}. 
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -361,42 +352,42 @@ The user is given the freedom to customise the mapping between the steps and imp
   \label{fig:prefs1}
 \endminipage\hfill
 \minipage{0.32\textwidth}
-  \includegraphics[width=\linewidth]{pics/prefs2.png}
+  \includegraphics[width=\linewidth]{pics/pref2.png}
   \caption{Settings}\label{fig:prefs2}
 \endminipage
 \end{figure}
 
 \subsection{User notifications}
 
-When the progress reaches the goal value the app will issue a notification to the user. 
+When the progress reaches the goal value the app will issue a notification to the user, figures \ref{fig:nots1} \& \ref{fig:notSmall}. 
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/nots.png}
   \caption{Notification drawer}
-  \label{fig:prefs1}
+  \label{fig:nots1}
 \endminipage\hfill
 \minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/notsmall.png}
-  \caption{Notification icon}\label{fig:prefs2}
+  \caption{Notification icon}\label{fig:notSmall}
 \endminipage\hfill
 \minipage{0.32\textwidth}
   \includegraphics[width=4.3cm,height=3cm]{pics/fab.png}
-  \caption{Expanded FAB}\label{fig:fab}
+  \caption{Expanded FAB}\label{fig:fabex}
 \endminipage
 \end{figure}
 
 \subsection{Step detection}
 
-The app uses the Step Detector sensor to detect when the user has taken a step. When a step is detected a counter is incremented and store in the database. 
+The app uses the Step Detector sensor to detect when the user has taken a step. When a step is detected a counter is incremented and stored in the database. 
 
 \subsection{Floating Action Button}
 
-The clans used in the app is the clans FAB. It is a third party library that easily allows the addition of multiple options, \ref{fig:fab} to the FAB. 
+The FAB used in the app is the clans FAB. It is a third party library that easily allows the addition of multiple options, figure \ref{fig:fabex} to the FAB. 
 
-\subsection{Errors warnings}
+\subsection{Warnings}
 
-The app constrains the user so that they don't enter data that wouldn't work well in the system. The only place the user can input custom data is in the add goal and steps dialogues screens so this is where the error warnings ware found. The user can only add numbers, no blanks, in the goal value and steps edit text views and each goal must have a unique name. The errors are displayed using TextView.setError and the messages can be seen below.
+The app constrains the user so that they don't enter data that wouldn't work well in the system. The only place the user can input custom data is in the add goal and progress dialogues so this is where the error warnings are found. The user can only add numbers, no blanks, in the goal value, figures \ref{fig:addgoalerror} \& \ref{fig:addstepserror} and steps edit text views and each goal must have a unique name that isn't blank, \ref{fig:goalnameerror}. The errors are displayed using TextView.setError().
 
 
 \begin{figure}[!htb]
@@ -409,7 +400,7 @@ The app constrains the user so that they don't enter data that wouldn't work wel
   \includegraphics[width=\linewidth]{pics/addstepserror.png}
   \caption{Steps value error}\label{fig:addstepserror}
 \endminipage\hfill
-\minipage{0.32\textwidth}%
+\minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/goalnameerror.png}
   \caption{Goal name error}\label{fig:goalnameerror}
 \endminipage
@@ -417,7 +408,7 @@ The app constrains the user so that they don't enter data that wouldn't work wel
 
 \subsection{Toasts and Snackbars}
 
-Toasts are displayed to notify the user of the success or lack there of a particular action that was expected to change the state of the app. Snackbars occur when the user has performed a permanent change and they are given the change to reverse it. The snackbar has an UNDO button which has a listener attached. This contains the data that is to be changed, a deleted goal in this case, and when activated adds the goal back into the database.
+Toasts are displayed to notify the user of the success or lack there of a particular action that was expected to change the state of the app, figure \ref{fig:toastnodelete}. Snackbars occur when the user has performed a permanent change and are given the change to reverse it. The snackbar has an UNDO button which has a listener attached, figure \ref{fig:snackbardel}. This contains the data that is to be changed, a deleted goal in this case, and when activated adds the goal back into the database.
 
 \begin{figure}[!htb]
 \minipage{0.32\textwidth}
@@ -426,13 +417,38 @@ Toasts are displayed to notify the user of the success or lack there of a partic
   \label{fig:toastnodelete}
 \endminipage\hfill
 \minipage{0.32\textwidth}
+  \includegraphics[width=\linewidth]{pics/optionsmenu.png}
+  \caption{Options Menu}\label{fig:menu}
+\endminipage\hfill
+\minipage{0.32\textwidth}
   \includegraphics[width=\linewidth]{pics/snackbardel.png}
   \caption{Snackbar message}\label{fig:snackbardel}
 \endminipage
 \end{figure}
 
+\subsection{Options menu}
+
+The Settings, Statistics and Clear History screens can be accessed through the options menu, figure \ref{fig:menu}
+
 \section{Feedback Consideration}
 
-The take away from the feedback of stage 1 was that more thought needed to be point in about the location of statics and setings. They were put in the options as they were considered to be places the user wouldn't be navigating to as often. 
-From stage 2, it was suggested to put in a warning in the toolbar so the user was reminded they were in testmode and to use a card layout with a recycler view in the goals view as this is much cleaner when displaying a lit of information compared to a list view. The colour scheme was much improved, errors and feedback were implemented so that user could understand what was happening. Empty states were implemented for the main screens. The FAB was made to disappear on list scroll. 
+The take away from the feedback of stage 1 was that more thought needed to be point in about the location of statistics and settings. They were put in the options as they were considered to be places the user wouldn't be navigating to as often as the three main fragments. 
+From stage 2, it was suggested to put in a warning in the toolbar so the user was reminded they were in testmode and to use a card layout with a recycler view in the goals view as this is much cleaner when displaying a lot of information compared to a list view. The colour scheme was much improved, errors and feedback were implemented so that user could understand what was happening. Empty states were implemented for the main screens. The FAB was made to disappear on list scroll. 
+
+\section{Third party libraries}
+
+Two libraries were used.
+\newline
+Clan's Floating Action button: 
+\url{https://github.com/Clans/FloatingActionButton}
+\newline
+PhilJay's MPAndroidChart: 
+\url{https://github.com/PhilJay/MPAndroidChart}
+\newline
+\newline
+To use, please ensure the following lines are in the app's gradle file:
+\newline
+    compile 'com.github.clans:fab:1.6.4'
+    \newline
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 \end{document}

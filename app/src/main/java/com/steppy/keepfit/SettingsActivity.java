@@ -14,8 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 public class SettingsActivity extends AppCompatActivity {
-    SwitchPreference testMode;
-    //http://stackoverflow.com/questions/39200846/how-to-add-toolbar-in-preferenceactivity
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -46,12 +46,7 @@ public class StepDetector extends Service implements SensorEventListener {
         //Toast.makeText(StepDetector.this,"stepDetected",Toast.LENGTH_SHORT).show();
 
         float stepNew = event.values[0];
-        //dbHelper.updateDayProgress(1);
         stepCount+=stepNew;
-        // Toast.makeText(this,"steps"+stepCount,Toast.LENGTH_SHORT).show();
-//        if (steps%100==0){
-//            save to db
-//        }
 
         Cursor existingSteps = dbHelper.getDayProgress();
         existingSteps.moveToFirst();
@@ -59,10 +54,8 @@ public class StepDetector extends Service implements SensorEventListener {
         float stepsOld= existingSteps.getFloat(existingSteps.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
         existingSteps.close();
         float updateStep = stepsOld+stepCount;
-        //TextView progressTV = (TextView) findViewById(R.id.tvprogress);
         try {
-           // progressTV.setText("" + updateStep);
-            dbHelper.updateDayProgress(1);
+           dbHelper.updateDayProgress(1);
         }catch (Exception e){
             e.printStackTrace();
         }

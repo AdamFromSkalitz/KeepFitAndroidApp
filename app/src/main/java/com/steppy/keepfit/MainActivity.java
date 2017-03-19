@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (getIntent().hasExtra("openPrevFrag")) {
             getFragmentManager().popBackStack();
         }
-
-        // Retrieve a PendingIntent that will perform a broadcast
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0);
         startAlarm();
@@ -105,9 +103,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         bottomBar = (BottomNavigationView) findViewById(R.id.bottomBar);
         bottomBar.setId(R.id.tab_main);
         bottomBar.getMenu().findItem(R.id.tab_main).setChecked(true);
-        //bottomBar.getMenu().getItem(1).setChecked(true);
 
-        //bottomBar.setDefaultTab(R.id.tab_main);
         bottomBar.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -149,26 +145,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     }
                 });
 
-//        Intent alarmIntent = new Intent(MainActivity.this, AlarmReceiver.class);
-//        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, alarmIntent, 0);
 
-        //startAt10();
     }
-//    public static class MainFragment extends Fragment {
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//            // Inflate the layout for this fragment
-//            final View mainView = inflater.inflate(R.layout.fragment_main, container, false);
-//            FloatingActionButton myFab = (FloatingActionButton) mainView.findViewById(R.id.fab);
-//            myFab.setOnClickListener(new View.OnClickListener() {
-//                public void onClick(View v) {
-//                    Toast.makeText(MainActivity.this,"main fab press",Toast.LENGTH_LONG).show();
-//                }
-//            });
-//            return inflater.inflate(R.layout.fragment_main, container, false);
-//        }
-//    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -180,12 +159,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             openSettings();
         } else if (id == R.id.deleteHistory) {
@@ -214,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void startAlarm() {
         manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        int interval = 10000;
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
         c.set(Calendar.SECOND, 0);
@@ -283,19 +257,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (notify) {
             if ( updateStep>=goalValue && updateStep <= (goalValue+5)) {
 
-                int requestID = (int) System.currentTimeMillis();
-
                 Intent mainIntent = new Intent(this, MainActivity.class);
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
                 stackBuilder.addParentStack(MainActivity.class);
                 stackBuilder.addNextIntent(mainIntent);
-                //mainPendingIntent = PendingIntent.getBroadcast(this,requestID, mainIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-                mainPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                 mainPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
                 mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                //notification.flags |= Notification.FLAG_AUTO_CANCEL;
                 Cursor result=null;
 
-                //String units="";
                 try {
                     result = dbHelper.getActiveGoal();
                     result.moveToFirst();

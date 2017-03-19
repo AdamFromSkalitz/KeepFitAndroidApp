@@ -55,6 +55,10 @@ public class StatisticsActivity extends AppCompatActivity {
     private SeekBar sbTop;
     private SeekBar sbBot;
     private TextView tvGoalTitleNum;
+    private TextView tvstop;
+    private TextView tvsbot;
+
+    private String unitsSpinString="";
 
     private float total=0f;
     private float average=0f;
@@ -63,9 +67,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
     private int minUpperBound=0;
     private int maxLowerBound=100;
-
-    //private String[] goals={"Goal1","Goal2", "Goal3","Goal4","Goal5","Goal6","Goal7"};
-    private ArrayList<Goal> goals = new ArrayList<>();
+     private ArrayList<Goal> goals = new ArrayList<>();
     GridAdapter gridAdapter;
 
     @Override
@@ -88,7 +90,12 @@ public class StatisticsActivity extends AppCompatActivity {
         putWarning();
         dbHelper = new DBHelper(StatisticsActivity.this);
 
-        setDefaultDates();
+        tvsbot = (TextView) findViewById(R.id.seektvbot);
+        tvstop = (TextView) findViewById(R.id.seektvtop);
+        unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
+        sbTop = (SeekBar) findViewById(R.id.seekBarTop);
+        sbBot = (SeekBar) findViewById(R.id.seekBarBot);
+        setDefaults();
 
         final Button butStartDate = (Button) findViewById(R.id.buttonStartDate);
         butStartDate.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +138,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-        unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
+
 
         gridAdapter = new GridAdapter(this,goals);
         GridView gridView = (GridView) findViewById(R.id.gridView);
@@ -144,11 +151,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         tvGoalTitleNum = (TextView) findViewById(R.id.goalsTitleNum);
 
-        final TextView tvstop = (TextView) findViewById(R.id.seektvtop);
-        sbTop = (SeekBar) findViewById(R.id.seekBarTop);
-        sbBot = (SeekBar) findViewById(R.id.seekBarBot);
-
-        sbTop.setProgress(100);
+        //sbTop.setProgress(100);
         sbTop.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -175,9 +178,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-        final TextView tvsbot = (TextView) findViewById(R.id.seektvbot);
-
-        sbBot.setProgress(0);
+        //sbBot.setProgress(0);
         sbBot.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -247,7 +248,7 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
     public void popStats(){
-        String unitsSpinString = unitsSpin.getSelectedItem().toString();
+        unitsSpinString = unitsSpin.getSelectedItem().toString();
         goals.clear();
         total=0f;
         max=Float.MIN_VALUE;
@@ -314,14 +315,77 @@ public class StatisticsActivity extends AppCompatActivity {
 
     }
 
-    public void setDefaultDates(){
+    public void setDefaults(){
         final Calendar c = Calendar.getInstance();
         endYear = c.get(Calendar.YEAR);
         endMonth = c.get(Calendar.MONTH);
         endDay = c.get(Calendar.DAY_OF_MONTH);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(this);
-        String array = SP.getString("pastLength","1");
+
+        String lowBound = SP.getString("percentageStatLower","0");
+        String highBound = SP.getString("percentageStatUpper","100");
+        int low=0;
+        int high=0;
+        try{
+            low = Integer.parseInt(lowBound);
+            high = Integer.parseInt(highBound);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        sbBot.setProgress(low);
+        tvsbot.setText(low+"");
+        sbTop.setProgress(high);
+        tvstop.setText(high+"");
+
+        String unitsValue = SP.getString("defaultUnitStat","1");
+        switch (unitsValue){
+            case "1":
+                unitsSpinString="Steps";
+                break;
+            case "2":
+                unitsSpinString="Kilometres";
+                break;
+            case "3":
+                unitsSpinString="Metres";
+                break;
+            case "4":
+                unitsSpinString="Miles";
+                break;
+            case "5":
+                unitsSpinString="Yards";
+                break;
+        }
+        int unit=1;
+        try{
+            //Android leaves residual files after uninstall
+            //which mess with the current install
+           unit= Integer.parseInt(unitsValue);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        unitsSpin.setSelection(unit-1);
+//        switch (unitsValue){
+//            case "Steps":
+//                units=0;
+//                break;
+//            case "Kilometres":
+//                units=1;
+//                break;
+//            case "Metres":
+//                units=2;
+//                break;
+//            case "Miles":
+//                units=3;
+//                break;
+//            case "Yards":
+//                units=4;
+//                break;
+//        }
+        //unitsSpinString=unitsValue;
+ //       unitsSpin.setSelection(units);
+
+        String array = SP.getString("pastLengthStat","1");
 
         int curMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
         int backLength=0;
@@ -361,6 +425,6 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         putWarning();
-        setDefaultDates();
+        setDefaults();
     }
 }

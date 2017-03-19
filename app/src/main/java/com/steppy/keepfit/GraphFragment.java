@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.graphics.Color;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -86,6 +87,10 @@ public class GraphFragment extends Fragment {
     private View graphView;
     private Spinner cutOffSpin;
     private SeekBar cutOffSeek;
+    private TextView cutOffTV;
+
+    String unitsSpinString="";
+    String percentSpinString="";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,13 +103,17 @@ public class GraphFragment extends Fragment {
 
         emptyState = (TextView) graphView.findViewById(R.id.empty_view);
 
-        //Set up initial start and end dates
         final Calendar c = Calendar.getInstance();
         endYear = c.get(Calendar.YEAR);
         endMonth = c.get(Calendar.MONTH);
         endDay = c.get(Calendar.DAY_OF_MONTH);
 
-        setDefaultDates();
+        unitsSpin = (Spinner) graphView.findViewById(R.id.spinnerUnits);
+        cutOffSpin = (Spinner) graphView.findViewById(R.id.spinnerCutOff);
+        cutOffSeek = (SeekBar) graphView.findViewById(R.id.seekBarCutOff);
+        cutOffTV = (TextView) graphView.findViewById(R.id.seektvCutOff);
+
+        setDefaults();
 
         butStartDate = (Button) graphView.findViewById(R.id.buttonStartDate);
         butStartDate.setOnClickListener(new View.OnClickListener() {
@@ -143,12 +152,20 @@ public class GraphFragment extends Fragment {
             }
         });
 
-        unitsSpin = (Spinner) graphView.findViewById(R.id.spinnerUnits);
 
-        cutOffSpin = (Spinner) graphView.findViewById(R.id.spinnerCutOff);
 
-        final TextView cutOffTV = (TextView) graphView.findViewById(R.id.seektvCutOff);
-        cutOffSeek = (SeekBar) graphView.findViewById(R.id.seekBarCutOff);
+        unitsSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                unitsSpinString=unitsSpin.getSelectedItem().toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         cutOffSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -175,6 +192,7 @@ public class GraphFragment extends Fragment {
             }
         });
 
+
         popGraph();
         return graphView;
     }
@@ -192,11 +210,8 @@ public class GraphFragment extends Fragment {
         endDate = sdf.format(date);
         Cursor customResult  = dbHelper.getCustomUserOldGoals(statistics,startDate,endDate,cutOffDirection,cutOffPercentage);
 
-        //Cursor result = dbHelper.getAllOldGoals();
-        //Cursor result = customResult;
         List<BarEntry> entries = new ArrayList<>();
         dates = new ArrayList<>();
-        //List<String> goalNames = new ArrayList<>();
 
         customResult.moveToFirst();
 
@@ -223,32 +238,10 @@ public class GraphFragment extends Fragment {
             float progress = Float.parseFloat(progressString);
             float goal = Float.parseFloat(goalString);
 
-            String unitsSpinString = unitsSpin.getSelectedItem().toString();
-            //SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            //unitsSpinString = unitsSpin.getSelectedItem().toString();
 
             float progressUnits=  stepsToUnits(progress,unitsSpinString);
             float goalUnits =  stepsToUnits(goal,unitsSpinString);
-            //convert data in db from steps into the units specified by the user
-
-
-//            switch (unitsSpinString){
-//                case "Kilometres":
-//                    float cmMap = Float.parseFloat(SP.getString("mappingMet","75"));
-//                    int progressStepsCM = (int)progress*(int)cmMap;
-//                    progressUnits = (float)progressStepsCM/100000;
-//                    int goalStepsCM = (int)goalInt*(int)cmMap;
-//                    goalUnits = (float)goalStepsCM/100000;
-//                    break;
-//                case "Miles":
-//                    int inch = Integer.parseInt(SP.getString("mappingImp","30"));
-//                    int progressStepsINC = progress*inch;
-//                    progressUnits = (float)progressStepsINC/(36*1760);
-//                    int goalsStepsINC = goalInt*inch;
-//                    goalUnits = (float)goalsStepsINC/(36*1760);
-//                    break;
-//                case "Steps":
-//                    break;
-//            }
 
             float remainder = goalUnits-progressUnits;
             if(remainder<0){
@@ -298,9 +291,6 @@ public class GraphFragment extends Fragment {
         for (int c : ColorTemplate.PASTEL_COLORS)
             colors.add(c);
 
-        int[] colorsArray =  new int[colors.size()];
-
-        //colors.add(ColorTemplate.getHoloBlue());
         dataSet.setColors(getColors());
 
         dataSet.setStackLabels(new String[]{"progress", "goal total", });
@@ -356,14 +346,59 @@ public class GraphFragment extends Fragment {
         return new DateFormatSymbols().getMonths()[month];
     }
 
-    public void setDefaultDates(){
+    public void setDefaults(){
         final Calendar c = Calendar.getInstance();
         endYear = c.get(Calendar.YEAR);
         endMonth = c.get(Calendar.MONTH);
         endDay = c.get(Calendar.DAY_OF_MONTH);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String array = SP.getString("pastLength","1");
+
+        String percentValue = SP.getString("percentageHis","0");
+        int percent=0;
+        try{
+            percent = Integer.parseInt(percentValue);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        if(percent>0 & percent <100){
+            cutOffTV.setText(percent+"");
+            cutOffSeek.setProgress(percent);
+        }
+
+
+        String percentValueDrop = SP.getString("percentageDropHis","No selection");
+        int percentDrop=1;
+        try{
+            percentDrop=Integer.parseInt(percentValueDrop);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        cutOffSpin.setSelection(percentDrop-1);
+
+        String unitsValue = SP.getString("defaultUnitHis","1");
+        unitsSpin.setSelection(Integer.parseInt(unitsValue)-1);
+
+        switch (unitsValue){
+            case "1":
+                unitsSpinString="Steps";
+                break;
+            case "2":
+                unitsSpinString="Kilometres";
+                break;
+            case "3":
+                unitsSpinString="Metres";
+                break;
+            case "4":
+                unitsSpinString="Miles";
+                break;
+            case "5":
+                unitsSpinString="Yards";
+                break;
+        }
+
+        String array = SP.getString("pastLengthHis","1");
 
         int curMonth = c.getActualMaximum(Calendar.DAY_OF_MONTH);
         int backLength=0;
@@ -428,7 +463,8 @@ public class GraphFragment extends Fragment {
     public void onResume() {
         super.onResume();
         putWarning();
-        setDefaultDates();
+        setDefaults();
+        popGraph();
     }
 }
 

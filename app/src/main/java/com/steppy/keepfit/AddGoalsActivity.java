@@ -25,15 +25,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -171,11 +162,7 @@ public class AddGoalsActivity extends Activity {
                     Date date = new Date();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String dateString = sdf.format(date);
-//                    try {
-//                        //ItemGoalList.add(new Goal(nameString, (float) stepsGoal, false, units));
-//                    }catch (Exception e){
-//                        e.printStackTrace();
-//                    }
+
                     if (dbHelper.insertGoal(nameString,(int)stepsGoal, "false", dateString,units)) {
                         Toast.makeText(AddGoalsActivity.this, "Goal Added Successfully", Toast.LENGTH_SHORT).show();
                     }else{
@@ -195,17 +182,8 @@ public class AddGoalsActivity extends Activity {
         return true;
     }
 
-    public void backToPrevFrag(){
-        Intent fragBack = new Intent(this, MainActivity.class);
-        fragBack.putExtra("openPrevFrag",true);
-        startActivity(fragBack);
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement

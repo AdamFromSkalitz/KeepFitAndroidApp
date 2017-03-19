@@ -24,7 +24,6 @@ public class GridAdapter extends BaseAdapter {
     private ArrayList<Goal> itemGoalList;
     private DBHelper dbhelper;
     private ArrayList<Integer> colors;
-    //public String[] message = {"Goal1","Goal2", "Goal3","Goal4","Goal5","Goal6","Goal7"};
 
     public GridAdapter(Context context,ArrayList<Goal> goalList){
         mContext=context;
@@ -70,12 +69,10 @@ public class GridAdapter extends BaseAdapter {
         if(convertView==null){
             goalNameTV = new TextView(mContext);
             goalNameTV.setLayoutParams(new GridView.LayoutParams(350,350));
-            //textView.setPadding(8,8,8,8);
+
             goalNameTV.setGravity(Gravity.CENTER);
 
-            //Random r = new Random(); colors.get(r.nextInt(colors.size());
-            goalNameTV.setBackgroundResource(R.color.colorPrimary);
-            //textView.setTextColor(ContextCompat.getColor(mContext,R.color.black));
+             goalNameTV.setBackgroundResource(R.color.colorPrimary);
         }else{
             goalNameTV = (TextView) convertView;
         }

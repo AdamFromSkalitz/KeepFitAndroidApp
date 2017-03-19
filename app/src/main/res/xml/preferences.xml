@@ -59,20 +59,82 @@
 
     </PreferenceCategory>
 
+
     <PreferenceCategory
-        android:key="defaultPres"
-        android:title="Default Presentation Mode">
+        android:key="defaultPresHis"
+        android:title="Default Presentation Mode (History)">
 
         <ListPreference
             android:defaultValue="1"
             android:entries="@array/pastArray"
             android:entryValues="@array/pastArrayValues"
-            android:key="pastLength"
-            android:summary="Set how far into the past Statistics and History show on default"
-            android:title="Past View"
-            />
+            android:key="pastLengthHis"
+            android:summary="Set how far into the past History to show on default"
+            android:title="Past View" />
 
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues"
+            android:key="defaultUnitHis"
+            android:summary="Select default units for History"
+            android:title="Units" />
+
+        <ListPreference
+            android:defaultValue="No selection"
+            android:entries="@array/percentageDropHis"
+            android:entryValues="@array/percentageDropHisValues"
+            android:key="percentageDropHis"
+            android:summary="Select default selection for the dropdown"
+            android:title="Percentage Dropdown" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:inputType="number"
+            android:key="percentageHis"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Choose a percentage value"
+            android:title="Default History Percentage" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="defaultPresStats"
+        android:title="Default Presentation Mode (Statistics)">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/pastArray"
+            android:entryValues="@array/pastArrayValues"
+            android:key="pastLengthStat"
+            android:summary="Set how far into the past Statistics to show on default"
+            android:title="Past View" />
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/listArray"
+            android:entryValues="@array/listValues"
+            android:key="defaultUnitStat"
+            android:summary="Select default units for Statistics"
+            android:title="Units" />
+
+        <EditTextPreference
+            android:defaultValue="0"
+            android:inputType="number"
+            android:key="percentageStatLower"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Choose a value for the percentage lower bound"
+            android:title="Lower Bound" />
+
+        <EditTextPreference
+            android:defaultValue="100"
+            android:inputType="number"
+            android:key="percentageStatUpper"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:summary="Choose a value for the percentage upper bound"
+            android:title="Upper Bound" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

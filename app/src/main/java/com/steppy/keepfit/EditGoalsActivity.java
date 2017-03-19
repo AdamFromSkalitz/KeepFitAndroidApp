@@ -13,15 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.roughike.bottombar.BottomBar;
-
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class EditGoalsActivity extends AppCompatActivity {
-    private BottomBar bottomBar;
     final Handler handler = new Handler();
     private ArrayList<Goal> listToBeSaved = new ArrayList<>();
 
@@ -35,9 +32,7 @@ public class EditGoalsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_goals);
-//
-//        Toast.makeText(ViewGoalsActivity.this,"ViewGoals",Toast.LENGTH_LONG).show();
-//
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(" ");
@@ -49,8 +44,6 @@ public class EditGoalsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 EditText name = (EditText) findViewById(R.id.nameText);
                 EditText goal = (EditText) findViewById(R.id.goalsText);
-                //CheckBox active = (CheckBox) findViewById(R.id.checkBox);
-
 
                 dbHelper = new DBHelper(EditGoalsActivity.this);
                 String nameString = name.getText().toString();
@@ -62,7 +55,6 @@ public class EditGoalsActivity extends AppCompatActivity {
 
                 goalToEditRes.moveToFirst();
                 int id = goalToEditRes.getInt(goalToEditRes.getColumnIndex(DBHelper.COLUMN_ID));
-                //String existGoalName = goalToEditRes.getString(goalToEditRes.getColumnIndex(DBHelper.COLUMN_NAME));
                 String existGoalValue = goalToEditRes.getString(goalToEditRes.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
                 String dateString = goalToEditRes.getString(goalToEditRes.getColumnIndex(DBHelper.COLUMN_DATE));
                 String active = goalToEditRes.getString(goalToEditRes.getColumnIndex(DBHelper.COLUMN_ACTIVE));
@@ -94,12 +86,9 @@ public class EditGoalsActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }

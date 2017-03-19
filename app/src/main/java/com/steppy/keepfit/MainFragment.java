@@ -78,9 +78,6 @@ public class MainFragment extends Fragment {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean testMode = SP.getBoolean("enableTest", false);
 
-//        Toast.makeText(getActivity(), Boolean.toString(strUserName), Toast.LENGTH_LONG).show();
-
-        // Inflate the layout for this fragment
         final View mainView = inflater.inflate(R.layout.fragment_main, container, false);
 
         ActionBar actionBar = ((MainActivity)getActivity()).getSupportActionBar();
@@ -120,8 +117,6 @@ public class MainFragment extends Fragment {
             float steps= cursor.getFloat(cursor.getColumnIndex(DBHelper.PROGRESS_COLUMN_STEPS));
             float stepsFloat=stepsToUnits(steps);
             stepsProgress = Float.toString(stepsFloat);
-                    //= df.format(stepsFloat);
-            //stepsProgress=""+stepsFloat;
         }catch (Exception e){
             stepsProgress = "0";
             e.printStackTrace();
@@ -132,9 +127,6 @@ public class MainFragment extends Fragment {
 
         PieChart chart = (PieChart) mainView.findViewById(R.id.chartPie);
         chart.setUsePercentValues(true);
-        //XAxis xAxis = chart.getXAxis();
-        //xAxis.setGranularity(1f);
-        //xAxis.setValueFormatter(formatter);
 
         // enable rotation of the chart by touch
         chart.setRotationAngle(0);
@@ -150,9 +142,6 @@ public class MainFragment extends Fragment {
         legend.setXEntrySpace(7);
         legend.setYEntrySpace(5);
         List<LegendEntry> xVals = new ArrayList<LegendEntry>();
-        //xVals.add("progree");
-        //xVals.add("goal")
-        //new Le
         LegendEntry le = new LegendEntry();
         le.label="Progress";
         LegendEntry le2 = new LegendEntry();
@@ -249,7 +238,6 @@ public class MainFragment extends Fragment {
 
     public void addGoals() {
         Intent intent = new Intent(getActivity(), AddGoalsActivity.class);
-        //EditText editText = (EditText) findViewById(R.id.edit_message);
         startActivity(intent);
     }
 
@@ -266,16 +254,16 @@ public class MainFragment extends Fragment {
         stepsFloat=steps;
         switch (units){
             case "Kilometres":
-                float cm = stepsCM*(float)steps;
-                stepsFloat= (float)cm/100000;
+                float cm = stepsCM*steps;
+                stepsFloat= cm/100000;
                 break;
             case "Metres":
                 float cmMetres = stepsCM*steps;
                 stepsFloat=cmMetres/100;
                 break;
             case "Miles":
-                float inches = stepsInch*(float)steps;
-                stepsFloat= (float)inches/(1760*36);
+                float inches = stepsInch*steps;
+                stepsFloat= inches/(1760*36);
                 break;
             case "Yards":
                 float inchesYards = stepsInch*steps;

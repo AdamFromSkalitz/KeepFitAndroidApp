@@ -38,7 +38,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
     Context context;
     DBHelper dbHelper;
     Activity view;
-    //Goal goal;
 
     public RVAdapter(List<Goal> goals, Context context, Activity view) {
         this.goals = goals;
@@ -102,11 +101,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 dbHelper = new DBHelper(context);
                 Cursor cur = dbHelper.getGoal(goals.get(i).getName());
                 cur.moveToFirst();
-                //introduce bug here, if there are two goals with same name then no matter which one is picked here
-                //we will update only the first one db found.
-                String active = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_ACTIVE));
+                 String active = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_ACTIVE));
                 boolean activeBool = Boolean.parseBoolean(active);
-                //not allowed to access these variables inside if statement ?!?!?!?!?!?!
+
                 int id = cur.getInt(cur.getColumnIndex(DBHelper.COLUMN_ID));
                 String name = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_NAME));
                 String goal = cur.getString(cur.getColumnIndex(DBHelper.COLUMN_GOALVALUE));
@@ -158,10 +155,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                // Inflate and set the layout for the dialog
-                // Pass null as the parent view because its going in the dialog layout
-                final View dialogView = inflater.inflate(R.layout.fragment_edit_steps_dialog, null);
-
+               final View dialogView = inflater.inflate(R.layout.fragment_edit_steps_dialog, null);
 
                 dbHelper = new DBHelper(context);
                 final Cursor result = dbHelper.getGoal(goals.get(i).getName());
@@ -257,7 +251,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
                 if (!goalActiveName.equals(goal.getName())) {
 
                     builder.show();
-                    //dl.show();
                 }else{
                     Toast.makeText(context,"Cannot edit active goal",Toast.LENGTH_SHORT).show();
                 }
@@ -334,12 +327,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.GoalViewHolder> {
 
     public float turnIntoSteps(String units, float goalInSomeUnits){
 
-        //Spinner unitsSpin = (Spinner) findViewById(R.id.spinnerUnits);
-        //String units = unitsSpin.getSelectedItem().toString();
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(context);
 
         float stepsInt = goalInSomeUnits;
-        float goalFloat = (float) goalInSomeUnits;
+        float goalFloat = goalInSomeUnits;
         float steps=0;
         float inches=0;
         float cms=0;
