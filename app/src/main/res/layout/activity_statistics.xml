@@ -8,18 +8,16 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        >
-    </include>
+        layout="@layout/toolbar"></include>
 
     <LinearLayout
         android:id="@+id/datePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_margin="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@id/toolbar">
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,31 +37,30 @@
             android:id="@+id/buttonStartDate"
             android:layout_width="100dp"
             android:layout_height="36dp"
-            android:background="@drawable/buttonshape"
-            android:textAllCaps="false"
-            android:textColor="#000000"
-            android:textSize="15sp"
-            android:text="@string/startdate_button"
             android:layout_marginLeft="35dp"
+            android:background="@drawable/buttonshape"
             android:shadowColor="#A8A8A8"
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            />
+            android:text="@string/startdate_button"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/buttonEndDate"
             android:layout_width="100dp"
             android:layout_height="36dp"
-            android:background="@drawable/buttonshape"
-            android:text="@string/enddate_button"
             android:layout_marginLeft="20dp"
-            android:textColor="#000000"
-            android:textAllCaps="false"
+            android:background="@drawable/buttonshape"
             android:shadowColor="#A8A8A8"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="5"/>
+            android:shadowRadius="5"
+            android:text="@string/enddate_button"
+            android:textAllCaps="false"
+            android:textColor="#000000" />
     </LinearLayout>
 
     <LinearLayout
@@ -86,8 +83,8 @@
             android:id="@+id/spinnerUnits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:entries="@array/listArray"
             android:layout_marginLeft="11dp"
+            android:entries="@array/listArray"
             android:textSize="17dp">
 
         </Spinner>
@@ -142,12 +139,13 @@
             android:layout_weight=".1"
             android:text="0"
             android:textSize="17sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/seektvbot"
             android:text="%"
-            android:textSize="17sp"
-            android:layout_toRightOf="@id/seektvbot"/>
+            android:textSize="17sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -184,30 +182,32 @@
             android:layout_weight=".1"
             android:text="100"
             android:textSize="17sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/seektvtop"
             android:text="%"
-            android:textSize="17sp"
-            android:layout_toRightOf="@id/seektvtop"/>
+            android:textSize="17sp" />
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/buttonConfirm"
         android:layout_width="150dp"
         android:layout_height="36dp"
-        android:layout_margin="10dp"
+        android:layout_below="@id/seekerLayoutTop"
         android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
         android:background="@drawable/buttonshape"
         android:shadowColor="#A8A8A8"
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="5"
+        android:text="@string/confirm_button"
         android:textAllCaps="false"
-        android:textColor="#000000"
-        android:id="@+id/buttonConfirm"
-        android:layout_below="@id/seekerLayoutTop"
-        android:text="@string/confirm_button" />
+        android:textColor="#000000" />
+
 
 
     <TableLayout
@@ -217,9 +217,72 @@
         android:layout_below="@id/buttonConfirm"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
-        android:gravity="center"
-        android:layout_marginTop="0dp"
-        >
+        android:layout_marginTop="-10dp"
+        android:gravity="center">
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Max"
+                android:textSize="19sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40sp"
+                android:layout_marginRight="40sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Min"
+                android:textSize="19sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/maxNum"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="0.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/minNum"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40sp"
+                android:layout_marginRight="40sp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="0.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="22sp" />
+
+        </TableRow>
+
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -229,24 +292,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="19sp"
-                android:text="Average"
+                android:layout_centerHorizontal="true"
                 android:layout_marginLeft="40dp"
                 android:layout_marginStart="40dp"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"/>
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Average"
+                android:textSize="19sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="40sp"
-                android:layout_marginEnd="40sp"
-                android:layout_weight="1"
-                android:text="Total"
-                android:textSize="19sp"
                 android:layout_centerHorizontal="true"
-                android:gravity="center"/>
+                android:layout_marginEnd="40sp"
+                android:layout_marginRight="40sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Total"
+                android:textSize="19sp" />
 
         </TableRow>
 
@@ -260,138 +323,235 @@
                 android:id="@+id/avgNum"
                 android:layout_width="50dp"
                 android:layout_height="30sp"
-                android:layout_weight="1"
                 android:layout_marginLeft="40dp"
                 android:layout_marginStart="40dp"
-                android:textSize="22sp"
-                android:textColor="@color/colorAccent"
-                android:text="0.0"
-                android:gravity="center"
+                android:layout_weight="1"
                 android:ellipsize="end"
-                android:maxLines="1"/>
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="0.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="22sp" />
 
             <TextView
+                android:id="@+id/totalNum"
                 android:layout_width="50dp"
                 android:layout_height="30sp"
-                android:layout_marginRight="40sp"
                 android:layout_marginEnd="40sp"
+                android:layout_marginRight="40sp"
                 android:layout_weight="1"
-                android:text="0.0"
-                android:id="@+id/totalNum"
-                android:textSize="22sp"
-                android:textColor="@color/colorAccent"
-                android:gravity="center"
                 android:ellipsize="end"
-                android:maxLines="1"/>
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="0.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="22sp" />
 
         </TableRow>
 
+
+    </TableLayout>
+
+    <TableLayout
+        android:id="@+id/tablePercent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_below="@+id/table"
+        android:layout_alignRight="@+id/seekerLayoutTop"
+        android:layout_alignEnd="@+id/seekerLayoutTop">
+
+
+
         <TableRow
-            android:id="@+id/tableRow3"
+            android:id="@+id/tableRowP3"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp">
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginLeft="40dp"
-                android:layout_marginStart="40dp"
+                android:gravity="center"
+                android:layout_marginEnd="-20sp"
+                android:layout_marginRight="-20sp"
                 android:text="Max"
-                android:textSize="19sp"
-                android:gravity="center"/>
+                android:layout_weight="1"
+                android:textSize="19sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="55sp"
+                android:layout_marginRight="55sp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:text="Min"
-                android:layout_marginRight="40sp"
-                android:layout_marginEnd="40sp"
-                android:textSize="19sp"
-                android:gravity="center"/>
+                android:textSize="19sp" />
 
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow4"
+            android:id="@+id/tableRowP4"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
 
             <TextView
+                android:id="@+id/maxPerNum"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-
-                android:layout_marginLeft="40dp"
-                android:layout_marginStart="40dp"
-                android:textSize="22sp"
-                android:textColor="@color/colorAccent"
-                android:id="@+id/maxNum"
-                android:text="0.0"
-                android:gravity="center"
+                android:layout_marginLeft="100dp"
+                android:layout_marginStart="100dp"
                 android:ellipsize="end"
-                android:maxLines="1"/>
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="0.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="22sp" />
 
             <TextView
+                android:layout_width="10dp"
+                android:id="@+id/maxPerNumSign"
+                android:layout_height="30sp"
+                android:layout_toRightOf="@id/maxPerNum"
+                android:layout_toEndOf="@+id/maxPerNum"
+                android:text="%"
+                android:layout_weight="1"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:id="@+id/minPerNum"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="40sp"
-                android:layout_marginEnd="40sp"
-                android:textSize="22sp"
-                android:textColor="@color/colorAccent"
-                android:layout_weight="1"
-                android:id="@+id/minNum"
-                android:text="0.0"
-                android:gravity="center"
+                android:layout_toRightOf="@id/maxPerNumSign"
+                android:layout_toEndOf="@+id/maxPerNumSign"
+                android:layout_marginRight="15dp"
                 android:ellipsize="end"
-                android:maxLines="1"/>
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="0.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:id="@+id/minPerNumSign"
+                android:layout_height="30sp"
+                android:layout_marginRight="60dp"
+                android:layout_marginEnd="60dp"
+                android:layout_toRightOf="@id/minPerNum"
+                android:layout_toEndOf="@+id/minPerNum"
+                android:text="%"
+                android:textSize="22sp"/>
+        </TableRow>
+
+
+        <TableRow
+            android:id="@+id/tableRowP1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Average"
+                android:textSize="19sp"
+                android:id="@+id/textView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="30dp"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text=" "
+                android:textSize="19sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowP2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <TextView
+                android:id="@+id/avgPerNum"
+                android:layout_width="50dp"
+                android:layout_height="30sp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginStart="100dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="0.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="22sp" />
+
+            <TextView
+                android:layout_width="10dp"
+                android:id="@+id/avgPerNumSign"
+                android:layout_height="30sp"
+                android:layout_weight="1"
+                android:layout_toRightOf="@id/avgPerNum"
+                android:layout_toEndOf="@+id/avgPerNum"
+                android:text="%"
+                android:textSize="22sp"/>
+
 
         </TableRow>
 
+
     </TableLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/goalGridTitle"
-        android:layout_below="@id/table">
-
-        <TextView
-            android:id="@+id/goalsGridTitle"
+    <!--
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginLeft="5dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="Goals"
-            android:textSize="19dp" />
+            android:id="@+id/goalGridTitle"
+            android:layout_below="@id/table">
 
-        <TextView
-            android:id="@+id/goalsTitleNum"
+            <TextView
+                android:id="@+id/goalsGridTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Goals"
+                android:textSize="19dp" />
+
+            <TextView
+                android:id="@+id/goalsTitleNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_marginLeft="5dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="0"
+                android:textSize="15dp" />
+        </LinearLayout>
+
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_marginLeft="5dp"
-            android:fontFamily="sans-serif-medium"
-            android:text="0"
-            android:textSize="15dp" />
-    </LinearLayout>
-
-
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="5dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/goalGridTitle"
-        android:columnWidth="0dp"
-        android:horizontalSpacing="4dp"
-        android:numColumns="3"
-        android:verticalSpacing="4dp">
-    </GridView>
-
+            android:layout_below="@id/goalGridTitle"
+            android:columnWidth="0dp"
+            android:horizontalSpacing="4dp"
+            android:numColumns="3"
+            android:verticalSpacing="4dp">
+        </GridView>
+    -->
 
 </RelativeLayout>

@@ -48,10 +48,14 @@ public class StatisticsActivity extends AppCompatActivity {
 
     private Spinner unitsSpin;
     private DBHelper dbHelper;
-    private TextView tvAvg;
-    private TextView tvTot;
-    private TextView tvMax;
-    private TextView tvMin;
+    private TextView tvAvgV;
+    private TextView tvTotV;
+    private TextView tvMaxV;
+    private TextView tvMinV;
+    private TextView tvAvgP;
+    private TextView tvTotP;
+    private TextView tvMaxP;
+    private TextView tvMinP;
     private SeekBar sbTop;
     private SeekBar sbBot;
     private TextView tvGoalTitleNum;
@@ -60,10 +64,10 @@ public class StatisticsActivity extends AppCompatActivity {
 
     private String unitsSpinString="";
 
-    private float total=0f;
-    private float average=0f;
-    private float max=Float.MIN_VALUE;
-    private float min=Float.MAX_VALUE;
+    //private float total=0f;
+    //private float average=0f;
+    //private float max=Float.MIN_VALUE;
+    //private float min=Float.MAX_VALUE;
 
     private int minUpperBound=0;
     private int maxLowerBound=100;
@@ -140,16 +144,20 @@ public class StatisticsActivity extends AppCompatActivity {
 
 
 
-        gridAdapter = new GridAdapter(this,goals);
-        GridView gridView = (GridView) findViewById(R.id.gridView);
-        gridView.setAdapter(gridAdapter);
+//        gridAdapter = new GridAdapter(this,goals);
+//        GridView gridView = (GridView) findViewById(R.id.gridView);
+//        gridView.setAdapter(gridAdapter);
+//
+        tvAvgV = (TextView) findViewById(R.id.avgNum);
+        tvTotV = (TextView) findViewById(R.id.totalNum);
+        tvMaxV = (TextView) findViewById(R.id.maxNum);
+        tvMinV = (TextView) findViewById(R.id.minNum);
+        tvAvgP = (TextView) findViewById(R.id.avgPerNum);
+        tvMaxP = (TextView) findViewById(R.id.maxPerNum);
+        tvMinP = (TextView) findViewById(R.id.minPerNum);
 
-        tvAvg = (TextView) findViewById(R.id.avgNum);
-        tvTot = (TextView) findViewById(R.id.totalNum);
-        tvMax = (TextView) findViewById(R.id.maxNum);
-        tvMin = (TextView) findViewById(R.id.minNum);
 
-        tvGoalTitleNum = (TextView) findViewById(R.id.goalsTitleNum);
+//        tvGoalTitleNum = (TextView) findViewById(R.id.goalsTitleNum);
 
         //sbTop.setProgress(100);
         sbTop.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -250,9 +258,14 @@ public class StatisticsActivity extends AppCompatActivity {
     public void popStats(){
         unitsSpinString = unitsSpin.getSelectedItem().toString();
         goals.clear();
-        total=0f;
-        max=Float.MIN_VALUE;
-        min=Float.MAX_VALUE;
+        float totalValue=0f;
+        float averageValue=0f;
+        float maxValue=Float.MIN_VALUE;
+        float minValue=Float.MAX_VALUE;
+        float totalPercent=0f;
+        float averagePercent=0f;
+        float maxPercent=Float.MIN_VALUE;
+        float minPercent=Float.MAX_VALUE;
         String startPercent = Integer.toString(sbBot.getProgress());
         String endPercent = Integer.toString(sbTop.getProgress());
 
@@ -271,47 +284,73 @@ public class StatisticsActivity extends AppCompatActivity {
         while(!result.isAfterLast()){
             String name = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_NAME));
             String units = result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_UNITS));
+
             boolean active = true;
             float steps=0f;
+            float percentage=0f;
             try {
                 steps = Float.parseFloat(result.getString(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PROGRESS)));
+                percentage = result.getFloat(result.getColumnIndex(DBHelper.OLD_GOAL_COLUMN_PERCENTAGE));
             }catch (Exception e){
                 e.printStackTrace();
             }
-            total+=steps;
-            if(steps>max){
-                max=steps;
+            totalPercent+=percentage;
+            totalValue+=steps;
+
+            if(steps>maxValue){
+                maxValue=steps;
             }
-            if(steps<min){
-                min=steps;
+            if(steps<minValue){
+                minValue=steps;
+            }
+
+            if(percentage>maxPercent){
+                maxPercent=percentage;
+            }
+            if(percentage<minPercent){
+                minPercent=percentage;
             }
 
             goals.add(new Goal(name,steps,active,units));
             result.moveToNext();
         }
         if(goals.size()==0){
-            average=0f;
+            averageValue=0f;
+            averagePercent=0f;
         }else {
-            average = total / goals.size();
+            averagePercent = totalPercent / goals.size();
+            averageValue = totalValue / goals.size();
         }
-        gridAdapter.notifyDataSetChanged();
+
+       // gridAdapter.notifyDataSetChanged();
         //updateTable()
-        tvGoalTitleNum.setText(""+goals.size());
+      //  tvGoalTitleNum.setText(""+goals.size());
 
         DecimalFormat df = new DecimalFormat("##.##");
 
-        String convertedAverage= df.format(convertToUnits(unitsSpinString,average));
-        String convertedMax= df.format(convertToUnits(unitsSpinString,max));
-        if(min==Float.MAX_VALUE){
-            min=0f;
+        String convertedAverage= df.format(convertToUnits(unitsSpinString,averageValue));
+        String convertedMax= df.format(convertToUnits(unitsSpinString,maxValue));
+        if(minValue==Float.MAX_VALUE){
+            minValue=0f;
         }
-        String convertedMin= df.format(convertToUnits(unitsSpinString,min));
-        String convertedTotal= df.format(convertToUnits(unitsSpinString,total));
+        String convertedMin= df.format(convertToUnits(unitsSpinString,minValue));
+        String convertedTotal= df.format(convertToUnits(unitsSpinString,totalValue));
 
-        tvAvg.setText(convertedAverage);
-        tvMax.setText(""+convertedMax);
-        tvMin.setText(""+convertedMin);
-        tvTot.setText(""+convertedTotal);
+        String convertedAveragePercent= df.format(averagePercent);
+        String convertedMaxPercent= df.format(maxPercent);
+        if(minPercent==Float.MAX_VALUE){
+            minPercent=0f;
+        }
+        String convertedMinPercent= df.format(minPercent);
+
+        tvAvgV.setText(convertedAverage);
+        tvMaxV.setText(convertedMax);
+        tvMinV.setText(convertedMin);
+        tvTotV.setText(convertedTotal);
+
+        tvAvgP.setText(convertedAveragePercent);
+        tvMaxP.setText(convertedMaxPercent);
+        tvMinP.setText(convertedMinPercent);
 
     }
 
